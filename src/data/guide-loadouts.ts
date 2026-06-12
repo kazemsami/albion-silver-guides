@@ -19,27 +19,12 @@ const ESCAPE_SLOTS = {
   },
 } as const;
 
-/** Travel slots for yellow Mists, safe zone; wear your best gear. */
-const MISTS_FISHING_TRAVEL_SLOTS = {
-  mainhand: {
-    id: "T4_MAIN_RAPIER_MORGANA",
-    name: "Adept's Bloodletter",
-    hint: "Main hand stays a weapon. Never equip the fishing rod here",
-  },
-  cape: {
-    id: "T4_CAPE",
-    name: "Adept's Cape",
-    hint: "Cape does not increase fishing yield. Use any cape you prefer.",
-  },
-  bag: {
-    id: "T8_BAG",
-    name: "Elder's Bag",
-    hint: "Best bag for more fish per trip",
-  },
+/** Recommended mount for yellow Mists fishing. */
+const MISTS_FISHING_MOUNT = {
   mount: {
-    id: "T8_MOUNT_OX",
-    name: "Elder's Transport Ox",
-    hint: "Best carry mount, yellow Mists are knockdown-only",
+    id: "T6_MOUNT_GIANTSTAG_MOOSE",
+    name: "Master's Moose",
+    hint: "Recommended mount for mists fishing loops",
   },
 } as const;
 
@@ -543,32 +528,31 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "10-30": {
       title: "Early Mists Fishing",
       description:
-        "Expert fisherman set, Avalonian fishing rod in bag. Fish your starting Uncommon mist; no T7 journal profit expected yet.",
+        "Wear your best gear plus fisherman set, Avalonian rod, bait, and journal. Moose mount recommended. Fish your starting Uncommon mist.",
       slots: {
-        head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Fishing yield" },
-        armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
-        shoes: { id: "T5_SHOES_GATHERER_FISH", name: "Expert's Fisherman Workboots", hint: "Weight reduction" },
-        ...MISTS_FISHING_TRAVEL_SLOTS,
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
+        head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Best fisherman head you can wear" },
+        armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Best fisherman armor you can wear" },
+        shoes: { id: "T5_SHOES_GATHERER_FISH", name: "Expert's Fisherman Workboots", hint: "Best fisherman boots you can wear" },
+        ...MISTS_FISHING_MOUNT,
       },
       inventory: [
-        { id: "T5_2H_TOOL_FISHINGROD_AVALON", name: "Expert's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
+        { id: "T5_2H_TOOL_FISHINGROD_AVALON", name: "Expert's Avalonian Fishing Rod", hint: "In bag. Cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fills slowly at this level" },
       ],
     },
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Master's fisherman set. Hunt Rare+ nested mists for T7 zones; journal fill is still very slow at this level.",
+        "Wear your best gear plus fisherman set, Avalonian rod, bait, and journal. Moose mount recommended. Hunt Rare+ nested mists for T7 zones.",
       slots: {
-        head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Fishing yield" },
-        armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Fishing yield" },
-        shoes: { id: "T6_SHOES_GATHERER_FISH", name: "Master's Fisherman Workboots", hint: "Weight reduction" },
-        ...MISTS_FISHING_TRAVEL_SLOTS,
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
+        head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Best fisherman head you can wear" },
+        armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Best fisherman armor you can wear" },
+        shoes: { id: "T6_SHOES_GATHERER_FISH", name: "Master's Fisherman Workboots", hint: "Best fisherman boots you can wear" },
+        ...MISTS_FISHING_MOUNT,
       },
       inventory: [
-        { id: "T6_2H_TOOL_FISHINGROD_AVALON", name: "Master's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
+        { id: "T6_2H_TOOL_FISHINGROD_AVALON", name: "Master's Avalonian Fishing Rod", hint: "In bag. Cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Slow fill until you land Rare+ T7 mists consistently" },
       ],
@@ -576,19 +560,17 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "60+": {
       title: "Expert Mists Fishing",
       description:
-        "Grandmaster fisherman set, Avalonian fishing rod, T7 journal. Scout Rare/Epic/Legendary mists at 5:00 on the timer.",
+        "Wear your best gear plus fisherman set, Avalonian rod, bait, and journal. Moose mount recommended. Scout Rare/Epic/Legendary mists at 5:00 on the timer.",
       slots: {
-        head: { id: "T7_HEAD_GATHERER_FISH", name: "Grandmaster's Fisherman Cap", hint: "Max fishing yield" },
-        armor: { id: "T7_ARMOR_GATHERER_FISH", name: "Grandmaster's Fisherman Garb", hint: "Max fishing yield" },
-        shoes: { id: "T7_SHOES_GATHERER_FISH", name: "Grandmaster's Fisherman Workboots", hint: "Weight reduction" },
-        ...MISTS_FISHING_TRAVEL_SLOTS,
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
+        head: { id: "T7_HEAD_GATHERER_FISH", name: "Grandmaster's Fisherman Cap", hint: "Best fisherman head you can wear" },
+        armor: { id: "T7_ARMOR_GATHERER_FISH", name: "Grandmaster's Fisherman Garb", hint: "Best fisherman armor you can wear" },
+        shoes: { id: "T7_SHOES_GATHERER_FISH", name: "Grandmaster's Fisherman Workboots", hint: "Best fisherman boots you can wear" },
+        ...MISTS_FISHING_MOUNT,
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD_AVALON", name: "Grandmaster's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
+        { id: "T7_2H_TOOL_FISHINGROD_AVALON", name: "Grandmaster's Avalonian Fishing Rod", hint: "In bag. Cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "~1/hr in Rare+ T7 mists with this gear" },
-        { id: "T1_MEAL_SEAWEEDSALAD", name: "Seaweed Salad", hint: "Optional speed buff" },
       ],
     },
   },
