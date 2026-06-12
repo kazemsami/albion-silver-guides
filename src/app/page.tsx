@@ -14,7 +14,7 @@ import { websiteJsonLd } from "@/lib/structured-data";
 export const metadata: Metadata = createPageMetadata({
   title: "Albion Online Money Making Guides",
   description:
-    "Stack silver faster with proven Albion Online guides: gathering, fishing, dungeons, crafting, and laborers. Live profit/hour from market prices.",
+    "Stack silver faster with proven Albion Online guides: gathering, fishing, dungeons, crafting, and laborers. Profit per hour from estimated price snapshots.",
   path: "/",
 });
 

@@ -1,6 +1,6 @@
 /**
  * Fetch royal-city median prices and print ITEM_PRICE_FALLBACKS entries
- * for items missing from the current fallback map.
+ * to refresh site-wide estimated price snapshots.
  *
  * Usage: node scripts/refresh-price-fallbacks.mjs
  * (Respect Albion Data Project rate limits: 100 req/min)

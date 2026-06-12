@@ -1,8 +1,6 @@
 /**
- * Fallback silver/unit when Albion Data Project has no royal-city listings.
- * Live market prices always win; these are used only as a last resort.
- *
- * Regenerate snapshots when not rate-limited: npm run refresh-price-fallbacks
+ * Estimated silver/unit snapshots used by all profit calculators.
+ * Regenerate from a market sample: npm run refresh-price-fallbacks
  */
 
 export interface FallbackPrices {

@@ -26,15 +26,10 @@ import type {
 } from "@/types/guide";
 import {
   AVERAGE_MARKET_CITY_ID,
-  getMarketCityLabel,
   type MarketCityId,
 } from "@/lib/market-cities";
 import {
-  fetchAlbionPriceRows,
-  fetchAlbionPricesByCity,
-  buildPriceMapsFromRows,
-  getBuyPrice,
-  getSellPrice,
+  buildEstimatedPriceMapsByCity,
   type PriceMap,
   type PriceMapsByCity,
 } from "@/lib/albion-prices";
@@ -248,7 +243,7 @@ function computeAllGuideProfitRanges(
   return result;
 }
 
-/** Batch-fetch market prices and compute profit/hr ranges for every guide with economics. */
+/** Compute profit/hr ranges for every guide with economics using estimated prices. */
 export async function fetchAllGuidesProfitRanges(): Promise<
   Record<string, GuideProfitRange>
 > {
@@ -274,8 +269,7 @@ export async function fetchAllGuidesProfitRangesByCity(): Promise<
     }
   }
 
-  const rows = await fetchAlbionPriceRows([...allItemIds]);
-  const priceMaps = buildPriceMapsFromRows(rows);
+  const priceMaps = buildEstimatedPriceMapsByCity([...allItemIds]);
   return computeAllGuideProfitRanges(slugs, priceMaps);
 }
 
@@ -305,15 +299,6 @@ function resolveUnitPrice(
     "fixedSilverPerUnit" in item ? item.fixedSilverPerUnit : undefined;
   if (fixedSilver != null) {
     return { unitPrice: fixedSilver, priceSource: "fixed" };
-  }
-
-  const marketPrice =
-    side === "buy"
-      ? getBuyPrice(prices, item.id) ?? getSellPrice(prices, item.id)
-      : getSellPrice(prices, item.id) ?? getBuyPrice(prices, item.id);
-
-  if (marketPrice != null) {
-    return { unitPrice: marketPrice, priceSource: "market" };
   }
 
   const itemEstimate =
@@ -445,11 +430,11 @@ export function computeLoadoutPricing(
 
 export const PREMIUM_LISTING_TAX_RATE = 0.065;
 
-export function marketCityLocationNote(city: MarketCityId): string {
-  const label = getMarketCityLabel(city);
-  return city === AVERAGE_MARKET_CITY_ID
-    ? `${label} (Albion Data Project). Station fees not included. After-tax line uses ~6.5% Premium listing tax.`
-    : `${label} market prices (Albion Data Project). Station fees not included. After-tax line uses ~6.5% Premium listing tax.`;
+export const ESTIMATED_PRICES_NOTE =
+  "Estimated snapshot prices. Station fees not included. After-tax line uses ~6.5% Premium listing tax.";
+
+export function marketCityLocationNote(_city: MarketCityId): string {
+  return ESTIMATED_PRICES_NOTE;
 }
 
 export function computeHourlyEconomics(
@@ -540,7 +525,7 @@ export async function fetchGuidePricing(
     : [];
 
   const itemIds = collectGuideItemIds(tierLoadouts, economics);
-  const priceMaps = await fetchAlbionPricesByCity(itemIds);
+  const priceMaps = buildEstimatedPriceMapsByCity(itemIds);
   const prices = priceMaps[AVERAGE_MARKET_CITY_ID];
 
   const defaultTier = economics?.skillTiers.find(

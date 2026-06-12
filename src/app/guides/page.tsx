@@ -50,7 +50,7 @@ export async function generateMetadata({
   return createPageMetadata({
     title: "All Albion Online Money Making Guides",
     description:
-      "Browse Albion Online silver guides for gathering, fishing, dungeons, crafting, and laborers. Sort by live market profit per hour.",
+      "Browse Albion Online silver guides for gathering, fishing, dungeons, crafting, and laborers. Sort by estimated profit per hour.",
     path: "/guides",
     noIndex: filtered,
   });

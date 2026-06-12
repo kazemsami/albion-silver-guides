@@ -189,7 +189,7 @@ export function getTrackingTierConfig(tierId: string): TrackingTierConfig {
   return TRACKING_TIER_CONFIGS.find((t) => t.id === tierId) ?? TRACKING_TIER_CONFIGS[0];
 }
 
-/** All item ids used in the tracking loot model (for market price fetching). */
+/** All item ids used in the tracking loot model (for price snapshots). */
 export function getTrackingLootItemIds(): string[] {
   const ids = new Set<string>();
   for (const tier of TRACKING_TIER_CONFIGS) {

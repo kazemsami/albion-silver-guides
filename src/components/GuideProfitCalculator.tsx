@@ -20,7 +20,6 @@ import {
   getLaborerSpecialty,
 } from "@/data/laborer-specialties";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { getMarketCityLabel } from "@/lib/market-cities";
 import {
   computeHourlyEconomics,
   computeLoadoutPricing,
@@ -237,15 +236,7 @@ export function GuideProfitCalculator({
             {hasLaborerSpecialtyPicker ? `${specialty.label}, ` : ""}
             {tier.label}
           </span>{" "}
-          yield, using {getMarketCityLabel(marketCity).toLowerCase()} prices
-          (Albion Data Project). Updated {formattedAt}.
-          {result.hasEstimatedPrices && (
-            <>
-              {" "}
-              Items marked <span className="text-amber-400/90">est.</span> use
-              fallback prices when no royal market orders exist.
-            </>
-          )}
+          yield. Estimated snapshot prices. Updated {formattedAt}.
         </p>
 
         <EconomicsTable

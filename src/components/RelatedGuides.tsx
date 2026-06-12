@@ -2,7 +2,6 @@
 
 import { GuideCard } from "@/components/GuideCard";
 import {
-  useMarketCity,
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
@@ -15,7 +14,6 @@ export function RelatedGuides({
   guides: Guide[];
   profitRangesByCity: GuideProfitRangesByCity;
 }) {
-  const { marketCity } = useMarketCity();
   const profitRanges = useProfitRangesForCity(profitRangesByCity);
 
   return (
@@ -29,7 +27,6 @@ export function RelatedGuides({
             key={guide.slug}
             guide={guide}
             profitRange={profitRanges[guide.slug]}
-            marketCity={marketCity}
           />
         ))}
       </div>

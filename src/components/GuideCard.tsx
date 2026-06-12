@@ -10,7 +10,6 @@ import {
   getGuideSilverDisplay,
   hasLiveProfitRange,
 } from "@/lib/guide-display";
-import { getMarketCityLabel, type MarketCityId } from "@/lib/market-cities";
 import type { GuideProfitRange } from "@/lib/guide-economics";
 
 const difficultyColors = {
@@ -27,17 +26,11 @@ const zoneTypeColors = {
 export function GuideCard({
   guide,
   profitRange,
-  marketCity,
 }: {
   guide: Guide;
   profitRange?: GuideProfitRange | null;
-  marketCity?: MarketCityId;
 }) {
   const liveProfit = hasLiveProfitRange(profitRange);
-  const marketLabel =
-    marketCity && marketCity !== "average"
-      ? getMarketCityLabel(marketCity)
-      : null;
   return (
     <Link
       href={`/guides/${guide.slug}`}
@@ -77,7 +70,7 @@ export function GuideCard({
             {getGuideSilverDisplay(guide, profitRange)}
             <span className="font-normal text-parchment/40">
               {" "}
-              · {liveProfit ? (marketLabel ?? "live market") : "estimate"}
+              · {liveProfit ? "est." : "estimate"}
             </span>
           </p>
         </div>

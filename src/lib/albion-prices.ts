@@ -151,12 +151,55 @@ export function getBuyPrice(prices: PriceMap, itemId: string): number | null {
 
 /** Loadout gear is priced at average sell (replacement cost), with static fallback. */
 export function getLoadoutUnitPrice(
-  prices: PriceMap,
+  _prices: PriceMap,
   itemId: string,
 ): number | null {
-  return (
-    getSellPrice(prices, itemId) ??
-    getBuyPrice(prices, itemId) ??
-    getItemPriceFallback(itemId, "sell")
-  );
+  return getItemPriceFallback(itemId, "sell");
+}
+
+export function resolveSellPrice(
+  _prices: PriceMap,
+  itemId: string,
+): { unitPrice: number | null; priceSource: "estimated" } {
+  const fallback = getItemPriceFallback(itemId, "sell");
+  return { unitPrice: fallback, priceSource: "estimated" };
+}
+
+export function resolveBuyPrice(
+  _prices: PriceMap,
+  itemId: string,
+): { unitPrice: number | null; priceSource: "estimated" } {
+  const fallback = getItemPriceFallback(itemId, "buy");
+  return { unitPrice: fallback, priceSource: "estimated" };
+}
+
+/** Build a price map from site snapshot estimates (no live API). */
+export function buildEstimatedPriceMap(itemIds: string[]): PriceMap {
+  const unique = [...new Set(itemIds)];
+  const result: PriceMap = new Map();
+
+  for (const itemId of unique) {
+    result.set(itemId, {
+      sell: getItemPriceFallback(itemId, "sell"),
+      buy: getItemPriceFallback(itemId, "buy"),
+    });
+  }
+
+  return result;
+}
+
+/** Same estimated map for every city (snapshots are not city-specific). */
+export function buildEstimatedPriceMapsByCity(
+  itemIds: string[],
+): PriceMapsByCity {
+  const average = buildEstimatedPriceMap(itemIds);
+  const result: PriceMapsByCity = {
+    [AVERAGE_MARKET_CITY_ID]: average,
+  } as PriceMapsByCity;
+
+  for (const city of ROYAL_MARKET_CITIES) {
+    result[city] = average;
+  }
+
+  return result;
 }

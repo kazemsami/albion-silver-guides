@@ -10,10 +10,9 @@ import {
   type PotionRecipe,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
-import { getItemPriceFallback } from "@/data/item-price-fallbacks";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/guide-economics";
 import type { PriceMap } from "@/lib/albion-prices";
-import { getBuyPrice, getSellPrice } from "@/lib/albion-prices";
+import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
@@ -64,28 +63,6 @@ export interface PotionEconomicsResult {
   hasEstimatedPrices: boolean;
 }
 
-function resolveSellPrice(
-  prices: PriceMap,
-  itemId: string,
-): { unitPrice: number | null; priceSource: PricedLine["priceSource"] } {
-  const market = getSellPrice(prices, itemId) ?? getBuyPrice(prices, itemId);
-  if (market != null) return { unitPrice: market, priceSource: "market" };
-  const fallback = getItemPriceFallback(itemId, "sell");
-  if (fallback != null) return { unitPrice: fallback, priceSource: "estimated" };
-  return { unitPrice: null, priceSource: "estimated" };
-}
-
-function resolveBuyPrice(
-  prices: PriceMap,
-  itemId: string,
-): { unitPrice: number | null; priceSource: PricedLine["priceSource"] } {
-  const market = getBuyPrice(prices, itemId) ?? getSellPrice(prices, itemId);
-  if (market != null) return { unitPrice: market, priceSource: "market" };
-  const fallback =
-    getItemPriceFallback(itemId, "buy") ?? getItemPriceFallback(itemId, "sell");
-  if (fallback != null) return { unitPrice: fallback, priceSource: "estimated" };
-  return { unitPrice: null, priceSource: "estimated" };
-}
 
 function priceLine(
   prices: PriceMap,

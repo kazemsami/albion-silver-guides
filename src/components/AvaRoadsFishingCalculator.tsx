@@ -14,7 +14,6 @@ import {
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { getMarketCityLabel } from "@/lib/market-cities";
 import {
   computeAvaRoadsEconomics,
   computeAvaRoadsProfitRange,
@@ -252,8 +251,8 @@ export function AvaRoadsFishingCalculator({
           Profit breakdown
         </h2>
         <p className="mt-2 text-sm text-parchment/50">
-          {result.presetLabel} preset, {result.snapperViewId} Snapper view,{" "}
-          {getMarketCityLabel(marketCity).toLowerCase()} prices. Updated {formattedAt}.
+          {result.presetLabel} preset, {result.snapperViewId} Snapper view.
+          Estimated snapshot prices. Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">

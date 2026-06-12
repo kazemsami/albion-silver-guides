@@ -19,7 +19,6 @@ import {
   type AbyssalTeamSizeId,
 } from "@/data/abyssal-economics";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { getMarketCityLabel } from "@/lib/market-cities";
 import {
   computeAbyssalEconomics,
   computeAbyssalProfitRange,
@@ -375,8 +374,7 @@ export function AbyssalProfitCalculator({
         </h2>
         <p className="mt-2 text-sm text-parchment/50">
           {result.scenarioLabel}, {result.teamLabel}, {runDurationMinutes} min
-          run, {getMarketCityLabel(marketCity).toLowerCase()} prices. Updated{" "}
-          {formattedAt}.
+          run, estimated snapshot prices. Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">

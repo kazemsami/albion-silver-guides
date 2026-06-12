@@ -17,7 +17,6 @@ import {
   TRACKING_TIER_CONFIGS,
   type TrackingScenarioId,
 } from "@/data/tracking-economics";
-import { getMarketCityLabel } from "@/lib/market-cities";
 import {
   computeLoadoutPricing,
   deserializePriceMap,
@@ -286,15 +285,7 @@ export function TrackingProfitCalculator({
           <span className="text-parchment/70">{tierConfig.label}</span>,{" "}
           <span className="text-parchment/70">{result.scenarioLabel}</span>{" "}
           scenario. Average material loot is from a ~22 kill mixed Roads session.
-          Using {getMarketCityLabel(marketCity).toLowerCase()} prices
-          (Albion Data Project). Updated {formattedAt}.
-          {result.hasEstimatedPrices && (
-            <>
-              {" "}
-              Items marked <span className="text-amber-400/90">est.</span> use
-              fallback prices when no royal market orders exist.
-            </>
-          )}
+          Estimated snapshot prices. Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">
@@ -311,7 +302,7 @@ export function TrackingProfitCalculator({
               value={formatPercent(result.remnantAssumptions.dropChance)}
             />
             <AssumptionRow
-              label="Remnant market price"
+              label="Remnant est. price"
               value={
                 result.remnantAssumptions.remnantUnitPrice != null
                   ? formatSilverExact(result.remnantAssumptions.remnantUnitPrice)

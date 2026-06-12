@@ -15,7 +15,6 @@ import {
   POTION_SELL_THROUGH_META,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
-import { getMarketCityLabel } from "@/lib/market-cities";
 import {
   computeLoadoutPricing,
   deserializePriceMap,
@@ -254,8 +253,7 @@ export function PotionProfitCalculator({
         <p className="mt-2 text-sm text-parchment/50">
           Modeled session: {result.healBatchesPerHour} heal batches +{" "}
           {result.energyBatchesPerHour} energy batches per hour (
-          {result.totalPotsPerHour} pots total). Prices from{" "}
-          {getMarketCityLabel(marketCity).toLowerCase()} (Albion Data Project).
+          {result.totalPotsPerHour} pots total). Estimated snapshot prices.
           Updated {formattedAt}.
         </p>
 

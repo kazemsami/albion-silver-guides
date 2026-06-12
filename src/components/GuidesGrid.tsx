@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import {
-  useMarketCity,
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
@@ -19,7 +18,6 @@ export function GuidesGrid({
   profitRangesByCity: GuideProfitRangesByCity;
   sort?: GuideSort;
 }) {
-  const { marketCity } = useMarketCity();
   const profitRanges = useProfitRangesForCity(profitRangesByCity);
 
   const sorted = useMemo(
@@ -34,7 +32,6 @@ export function GuidesGrid({
           key={guide.slug}
           guide={guide}
           profitRange={profitRanges[guide.slug]}
-          marketCity={marketCity}
         />
       ))}
     </div>
