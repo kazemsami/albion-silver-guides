@@ -6,6 +6,7 @@ import {
 } from "@/data/laborer-specialties";
 import type { HourlyItem } from "@/types/guide";
 import { SKILL_TIERS, tiers } from "@/data/guide-skill-tiers";
+import { getT2RoamVerifiedHourlyOutput } from "@/data/t2-roam-verified-loot";
 
 /** Butchered T7-and-lower bycatch → chopped fish (avg). */
 const AVA_CHOPS_PER_FISH = 15;
@@ -88,17 +89,30 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "red",
   },
   "abyssal-depths-farming": {
-    // Tradable extract loot proxy (room chests, altar greed, vault), ~3-4M/hr at level-2 duo pace.
+    // Baseline ~1M/hr floor-2 extract; duo soul PvP pushes higher. One ~45 min run per hour with queue.
     hourlyOutput: [
-      { id: "T8_SOUL", name: "Elder's Soul", quantity: 90 },
-      { id: "T7_SOUL", name: "Grandmaster's Soul", quantity: 220 },
-      { id: "T8_RUNE", name: "Elder's Rune", quantity: 380 },
-      { id: "T7_RUNE", name: "Grandmaster's Rune", quantity: 60 },
+      {
+        id: "T4_RUNE",
+        name: "Silver bags (safe in inventory until death)",
+        quantity: 1,
+        estimatedSilverPerUnit: 650_000,
+      },
+      { id: "T7_RUNE", name: "Grandmaster's Rune (room + altar chests)", quantity: 140 },
+      { id: "T6_SOUL", name: "Master's Soul", quantity: 90 },
+      { id: "T8_RUNE", name: "Elder's Rune (floor 2–3 chests)", quantity: 45 },
+    ],
+    hourlyInputs: [
+      {
+        id: "T8_JOURNAL_MERCENARY_EMPTY",
+        name: "T8 mercenary journals (optional floor-3 fill, death risk)",
+        quantity: 2,
+        side: "buy",
+      },
     ],
     hourlyConsumables: [
-      { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 3 },
-      { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", quantity: 2 },
+      { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2 },
       { id: "T6_POTION_HEAL", name: "Major Healing Potion", quantity: 4 },
+      { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", quantity: 1 },
     ],
     skillTiers: tiers(
       SKILL_TIERS.depthsLearning,
@@ -147,6 +161,35 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       SKILL_TIERS.corruptedSlayer,
     ),
     defaultSkillTierId: "stalker",
+  },
+  "t2-blackzone-roaming": {
+    hourlyOutput: getT2RoamVerifiedHourlyOutput(),
+    hourlyInputs: [
+      {
+        id: "T4_JOURNAL_FISHING_EMPTY",
+        name: "Empty fisher journals (restock)",
+        quantity: 2,
+        side: "buy",
+      },
+      {
+        id: "T2_MAIN_FIRESTAFF",
+        name: "Full T2 kit replacement (avg deaths/hr)",
+        quantity: 0.15,
+        side: "buy",
+      },
+    ],
+    hourlyConsumables: [
+      { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
+      { id: "T4_MEAL_STEW", name: "Goat Stew", quantity: 2 },
+      { id: "T3_POTION_STONESKIN", name: "Minor Resistance Potion", quantity: 2 },
+      { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", quantity: 1 },
+    ],
+    skillTiers: tiers(
+      SKILL_TIERS.bzRoamingLearning,
+      SKILL_TIERS.bzRoamingVerified,
+      SKILL_TIERS.bzRoamingHot,
+    ),
+    defaultSkillTierId: "verified",
   },
   "shoreline-fishing-guide": {
     hourlyOutput: [

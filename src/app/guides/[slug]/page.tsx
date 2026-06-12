@@ -191,6 +191,28 @@ export default async function GuidePage({ params }: GuidePageProps) {
         </ul>
       </section>
 
+      {guide.references && guide.references.length > 0 && (
+        <section className="mt-10">
+          <h2 className="wiki-heading font-display text-xl font-semibold text-parchment">
+            References
+          </h2>
+          <ul className="mt-4 space-y-2">
+            {guide.references.map((ref) => (
+              <li key={ref.url}>
+                <a
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold/90 underline decoration-gold/30 underline-offset-2 transition-colors hover:text-gold hover:decoration-gold/60"
+                >
+                  {ref.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {related.length > 0 && (
         <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} />
       )}

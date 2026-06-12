@@ -19,6 +19,25 @@ const ESCAPE_SLOTS = {
   },
 } as const;
 
+/** Travel slots for yellow Mists — safe zone; wear your best gear. */
+const MISTS_FISHING_TRAVEL_SLOTS = {
+  cape: {
+    id: "T4_CAPEITEM_AVALON",
+    name: "Adept's Avalonian Cape",
+    hint: "Best gathering cape you have",
+  },
+  bag: {
+    id: "T8_BAG",
+    name: "Elder's Bag",
+    hint: "Best bag for more fish per trip",
+  },
+  mount: {
+    id: "T8_MOUNT_OX",
+    name: "Elder's Transport Ox",
+    hint: "Best carry mount — yellow Mists are knockdown-only",
+  },
+} as const;
+
 /** Default mounted kit, rod stays in bag until you cast at a school. */
 const FISHING_COMBAT_SLOTS = {
   mainhand: {
@@ -198,119 +217,133 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
   },
   "abyssal-depths-farming": {
     learning: {
-      title: "T5.0 Learning Build",
+      title: "Floor 1 Extract",
       description:
-        "Minimum 900 base IP entry kit for level-1 practice in 2-player mode. Orange PvP, gear stays on, bag loot is at risk.",
+        "Budget ~1200 IP kit. Learn statue buffs, soul exits, and when to reset on floor 1.",
       slots: {
         head: {
-          id: "T5_HEAD_CLOTH_SET2",
-          name: "Expert's Druid Cowl",
-          hint: "Meets 900 IP entry with T5 set",
+          id: "T5_HEAD_LEATHER_SET3",
+          name: "Expert's Assassin Hood",
+          hint: "Budget burst near softcap",
         },
         armor: {
           id: "T5_ARMOR_CLOTH_SET2",
-          name: "Expert's Druid Robe",
+          name: "Expert's Cleric Robe",
           hint: "Defensive cooldowns",
         },
         shoes: {
-          id: "T5_SHOES_LEATHER_SET3",
-          name: "Expert's Stalker Shoes",
+          id: "T5_SHOES_PLATE_SET2",
+          name: "Expert's Royal Sandals",
           hint: "Mobility between rooms",
         },
         mainhand: {
-          id: "T5_2H_FROSTSTAFF",
-          name: "Expert's Permafrost Prism",
-          hint: "AoE room clear",
+          id: "T5_2H_FROSTSTAFF@1",
+          name: "Expert's Permafrost Prism (.1)",
+          hint: "AoE room clear under 1200 IP",
         },
         cape: {
           id: "T4_CAPEITEM_MORGANA",
           name: "Adept's Morgana Cape",
           hint: "Cheap defense under softcap",
         },
+        mount: {
+          id: "T4_MOUNT_GIANTSTAG",
+          name: "Adept's Giant Stag",
+          hint: "Carry weight for early extracts",
+        },
         bag: { id: "T4_BAG", name: "Adept's Bag", hint: "Empty before entry" },
         food: { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "Low-cost damage food" },
-        potion: { id: "T4_POTION_HEAL", name: "Healing Potion", hint: "-30% healing inside" },
+        potion: { id: "T4_POTION_HEAL", name: "Healing Potion", hint: "Backup sustain" },
       },
       inventory: [
         { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Backup heal" },
       ],
     },
     standard: {
-      title: "5.1 Level-2 Farm Build",
+      title: "Floor 2 Farm",
       description:
-        "5.1 Permafrost duo setup under the 1200 IP softcap: extract at level 2 for 3-4M/hr.",
+        "1200 IP softcap setup — stack 15 Demonic Ferocity on floor 1, extract floor 2 for baseline profit.",
       slots: {
         head: {
-          id: "T5_HEAD_CLOTH_SET2@1",
-          name: "Expert's Druid Cowl (.1)",
-          hint: "Healing / cleanse",
+          id: "T6_HEAD_LEATHER_SET3",
+          name: "Master's Assassin Hood",
+          hint: "Burst / defense near 1200 IP",
         },
         armor: {
-          id: "T5_ARMOR_CLOTH_SET2@1",
-          name: "Expert's Druid Robe (.1)",
-          hint: "Defensive cooldowns",
+          id: "T6_ARMOR_CLOTH_SET2",
+          name: "Master's Cleric Robe",
+          hint: "Pop armor during big pulls",
         },
         shoes: {
-          id: "T5_SHOES_LEATHER_SET3@1",
-          name: "Expert's Stalker Shoes (.1)",
-          hint: "Mobility between rooms",
+          id: "T6_SHOES_PLATE_SET2",
+          name: "Master's Royal Sandals",
+          hint: "Room-to-room mobility",
         },
         mainhand: {
-          id: "T5_2H_FROSTSTAFF@1",
-          name: "Expert's Permafrost Prism (.1)",
-          hint: "Fastest PvE room clears",
+          id: "T6_2H_HOLYSTAFF@4",
+          name: "Master's Astral Staff (.4)",
+          hint: "AoE clear + full Fame Bonus",
         },
         cape: {
-          id: "T4_CAPEITEM_MORGANA",
-          name: "Adept's Morgana Cape",
-          hint: "Defense without overshooting softcap",
+          id: "T4_CAPEITEM_FW_CAERLEON",
+          name: "Adept's Caerleon Cape",
+          hint: "Defense in orange zone",
+        },
+        mount: {
+          id: "T4_MOUNT_GIANTSTAG",
+          name: "Adept's Giant Stag",
+          hint: "High carry weight for extracts",
         },
         bag: { id: "T5_BAG", name: "Expert's Bag", hint: "Empty before entry" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage, modest IP bump" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "-30% healing inside" },
+        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "Extra food for long runs" },
+        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Between pulls and PvP" },
       },
       inventory: [
-        { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Demon rooms and PvP burst" },
+        { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Burst rooms / fights" },
       ],
     },
     expert: {
-      title: "6.1 Vault Push Build",
+      title: "Floor 3 Vault Push",
       description:
-        "6.1 kit near the 1200 IP softcap for level-3 Treasure Vault contests (3 keys in 2-player mode).",
+        "3 keys (duo) or 5 keys (trio) for the Treasure Vault. Sweaty PvP — vault portal is the safe extract on collapse.",
       slots: {
         head: {
-          id: "T6_HEAD_CLOTH_SET2@1",
-          name: "Master's Druid Cowl (.1)",
-          hint: "Healing / cleanse",
+          id: "T6_HEAD_LEATHER_SET3",
+          name: "Master's Assassin Hood",
+          hint: "Vault fights at softcap",
         },
         armor: {
-          id: "T6_ARMOR_CLOTH_SET2@1",
-          name: "Master's Druid Robe (.1)",
-          hint: "Vault survivability",
+          id: "T6_ARMOR_CLOTH_SET2",
+          name: "Master's Cleric Robe",
+          hint: "Survivability",
         },
         shoes: {
-          id: "T6_SHOES_LEATHER_SET3@1",
-          name: "Master's Stalker Shoes (.1)",
-          hint: "Mobility for vault fights",
+          id: "T6_SHOES_PLATE_SET2",
+          name: "Master's Royal Sandals",
+          hint: "Kite vault contesters",
         },
         mainhand: {
-          id: "T6_2H_FROSTSTAFF@1",
-          name: "Master's Permafrost Prism (.1)",
-          hint: "AoE for vault chaos",
+          id: "T6_2H_HOLYSTAFF@4",
+          name: "Master's Astral Staff (.4)",
+          hint: "AoE in vault chaos",
         },
         cape: {
-          id: "T4_CAPEITEM_MORGANA",
-          name: "Adept's Morgana Cape",
-          hint: "Keeps IP near softcap",
+          id: "T4_CAPEITEM_FW_CAERLEON",
+          name: "Adept's Caerleon Cape",
+          hint: "Defense",
+        },
+        mount: {
+          id: "T4_MOUNT_GIANTSTAG",
+          name: "Adept's Giant Stag",
+          hint: "Carry vault loot out",
         },
         bag: { id: "T5_BAG", name: "Expert's Bag", hint: "Empty before entry" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage under softcap" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "-30% healing inside" },
+        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "Long floor-3 push" },
+        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Sustain" },
       },
       inventory: [
-        { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Vault burst damage" },
-        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage contested vault" },
-        { id: "T7_MEAL_OMELETTE", name: "Pork Omelette", hint: "Defense food for level 3" },
+        { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Vault burst" },
+        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage vault fights" },
       ],
     },
   },
@@ -358,6 +391,192 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       inventory: [
         { id: "T6_POTION_ENERGY", name: "Major Energy Potion", hint: "Ability energy" },
         { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage" },
+      ],
+    },
+  },
+  "t2-blackzone-roaming": {
+    learning: {
+      title: "T2 Budget Roam + Fish",
+      description:
+        "Full T2 Soldier + Fire Staff kit (~540 IP). Fish between camps, fill journals, gank when it is free.",
+      slots: {
+        head: {
+          id: "T2_HEAD_PLATE_SET1",
+          name: "Novice's Soldier Helmet",
+          hint: "Minimal IP, low replacement cost",
+        },
+        armor: {
+          id: "T2_ARMOR_PLATE_SET1",
+          name: "Novice's Soldier Armor",
+          hint: "Cheap plate for open-world fights",
+        },
+        shoes: {
+          id: "T2_SHOES_PLATE_SET1",
+          name: "Novice's Soldier Boots",
+          hint: "Mobility for kiting and escapes",
+        },
+        mainhand: {
+          id: "T2_MAIN_FIRESTAFF",
+          name: "Novice's Fire Staff",
+          hint: "1H fire for opportunistic ganks",
+        },
+        offhand: {
+          id: "T2_OFF_SHIELD",
+          name: "Novice's Shield",
+          hint: "Extra survivability",
+        },
+        cape: {
+          id: "T2_CAPE",
+          name: "Novice's Cape",
+          hint: "Cheap cape slot",
+        },
+        bag: {
+          id: "T2_BAG",
+          name: "Novice's Bag",
+          hint: "Carry journals and loot",
+        },
+        mount: {
+          id: "T2_MOUNT_MULE",
+          name: "Novice's Mule",
+          hint: "Cheap carry weight",
+        },
+        potion: {
+          id: "T3_POTION_STONESKIN",
+          name: "Minor Resistance Potion",
+          hint: "CC resist + defense",
+          quantity: 2,
+        },
+      },
+      inventory: [
+        { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "Food between fights", quantity: 2 },
+        { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
+        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between camps" },
+        { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Fills while fishing" },
+        { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on any fame" },
+      ],
+    },
+    verified: {
+      title: "T2 Roam + Fish (Verified)",
+      description:
+        "Same ~540 IP kit with invis pot for banking journal stacks. Community verified ~11.5M over ~10–15 hr.",
+      slots: {
+        head: {
+          id: "T2_HEAD_PLATE_SET1",
+          name: "Novice's Soldier Helmet",
+          hint: "Minimal IP, low replacement cost",
+        },
+        armor: {
+          id: "T2_ARMOR_PLATE_SET1",
+          name: "Novice's Soldier Armor",
+          hint: "Cheap plate for open-world fights",
+        },
+        shoes: {
+          id: "T2_SHOES_PLATE_SET1",
+          name: "Novice's Soldier Boots",
+          hint: "Mobility for kiting and escapes",
+        },
+        mainhand: {
+          id: "T2_MAIN_FIRESTAFF",
+          name: "Novice's Fire Staff",
+          hint: "1H fire for opportunistic ganks",
+        },
+        offhand: {
+          id: "T2_OFF_SHIELD",
+          name: "Novice's Shield",
+          hint: "Extra survivability",
+        },
+        cape: {
+          id: "T2_CAPE",
+          name: "Novice's Cape",
+          hint: "Cheap cape slot",
+        },
+        bag: {
+          id: "T2_BAG",
+          name: "Novice's Bag",
+          hint: "Carry journals and loot",
+        },
+        mount: {
+          id: "T2_MOUNT_MULE",
+          name: "Novice's Mule",
+          hint: "Cheap carry weight",
+        },
+        potion: {
+          id: "T3_POTION_STONESKIN",
+          name: "Minor Resistance Potion",
+          hint: "CC resist + defense",
+          quantity: 2,
+        },
+      },
+      inventory: [
+        { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "Food between fights", quantity: 2 },
+        { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
+        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between camps and chests" },
+        { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Major income when full" },
+        { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on fish, camps, kills" },
+        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Extract with journal stacks" },
+        { id: "T4_POTION_ENERGY", name: "Energy Potion", hint: "Extra ability uptime in PvP" },
+      ],
+    },
+    hot: {
+      title: "T2 Roam (Active Zone)",
+      description:
+        "Same kit when zones are busy: more PvP and chests on top of the fishing + journal baseline.",
+      slots: {
+        head: {
+          id: "T2_HEAD_PLATE_SET1",
+          name: "Novice's Soldier Helmet",
+          hint: "Minimal IP, low replacement cost",
+        },
+        armor: {
+          id: "T2_ARMOR_PLATE_SET1",
+          name: "Novice's Soldier Armor",
+          hint: "Cheap plate for open-world fights",
+        },
+        shoes: {
+          id: "T2_SHOES_PLATE_SET1",
+          name: "Novice's Soldier Boots",
+          hint: "Mobility for kiting and escapes",
+        },
+        mainhand: {
+          id: "T2_MAIN_FIRESTAFF",
+          name: "Novice's Fire Staff",
+          hint: "1H fire for opportunistic ganks",
+        },
+        offhand: {
+          id: "T2_OFF_SHIELD",
+          name: "Novice's Shield",
+          hint: "Extra survivability",
+        },
+        cape: {
+          id: "T2_CAPE",
+          name: "Novice's Cape",
+          hint: "Cheap cape slot",
+        },
+        bag: {
+          id: "T2_BAG",
+          name: "Novice's Bag",
+          hint: "Carry journals and loot",
+        },
+        mount: {
+          id: "T2_MOUNT_MULE",
+          name: "Novice's Mule",
+          hint: "Cheap carry weight",
+        },
+        potion: {
+          id: "T3_POTION_STONESKIN",
+          name: "Minor Resistance Potion",
+          hint: "CC resist + defense",
+          quantity: 2,
+        },
+      },
+      inventory: [
+        { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "Food between fights", quantity: 2 },
+        { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
+        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between fights" },
+        { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Fills while fishing" },
+        { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on any fame" },
+        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage" },
+        { id: "T4_POTION_ENERGY", name: "Energy Potion", hint: "Ability energy" },
       ],
     },
   },
@@ -549,17 +768,16 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "10-30": {
       title: "Early Mists Fishing",
       description:
-        "Expert fisherman set with rod in bag: weapon, cape, bag, and mount equipped while scouting schools.",
+        "Expert fisherman set with rod in bag. Yellow Mists are knockdown-only — wear your best gear.",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
         shoes: { id: "T5_SHOES_GATHERER_FISH", name: "Expert's Fisherman Workboots", hint: "Weight reduction" },
-        ...FISHING_COMBAT_SLOTS,
+        ...MISTS_FISHING_TRAVEL_SLOTS,
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
-        potion: { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Escape gankers" },
       },
       inventory: [
-        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "Equip at the school only" },
+        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "In bag — cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -567,17 +785,16 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Master's fisherman set: hunt T7 yellow Mist zones. Rod in bag until you cast.",
+        "Master's fisherman set for T7 yellow Mist zones. Rod in bag — no need to equip it to cast.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Fishing yield" },
         shoes: { id: "T6_SHOES_GATHERER_FISH", name: "Master's Fisherman Workboots", hint: "Weight reduction" },
-        ...FISHING_COMBAT_SLOTS,
+        ...MISTS_FISHING_TRAVEL_SLOTS,
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
-        potion: { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Escape" },
       },
       inventory: [
-        { id: "T6_2H_TOOL_FISHINGROD", name: "Master's Fishing Rod", hint: "Equip at the school only" },
+        { id: "T6_2H_TOOL_FISHINGROD", name: "Master's Fishing Rod", hint: "In bag — cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -585,20 +802,16 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "60+": {
       title: "Expert Mists Fishing",
       description:
-        "Grandmaster fisherman set with Avalonian cape: rod in bag, combat kit ready for gankers.",
+        "Grandmaster fisherman set with your best cape, bag, and mount. Rod stays in bag the whole run.",
       slots: {
         head: { id: "T7_HEAD_GATHERER_FISH", name: "Grandmaster's Fisherman Cap", hint: "Max fishing yield" },
         armor: { id: "T7_ARMOR_GATHERER_FISH", name: "Grandmaster's Fisherman Garb", hint: "Max fishing yield" },
         shoes: { id: "T7_SHOES_GATHERER_FISH", name: "Grandmaster's Fisherman Workboots", hint: "Weight reduction" },
-        mainhand: FISHING_COMBAT_SLOTS.mainhand,
-        cape: { id: "T4_CAPEITEM_AVALON", name: "Adept's Avalonian Cape", hint: "Gathering yield bonus" },
-        bag: FISHING_COMBAT_SLOTS_T5.bag,
-        mount: FISHING_COMBAT_SLOTS.mount,
+        ...MISTS_FISHING_TRAVEL_SLOTS,
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
-        potion: { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Escape" },
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "Equip at the school only" },
+        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag — cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
         { id: "T1_MEAL_SEAWEEDSALAD", name: "Seaweed Salad", hint: "Optional speed buff" },

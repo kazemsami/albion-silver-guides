@@ -100,23 +100,23 @@ export const SKILL_TIERS = {
   },
   depthsLearning: {
     id: "learning",
-    label: "Learning (L1)",
-    description: "Level 1 room clears in 2-player mode: lower loot, learning routes",
-    outputMultiplier: 0.7,
-    consumableMultiplier: 0.8,
+    label: "Floor 1 extract",
+    description: "Exit floor 1 with a soul when stacks are low or you are learning (~600k–800k/hr)",
+    outputMultiplier: 0.65,
+    consumableMultiplier: 0.85,
   },
   depthsStandard: {
     id: "standard",
-    label: "Level 2 duo",
-    description: "Extract at level 2 after ~15 min: baseline 3-4M/hr with a partner",
+    label: "Floor 2 extract (baseline)",
+    description: "Cash out floor 2 after ~30 min — best risk/reward for most teams and solo PvE",
     outputMultiplier: 1,
   },
   depthsExpert: {
     id: "expert",
-    label: "Level 3 vault",
-    description: "3 vault keys (2-player) and extract within the 60s vault timer",
-    outputMultiplier: 1.2,
-    consumableMultiplier: 1.1,
+    label: "Floor 3 vault",
+    description: "3 keys (duo) or 5 keys (trio) + Treasure Vault — high variance, sweaty PvP",
+    outputMultiplier: 1.35,
+    consumableMultiplier: 1.15,
   },
   trackingT6Red: {
     id: "t6-red",
@@ -233,6 +233,26 @@ export const SKILL_TIERS = {
     description: "High spec with focus returns",
     outputMultiplier: 1.25,
     inputMultiplier: 1.1,
+  },
+  bzRoamingLearning: {
+    id: "learning",
+    label: "Learning routes",
+    description: "Quiet zones, fewer fights (~500k/hr)",
+    outputMultiplier: 0.55,
+    consumableMultiplier: 0.8,
+  },
+  bzRoamingVerified: {
+    id: "verified",
+    label: "Community verified",
+    description:
+      "11.5M over ~10–15 hr (~750k–1.2M/hr): fish, journals, treasures, PvP loot",
+    outputMultiplier: 1,
+  },
+  bzRoamingHot: {
+    id: "hot",
+    label: "Active zone",
+    description: "Strong PvP and chest RNG on good days",
+    outputMultiplier: 1.25,
   },
 } as const satisfies Record<string, SkillTier>;
 
