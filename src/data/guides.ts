@@ -1023,7 +1023,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "potions-crafting-bulk",
     title: "Bulk Potion Crafting",
     description:
-      "Craft Major Healing Potion and Major Energy Potion at a Brecilien alchemy lab (potion crafting bonus city). Recipes: 72 Elusive Foxglove + eggs/milk + Potato Schnapps per 5 pots. Add Major Gigantify and Major Resistance before weekend ZvZ. Margins swing with buy prices, station fees, and market tax—use the calculator, not a fixed silver/hour headline.",
+      "Craft Major Healing Potion and Major Energy Potion at a Brecilien alchemy lab (potion crafting bonus city). Recipes: 72 Elusive Foxglove + eggs/milk + Potato Schnapps per 5 pots. Add Major Gigantify and Major Resistance before weekend ZvZ. Margins swing with buy prices, station fees, and market tax. Use the calculator, not a fixed silver/hour headline.",
     category: "crafting",
     difficulty: "intermediate",
     zoneType: "safe",

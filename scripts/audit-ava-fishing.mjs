@@ -1,4 +1,4 @@
-/** Ava Roads profit audit — fish/hr model with optional chop price override. */
+/** Ava Roads profit audit: fish/hr model with optional chop price override. */
 import { readFileSync } from "fs";
 
 const CHOPS_PER_FISH = 15;

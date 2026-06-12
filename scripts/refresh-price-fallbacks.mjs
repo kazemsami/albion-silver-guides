@@ -3,7 +3,7 @@
  * for items missing from the current fallback map.
  *
  * Usage: node scripts/refresh-price-fallbacks.mjs
- * (Respect Albion Data Project rate limits — 100 req/min)
+ * (Respect Albion Data Project rate limits: 100 req/min)
  */
 import { readFileSync } from "fs";
 
