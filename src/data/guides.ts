@@ -881,7 +881,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "ava-roads-fishing",
     title: "Avalonian Roads Fishing (T8)",
     description:
-      "Fish T8 schools on Avalonian Roads for top-tier silver income. Expect ~2M+/hr with T7 gear on a T8 road map, ~2.5-3.5M with full T8 fisherman gear, and 4-5M+ at max specs when Snapper RNG is strong. Use the profit calculator tabs to compare setups.",
+      "Fish normal schools on T8 Avalonian Road maps for top-tier silver income. River Sturgeon and Puremist Snapper are random zone-tier catches while fishing, not separate school types or pools. Net profit scales from about 1.5M/hr on the safe escape build to roughly 3.8-5M/hr at max fishing specs. Use the profit calculator tabs to compare setups.",
     category: "fishing",
     difficulty: "advanced",
     zoneType: "dangerous",
@@ -1024,7 +1024,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     },
     requirements: [
       "Fishing level 60+ for Grandmaster rod; T8 fisherman spec for Elder's rod and armor on T8 tabs",
-      "T8 road map with water, minimum ~2M/hr with proper fishing gear in-zone",
+      "T8 road map with water; profit scales with gear tab (see calculator)",
       "Access to an Avalonian Road portal near a royal city or Brecilien",
       "T3 bait every session (faster bites = more casts per hour)",
       "Pork Pie ×2 per hour on every fishing tab (+15% yield, +30% carry weight)",
@@ -1032,7 +1032,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     ],
     steps: [
       "Enter an Avalonian Road from a yellow or blue zone and travel inward until you find a T8 map with large water bodies.",
-      "Scout for T8 fishing schools (visible nodes on the water), only cast on schools, not open water.",
+      "Scout for fishing schools on the water (visible nodes), only cast on schools, not open water.",
       "Pick a loadout tab: safe escape (mobility only). T7 gear (middle specs), T8 max profit, or T8 max spec on deep road maps.",
       "T7/T8 geared tabs: equip fisherman armor, eat 2 Pork Pies per hour, and carry an invisibility potion. Keep the fishing rod in your bag and cast at schools without equipping it.",
       "Safe setup: wear the escape build. Grandmaster fisherman cap, 2 Pork Pies per hour, rod and journal in bag. No fishing garb, boots, or invis potion.",
