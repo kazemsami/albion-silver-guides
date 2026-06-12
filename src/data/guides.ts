@@ -556,43 +556,70 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "mists-fishing",
     title: "Yellow Zone Mists Fishing",
     description:
-      "Fish in yellow-zone Mists for strong fishing income with knockdown-only PvP. Earnings scale heavily with fishing level and market prices; use the calculator for after-tax take-home with journal empty costs included.",
+      "Fish in yellow-zone Mists for solid non-lethal fishing income. PvP is knockdown-only, so profit mainly depends on fishing level, fisherman gear, Mist rarity, school density, market prices, and how quickly you find higher-rarity nested Mists. The calculator treats T7 journals and Puremist Snapper as late-game bonuses, not beginner income.",
     category: "fishing",
     difficulty: "intermediate",
     zoneType: "safe",
-    silverPerHour: { min: 600_000, max: 1_000_000 },
+  
+    silverPerHour: { min: 250_000, max: 1_000_000 },
+  
     silverByLevel: [
-      { label: "Fishing Level 10-30", amount: 600_000 },
-      { label: "Fishing Level 30-60", amount: 900_000 },
-      { label: "Fishing Level 60+", amount: 1_000_000 },
+      { label: "Fishing Level 10-30", amount: 250_000 },
+      { label: "Fishing Level 30-60", amount: 500_000 },
+      { label: "Fishing Level 60+", amount: 800_000 },
     ],
+  
     requirements: [
-      "Fishing level 10+ (higher levels earn significantly more)",
-      "Your best fisherman gear for your level, yellow Mists are knockdown-only, so wear top-tier kit",
-      "Best fishing rod in your bag, you can cast without equipping it",
-      "T3 Fancy Fish Bait at schools for faster bites",
-      "Grandmaster fisherman's journal for bonus silver while fishing",
-      "Pork Pie ×2 per hour (+15% yield, +30% carry weight) at fishing level 60+",
-      "Best bag and mount you have, no need to bring cheap escape gear",
-      "Comfortable navigating Mist portals and exit timers",
+      "Fishing level 10+ to start, but serious income starts much later",
+      "Your best fisherman gear for your current fishing tier",
+      "Your best fishing rod in your bag only. You can cast from inventory and do not need to equip it",
+      "Avalonian fishing rod if you can afford it. The rod gives yield, not the cape",
+      "T3 Fancy Fish Bait for active fishing schools",
+      "Pork Pie when the extra yield and carry weight justify the cost, especially at fishing level 60+",
+      "T7 Grandmaster Fisherman's Journal only once you can realistically fill it, usually fishing 60+ in higher-rarity Mists",
+      "Good bag and mount for carry weight. Yellow Mists are non-lethal, so replacement cost is less important than efficiency",
+      "Basic comfort with Will o' Wisps, nested Mist portals, Mist rarity, and exit timers",
     ],
+  
     steps: [
-      "Enter the Mists through a portal in a royal city or outpost.",
-      "Locate active fish schools near water. Use T3 Fancy Fish Bait at schools, bait is optional but strongly recommended for faster bites and more casts per hour.",
-      "Wear your best fisherman set, cape, bag, and mount. Keep the fishing rod in your bag, cast at schools without equipping it.",
-      "At fishing level 30+, fish in T7 yellow Mist zones. Puremist Snapper is a random catch from the zone tier, not its own school.",
-      "Fish schools matching your rod tier for the best catch rate.",
-      "Sell raw fish, chopped fish, or rare catches on the market. Check Caerleon for premium prices.",
+      "Bank in your royal city before each run. There is no normal bank inside the Mists, so enter with empty bag space and sell after you leave.",
+      "Enter the Mists by finding a Will o' Wisp in a T5/T6 yellow zone. Wear fisherman armor, a normal or defensive cape, bag, and mount. Keep your fishing rod in your bag and keep a weapon equipped if you want basic mobility or defense.",
+      "Fish active schools near water in your starting Mist. Use T3 Fancy Fish Bait at schools for faster bites and more casts per hour.",
+      "When the exit timer reaches around 5:00, start scouting for higher-rarity nested Wisps instead of squeezing one more fishing school.",
+      "Prioritize Rare, Epic, and Legendary nested Mists because higher-rarity Mists are more likely to contain better fishing opportunities. Do not assume every Rare+ Mist is automatically a T7 fishing zone.",
+      "If you only find an Uncommon Will o' Wisp, remember its location and keep searching briefly. If time is running out and no better option appears, enter the Uncommon Mist and keep fishing rather than wasting the rest of the session.",
+      "At fishing 60+, bring a Grandmaster Fisherman's Journal when you expect to fish higher-rarity Mists long enough to fill meaningful fame. Below that, treat journals as a slow bonus, not guaranteed hourly income.",
+      "After leaving the Mists, sell valuable fish raw. Butcher low-value bycatch into chopped fish only when chopped-fish value is clearly better than raw sale value.",
     ],
+  
     tips: [
-      "Income scales sharply with fishing level and fish prices. Calculator ranges are after ~6.5% Premium listing tax; yields still swing with competition and Snapper RNG.",
-      "Puremist Snapper can drop while fishing in T7+ zones. There are no dedicated snapper schools, only normal fish schools.",
-      "Fish during off-peak hours to avoid competition for schools and portal camps.",
-      "Yellow-zone Mists are knockdown-only, bring your best gear for max yield, not a budget PvP setup.",
-      "An Avalonian gathering cape and pork pie (+15% yield) stack well with high-level fishing for extra throughput.",
-      "The rod can stay in your bag the whole run, Albion lets you fish without equipping it.",
+      "Yellow-zone Mists are knockdown-only, so wear efficient fishing gear instead of cheap throwaway gear.",
+      "The cape does not increase fishing yield. The Avalonian Fishing Rod is the Avalonian item that matters for fishing yield.",
+      "Do not list Avalonian Cape as required. Use any cape you prefer, such as a cheap cape, defensive cape, or utility cape.",
+      "Your fishing rod can stay in your inventory. You do not need to put it in your main hand to fish.",
+      "T7 fishing zones are not the default Mist you spawn into. You are usually hunting for better nested Mists, especially Epic and Legendary ones.",
+      "Puremist Snapper is a rare T7 Mist/Roads fish, not its own visible fishing school. Treat it as RNG upside, not stable hourly income.",
+      "A T7 Grandmaster Fisherman's Journal usually does not fill efficiently at low fishing levels. It becomes more realistic once you have stronger gear, higher fishing fame, and access to better Mists.",
+      "At lower fishing levels, most income comes from normal fish and chopped fish. Do not advertise Snapper or T7 journals as beginner income.",
+      "Pork Pie gives extra yield and carry weight, but beginners should check whether the extra fish value actually pays for the food.",
+      "Fish during off-peak hours if possible. Less competition means more active schools and fewer interruptions.",
+      "When the exit timer is low, scouting higher-rarity Wisps is often worth more than finishing one extra low-tier school.",
+      "Use the silver/hour numbers as realistic ranges, not guarantees. Market prices, Mist rarity, competition, and fishing level change the result heavily.",
     ],
+  
     references: [
+      {
+        title: "Albion Online Wiki: Mists",
+        url: "https://wiki.albiononline.com/wiki/Mists",
+      },
+      {
+        title: "Albion Online Wiki: Fishing",
+        url: "https://wiki.albiononline.com/wiki/Fishing",
+      },
+      {
+        title: "Albion Online Wiki: Fishing Rod",
+        url: "https://wiki.albiononline.com/wiki/Fishing_Rod",
+      },
       {
         title: "GremmyAngler: Beginner's Fishing Guide (Zero to Hero, Part 1)",
         url: "https://www.youtube.com/watch?v=oTcuphnd1io",
@@ -602,73 +629,94 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         url: "https://www.reddit.com/r/albiononline/comments/1qgyrag/comment/o0iiku1/",
       },
     ],
+  
     profitBuild: {
-      title: "Required Gear",
+      title: "Recommended Gear",
       description:
-        "Best fisherman set for your level plus top bag, mount, and Avalonian cape. Safe yellow Mists, no cheap kit needed.",
+        "Use the best fisherman set and fishing rod your level allows. The rod stays in your bag. The cape does not give fishing yield, so use any cape you prefer.",
+  
       slots: {
         head: {
           id: "T8_HEAD_GATHERER_FISH",
           name: "Elder's Fisherman Cap",
-          hint: "Best fisherman head for max yield",
+          hint: "Best endgame fisherman head for max yield. Use the highest tier you can wear.",
         },
+  
+        mainhand: {
+          id: "T4_MAIN_RAPIER_MORGANA",
+          name: "Adept's Bloodletter",
+          hint: "Weapon slot only. Use for mobility or defense. Never put your fishing rod here.",
+        },
+  
         armor: {
           id: "T8_ARMOR_GATHERER_FISH",
           name: "Elder's Fisherman Garb",
-          hint: "Best fishing yield",
+          hint: "Best endgame fishing yield. Use the highest tier you can wear.",
         },
+  
         shoes: {
           id: "T8_SHOES_GATHERER_FISH",
           name: "Elder's Fisherman Workboots",
-          hint: "Max yield + lowest fish weight",
+          hint: "Fishing yield and reduced fish weight. Use the highest tier you can wear.",
         },
+  
         cape: {
-          id: "T4_CAPEITEM_AVALON",
-          name: "Adept's Avalonian Cape",
-          hint: "Gathering yield bonus",
+          id: "T4_CAPE",
+          name: "Adept's Cape",
+          hint: "Cape does not increase fishing yield. Use any cape you prefer.",
         },
+  
         bag: {
           id: "T8_BAG",
           name: "Elder's Bag",
-          hint: "Best bag, more fish per trip",
+          hint: "More carry weight. Use the best bag you can afford.",
         },
+  
         mount: {
           id: "T8_MOUNT_OX",
           name: "Elder's Transport Ox",
-          hint: "Best carry weight mount",
+          hint: "High carry weight. In Mists, a faster mount can feel better, but yellow-zone risk is non-lethal.",
         },
+  
         food: {
           id: "T7_MEAL_PIE",
           name: "Pork Pie",
           quantity: 2,
-          hint: "+15% fishing yield, +30% carry weight: eat 2 per hour",
+          hint: "+15% gathering yield and +30% carry weight. Best once your fish/hour is high enough to justify the cost.",
         },
       },
+  
       inventory: [
+        {
+          id: "T8_2H_TOOL_FISHINGROD_AVALON",
+          name: "Elder's Avalonian Fishing Rod",
+          hint: "Best yield option if affordable. Stays in bag, cast without equipping.",
+        },
         {
           id: "T8_2H_TOOL_FISHINGROD",
           name: "Elder's Fishing Rod",
-          hint: "Stays in bag, cast without equipping",
+          hint: "Normal T8 alternative if Avalonian rod is too expensive. Use the highest tier you can wear.",
         },
         {
           id: "T3_FISHINGBAIT",
           name: "Fancy Fish Bait",
-          hint: "Use at every school for faster bites",
+          hint: "Use at active fishing schools for faster bites.",
         },
         {
           id: "T7_JOURNAL_FISHING_EMPTY",
           name: "Grandmaster Fisherman's Journal (Empty)",
-          hint: "Fills while fishing: sell full journal for bonus silver",
+          hint: "Bring only when fishing 60+ or when you can realistically fill it in higher-rarity Mists.",
         },
         {
           id: "T1_MEAL_SEAWEEDSALAD",
           name: "Seaweed Salad",
-          hint: "Optional (+fishing speed for fame grinding",
+          hint: "Optional fishing-speed food for fame grinding. Usually weaker than Pork Pie for silver farming.",
         },
       ],
     },
+  
     featured: true,
-    readTime: 7,
+    readTime: 10,
   },
   {
     slug: "ava-roads-fishing",

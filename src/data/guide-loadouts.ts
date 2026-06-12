@@ -21,10 +21,15 @@ const ESCAPE_SLOTS = {
 
 /** Travel slots for yellow Mists, safe zone; wear your best gear. */
 const MISTS_FISHING_TRAVEL_SLOTS = {
+  mainhand: {
+    id: "T4_MAIN_RAPIER_MORGANA",
+    name: "Adept's Bloodletter",
+    hint: "Main hand stays a weapon. Never equip the fishing rod here",
+  },
   cape: {
-    id: "T4_CAPEITEM_AVALON",
-    name: "Adept's Avalonian Cape",
-    hint: "Best gathering cape you have",
+    id: "T4_CAPE",
+    name: "Adept's Cape",
+    hint: "Cape does not increase fishing yield. Use any cape you prefer.",
   },
   bag: {
     id: "T8_BAG",
@@ -538,7 +543,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "10-30": {
       title: "Early Mists Fishing",
       description:
-        "Expert fisherman set with rod in bag. Yellow Mists are knockdown-only, wear your best gear.",
+        "Expert fisherman set, Avalonian fishing rod in bag. Fish your starting Uncommon mist; no T7 journal profit expected yet.",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
@@ -547,15 +552,14 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
       inventory: [
-        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "In bag, cast without equipping" },
+        { id: "T5_2H_TOOL_FISHINGROD_AVALON", name: "Expert's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
-        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
     },
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Master's fisherman set for T7 yellow Mist zones. Snapper/Sturgeon come from zone tier, not special schools.",
+        "Master's fisherman set. Hunt Rare+ nested mists for T7 zones; journal fill is still very slow at this level.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Fishing yield" },
@@ -564,15 +568,15 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
       },
       inventory: [
-        { id: "T6_2H_TOOL_FISHINGROD", name: "Master's Fishing Rod", hint: "In bag, cast without equipping" },
+        { id: "T6_2H_TOOL_FISHINGROD_AVALON", name: "Master's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
-        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Slow fill until you land Rare+ T7 mists consistently" },
       ],
     },
     "60+": {
       title: "Expert Mists Fishing",
       description:
-        "Grandmaster fisherman set with your best cape, bag, and mount. Rod stays in bag the whole run.",
+        "Grandmaster fisherman set, Avalonian fishing rod, T7 journal. Scout Rare/Epic/Legendary mists at 5:00 on the timer.",
       slots: {
         head: { id: "T7_HEAD_GATHERER_FISH", name: "Grandmaster's Fisherman Cap", hint: "Max fishing yield" },
         armor: { id: "T7_ARMOR_GATHERER_FISH", name: "Grandmaster's Fisherman Garb", hint: "Max fishing yield" },
@@ -581,9 +585,9 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag, cast without equipping" },
+        { id: "T7_2H_TOOL_FISHINGROD_AVALON", name: "Grandmaster's Avalonian Fishing Rod", hint: "Best yield rod for your tier. Bag only, never move to main hand" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
-        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "~1/hr in Rare+ T7 mists with this gear" },
         { id: "T1_MEAL_SEAWEEDSALAD", name: "Seaweed Salad", hint: "Optional speed buff" },
       ],
     },

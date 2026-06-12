@@ -6,8 +6,8 @@ export const guideReliabilityBySlug: Record<string, GuideReliability> = {
     lastUpdated: "2026-06-12",
   },
   "mists-fishing": {
-    status: "tested-by-me",
-    lastUpdated: "2026-06-12",
+    status: "community-checked",
+    lastUpdated: "2026-06-13",
   },
   "ava-roads-fishing": {
     status: "tested-by-me",

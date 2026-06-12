@@ -313,37 +313,72 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     hourlyOutput: [
       { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
       { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
-      { id: "T7_JOURNAL_FISHING_FULL", name: "Grandmaster Fisherman's Journal (Full)", quantity: 1 },
     ],
-    hourlyInputs: [
-      { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", quantity: 1, side: "sell" },
-    ],
+    hourlyInputs: [],
     hourlyConsumables: [
       { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
       { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2 },
     ],
     skillTiers: tiers(
-      SKILL_TIERS.fishing10_30,
+      {
+        ...SKILL_TIERS.fishing10_30,
+        description:
+          "Uncommon starting mist, chopped fish income. No T7 journal or Snapper modeled.",
+      },
       {
         ...SKILL_TIERS.fishing30_60,
         description:
-          "Master's gear, fish in T7 yellow Mist. Snapper is a random zone-tier catch, not a separate school.",
+          "Hunt Rare+ nested mists for T7 zones. Slow journal fill (~0.15/hr) and low Snapper odds at this level.",
+        hourlyOutput: [
+          { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
+          { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
+          {
+            id: "T7_JOURNAL_FISHING_FULL",
+            name: "Grandmaster Fisherman's Journal (Full)",
+            quantity: 0.15,
+          },
+        ],
+        hourlyInputs: [
+          {
+            id: "T7_JOURNAL_FISHING_EMPTY",
+            name: "Grandmaster Fisherman's Journal (Empty)",
+            quantity: 0.15,
+            side: "sell",
+          },
+        ],
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (T7 yellow mist, avg)",
-            quantity: 0.25,
+            name: "Puremist Snapper (Rare+ T7 mist, avg)",
+            quantity: 0.08,
           },
         ],
       },
       {
         ...SKILL_TIERS.fishing60plus,
         description:
-          "Grandmaster gear, T7 yellow Mist. Best Snapper odds from zone-tier fishing, not dedicated schools.",
+          "Rare/Epic/Legendary T7 mists with GM gear. ~1 T7 journal/hr and best Snapper odds when you find good zones.",
+        hourlyOutput: [
+          { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
+          { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
+          {
+            id: "T7_JOURNAL_FISHING_FULL",
+            name: "Grandmaster Fisherman's Journal (Full)",
+            quantity: 1,
+          },
+        ],
+        hourlyInputs: [
+          {
+            id: "T7_JOURNAL_FISHING_EMPTY",
+            name: "Grandmaster Fisherman's Journal (Empty)",
+            quantity: 1,
+            side: "sell",
+          },
+        ],
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (T7 yellow mist, avg)",
+            name: "Puremist Snapper (Rare+ T7 mist, avg)",
             quantity: 0.4,
           },
         ],
