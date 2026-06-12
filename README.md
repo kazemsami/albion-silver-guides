@@ -45,6 +45,9 @@ This is a fan-made project and is not affiliated with Sandbox Interactive GmbH. 
 
 ## License
 
-Copyright © 2026 Kazem Abou Setta. All rights reserved.
+Copyright © 2026 Kazem Abou Setta.
 
-This repository is source-available for transparency, learning, and contribution purposes only. See [LICENSE](LICENSE) for full terms.
+This project is free software licensed under the [GNU General Public License v3.0 or later](LICENSE). You may redistribute and modify it under those terms. There is no warranty.
+
+- Full license: [LICENSE](LICENSE)
+- Online copy: https://www.gnu.org/licenses/gpl-3.0.html

@@ -33,6 +33,7 @@ export const paypalDonateUrl = "https://www.paypal.me/kazemsam";
 
 export const sourceRepoUrl = "https://github.com/kazemsami/albion-silver";
 export const sourceLicenseUrl = `${sourceRepoUrl}/blob/main/LICENSE`;
+export const siteLicensePath = "/license";
 
 /** Feedback form deliveries (FormSubmit). Override with FEEDBACK_EMAIL if needed. */
 export const feedbackEmail = "support@albion-silver.me";
