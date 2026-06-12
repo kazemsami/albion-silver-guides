@@ -5,6 +5,7 @@ import {
   difficultyLabels,
   zoneTypeLabels,
 } from "@/types/guide";
+import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import {
   getGuideSilverDisplay,
   hasLiveProfitRange,
@@ -56,6 +57,7 @@ export function GuideCard({
         >
           {zoneTypeLabels[guide.zoneType]}
         </span>
+        <GuideReliabilityBadges reliability={guide.reliability} />
       </div>
 
       <h3 className="font-display text-lg font-semibold text-parchment transition-colors group-hover:text-gold">

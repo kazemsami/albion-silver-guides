@@ -18,6 +18,15 @@ export function hasLiveProfitRange(
   return profitRange != null;
 }
 
+export function formatGuideLastUpdated(isoDate: string): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(year, month - 1, day));
+}
+
 const VALID_CATEGORIES = new Set<Guide["category"]>([
   "gathering",
   "crafting",

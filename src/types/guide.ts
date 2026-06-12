@@ -10,6 +10,18 @@ export type Difficulty = "beginner" | "intermediate" | "advanced";
 /** Where the activity primarily takes place — safe royal/yellow zones vs full-loot risk. */
 export type ZoneType = "safe" | "dangerous";
 
+/** How thoroughly the guide's numbers and steps have been verified. */
+export type GuideReviewStatus =
+  | "tested-by-me"
+  | "community-checked"
+  | "needs-review";
+
+export interface GuideReliability {
+  status: GuideReviewStatus;
+  /** ISO date (YYYY-MM-DD) when the guide content was last reviewed or updated. */
+  lastUpdated: string;
+}
+
 export interface SilverTier {
   label: string;
   amount?: number;
@@ -155,6 +167,7 @@ export interface Guide {
   tips: string[];
   featured: boolean;
   readTime: number;
+  reliability: GuideReliability;
 }
 
 export const categoryLabels: Record<GuideCategory, string> = {
@@ -182,4 +195,10 @@ export const difficultyLabels: Record<Difficulty, string> = {
 export const zoneTypeLabels: Record<ZoneType, string> = {
   safe: "Safe Zones",
   dangerous: "Dangerous Zones",
+};
+
+export const reviewStatusLabels: Record<GuideReviewStatus, string> = {
+  "tested-by-me": "Tested by me",
+  "community-checked": "Community checked",
+  "needs-review": "Needs review",
 };
