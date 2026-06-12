@@ -1,0 +1,493 @@
+@import "tailwindcss";
+
+/* Dark theme (default Albion aesthetic) */
+:root,
+[data-theme="dark"] {
+  --obsidian: #0d0b09;
+  --obsidian-light: #161310;
+  --parchment: #e8dcc8;
+  --gold: #c9a227;
+  --gold-dim: #8a7020;
+  --on-accent: #0d0b09;
+  --slot-bg: #0f0c09;
+  --slot-border: #3d3424;
+  --item-slot-bg: #1a1510;
+  --item-slot-border: #4a3f2a;
+  --item-slot-badge-bg: #1a1510;
+  --wiki-border: #3d3424;
+  --wiki-table-head: #1a1612;
+  --wiki-table-stripe: #12100d;
+  --wiki-note-bg: #161310;
+  --header-bg: color-mix(in srgb, var(--obsidian) 95%, transparent);
+  --text-muted: color-mix(in srgb, var(--parchment) 55%, transparent);
+  --text-faint: color-mix(in srgb, var(--parchment) 38%, transparent);
+  --accent-subtle: color-mix(in srgb, var(--gold) 10%, transparent);
+  --accent-subtle-hover: color-mix(in srgb, var(--gold) 18%, transparent);
+  --border-subtle: color-mix(in srgb, var(--gold) 14%, transparent);
+  --border-strong: color-mix(in srgb, var(--gold) 38%, transparent);
+  --overlay: rgba(0, 0, 0, 0.5);
+  --texture-opacity: 0.03;
+  --card-radius: 0.75rem;
+  --card-shadow: 0 4px 30px rgba(201, 162, 39, 0.08);
+  --card-hover-shadow: 0 4px 30px rgba(201, 162, 39, 0.08);
+  --btn-primary-hover-shadow: 0 0 30px rgba(201, 162, 39, 0.25);
+  --logo-shadow: drop-shadow(0 0 10px rgba(201, 162, 39, 0.35));
+  color-scheme: dark;
+}
+
+/* Light theme — parchment / OSRS wiki inspired */
+[data-theme="light"] {
+  --obsidian: #c9c3b6;
+  --obsidian-light: #e0dbd0;
+  --parchment: #1f1c18;
+  --gold: #0645ad;
+  --gold-dim: #0b0080;
+  --on-accent: #ffffff;
+  --slot-bg: #d4cec2;
+  --slot-border: #9a9285;
+  --item-slot-bg: #d0cac0;
+  --item-slot-border: #8f877a;
+  --item-slot-badge-bg: #e0dbd0;
+  --wiki-border: #8f877a;
+  --wiki-table-head: #c4bdb0;
+  --wiki-table-stripe: #d8d2c6;
+  --wiki-note-bg: #d5cfc3;
+  --header-bg: #d5cfc3;
+  --text-muted: #4a453c;
+  --text-faint: #5c564c;
+  --accent-subtle: rgba(6, 69, 173, 0.1);
+  --accent-subtle-hover: rgba(6, 69, 173, 0.16);
+  --border-subtle: rgba(143, 135, 122, 0.55);
+  --border-strong: rgba(6, 69, 173, 0.45);
+  --overlay: rgba(31, 28, 24, 0.45);
+  --texture-opacity: 0.012;
+  --card-radius: 3px;
+  --card-shadow: 0 1px 3px rgba(31, 28, 24, 0.1);
+  --card-hover-shadow: 0 2px 6px rgba(31, 28, 24, 0.12);
+  --btn-primary-hover-shadow: 0 2px 8px rgba(6, 69, 173, 0.28);
+  --logo-shadow: drop-shadow(0 1px 2px rgba(31, 28, 24, 0.18));
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-obsidian: var(--obsidian);
+  --color-obsidian-light: var(--obsidian-light);
+  --color-parchment: var(--parchment);
+  --color-gold: var(--gold);
+  --color-gold-dim: var(--gold-dim);
+  --color-on-accent: var(--on-accent);
+  --color-slot-bg: var(--slot-bg);
+  --color-slot-border: var(--slot-border);
+  --color-item-slot-bg: var(--item-slot-bg);
+  --color-item-slot-border: var(--item-slot-border);
+  --color-item-slot-badge-bg: var(--item-slot-badge-bg);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-cinzel);
+}
+
+body {
+  background: var(--obsidian);
+  color: var(--parchment);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+[data-theme="light"] body {
+  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+}
+
+[data-theme="light"] .font-display {
+  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.font-display {
+  font-family: var(--font-cinzel), Georgia, serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--texture-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── Shared UI primitives ───────────────────────────────────────── */
+
+.ui-control {
+  border: 1px solid var(--border-strong);
+  background-color: var(--obsidian-light);
+  color: var(--parchment);
+  border-radius: 0.5rem;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.ui-control:hover {
+  border-color: var(--gold);
+  background-color: color-mix(in srgb, var(--obsidian-light) 92%, var(--gold) 8%);
+}
+
+.ui-control:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+[data-theme="light"] .ui-control {
+  box-shadow: inset 0 1px 2px rgba(31, 28, 24, 0.05);
+}
+
+.ui-select {
+  cursor: pointer;
+  padding: 0.5rem 2.25rem 0.5rem 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  appearance: none;
+}
+
+.ui-select-wrap {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.ui-select-chevron {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  right: 0.625rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+}
+
+.btn-primary {
+  border-radius: 0.5rem;
+  background: var(--gold);
+  color: var(--on-accent);
+  font-weight: 600;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--gold) 90%, white);
+  box-shadow: var(--btn-primary-hover-shadow);
+}
+
+.btn-secondary {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-strong);
+  color: var(--gold);
+  font-weight: 500;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold);
+  background: var(--accent-subtle);
+}
+
+.feedback-dialog::backdrop {
+  background: var(--overlay);
+}
+
+.feedback-dialog:not([open]) {
+  display: none;
+}
+
+.card-interactive {
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.card-interactive:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.filter-chip {
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  border-radius: 0.5rem;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.filter-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--parchment);
+  background: var(--accent-subtle);
+}
+
+.filter-chip-active {
+  border-color: var(--border-strong);
+  background: var(--accent-subtle-hover);
+  color: var(--gold);
+}
+
+.site-logo {
+  filter: var(--logo-shadow);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-faint {
+  color: var(--text-faint);
+}
+
+/* ── Light theme surfaces & wiki styling ────────────────────────── */
+
+[data-theme="light"] .theme-surface {
+  border-radius: var(--card-radius);
+  border-color: var(--wiki-border) !important;
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .hero-section {
+  background: var(--obsidian-light);
+  border-bottom-color: var(--wiki-border) !important;
+}
+
+[data-theme="light"] .hero-section .hero-glow {
+  display: none;
+}
+
+[data-theme="light"] .category-band {
+  background: color-mix(in srgb, var(--obsidian-light) 65%, var(--obsidian) 35%);
+  border-top-color: var(--wiki-border) !important;
+}
+
+[data-theme="light"] footer {
+  background: color-mix(in srgb, var(--obsidian-light) 80%, var(--obsidian) 20%);
+  border-top-color: var(--wiki-border) !important;
+}
+
+[data-theme="light"] .wiki-heading {
+  border-bottom: 1px solid var(--wiki-border);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.15rem;
+}
+
+[data-theme="light"] .wiki-note {
+  border-radius: var(--card-radius);
+  border: 1px solid var(--wiki-border);
+  background: var(--wiki-note-bg) !important;
+}
+
+[data-theme="light"] .wiki-table-wrap {
+  border-radius: var(--card-radius);
+  border-color: var(--wiki-border) !important;
+  background: var(--obsidian-light);
+}
+
+[data-theme="light"] .wiki-table-wrap table {
+  border-collapse: collapse;
+}
+
+[data-theme="light"] .wiki-table-wrap > p {
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+[data-theme="light"] .wiki-table-wrap thead tr {
+  background: var(--wiki-table-head);
+}
+
+[data-theme="light"] .wiki-table-wrap th {
+  border: 1px solid var(--wiki-border);
+  padding: 0.4rem 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--parchment);
+}
+
+[data-theme="light"] .wiki-table-wrap td {
+  border: 1px solid var(--wiki-border);
+  padding: 0.4rem 0.55rem;
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .wiki-table-wrap tbody tr:nth-child(even) {
+  background: var(--wiki-table-stripe);
+}
+
+[data-theme="light"] .wiki-table-wrap tbody tr {
+  border-bottom: none;
+}
+
+[data-theme="light"] .site-header {
+  backdrop-filter: none;
+  background: var(--header-bg) !important;
+  border-bottom-color: var(--wiki-border) !important;
+}
+
+/* Article intro on guide pages — never inherit nav header chrome */
+.guide-intro {
+  background: transparent;
+  border: none;
+}
+
+[data-theme="light"] .mobile-nav-overlay {
+  background: var(--overlay) !important;
+}
+
+[data-theme="light"] a:visited {
+  color: var(--gold-dim);
+}
+
+[data-theme="light"] a:hover {
+  text-decoration: underline;
+}
+
+[data-theme="light"] .economics-table-inner {
+  background: var(--slot-bg) !important;
+  border-color: var(--wiki-border) !important;
+}
+
+[data-theme="light"] .profit-summary-box {
+  border-color: var(--wiki-border) !important;
+  background: var(--wiki-note-bg) !important;
+}
+
+[data-theme="light"] .profit-hero-panel {
+  background: var(--wiki-note-bg) !important;
+  border-color: var(--wiki-border) !important;
+}
+
+/* Badge contrast in light mode */
+[data-theme="light"] .text-emerald-400 {
+  color: #0d6e58;
+}
+
+[data-theme="light"] .text-rose-400 {
+  color: #b91c1c;
+}
+
+[data-theme="light"] .text-amber-400 {
+  color: #9a5f00;
+}
+
+[data-theme="light"] .text-sky-400 {
+  color: #0369a1;
+}
+
+[data-theme="light"] .text-orange-400 {
+  color: #b45309;
+}
+
+[data-theme="light"] .text-emerald-400\/90 {
+  color: #0d6e58;
+}
+
+[data-theme="light"] [class*="bg-emerald-400/10"] {
+  background-color: rgba(13, 110, 88, 0.12) !important;
+}
+
+[data-theme="light"] [class*="border-emerald-400/30"] {
+  border-color: rgba(13, 110, 88, 0.35) !important;
+}
+
+[data-theme="light"] [class*="bg-amber-400/10"] {
+  background-color: rgba(154, 95, 0, 0.12) !important;
+}
+
+[data-theme="light"] [class*="border-amber-400/30"] {
+  border-color: rgba(154, 95, 0, 0.35) !important;
+}
+
+[data-theme="light"] [class*="bg-rose-400/10"] {
+  background-color: rgba(185, 28, 28, 0.1) !important;
+}
+
+[data-theme="light"] [class*="border-rose-400/30"] {
+  border-color: rgba(185, 28, 28, 0.32) !important;
+}
+
+[data-theme="light"] [class*="bg-sky-400/10"] {
+  background-color: rgba(3, 105, 161, 0.11) !important;
+}
+
+[data-theme="light"] [class*="border-sky-400/30"] {
+  border-color: rgba(3, 105, 161, 0.32) !important;
+}
+
+[data-theme="light"] [class*="bg-orange-400/10"] {
+  background-color: rgba(180, 83, 9, 0.11) !important;
+}
+
+[data-theme="light"] [class*="border-orange-400/30"] {
+  border-color: rgba(180, 83, 9, 0.32) !important;
+}
+
+/* Improve faint text contrast on light backgrounds */
+[data-theme="light"] .text-parchment\/30,
+[data-theme="light"] .text-parchment\/35 {
+  color: var(--text-faint);
+}
+
+[data-theme="light"] .text-parchment\/40,
+[data-theme="light"] .text-parchment\/45 {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .text-parchment\/50,
+[data-theme="light"] .text-parchment\/55,
+[data-theme="light"] .text-parchment\/60,
+[data-theme="light"] .text-parchment\/65,
+[data-theme="light"] .text-parchment\/70 {
+  color: color-mix(in srgb, var(--parchment) 82%, var(--text-muted) 18%);
+}
+
+.item-slot {
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .item-slot {
+  box-shadow: inset 0 0 6px rgba(31, 28, 24, 0.1);
+}
+
+[data-theme="light"] details summary {
+  color: var(--gold);
+}
+
+[data-theme="light"] details summary:hover {
+  text-decoration: underline;
+}
+
+/* Giscus comment embed on guide pages */
+.giscus-wrap,
+.giscus,
+.giscus iframe {
+  width: 100%;
+}

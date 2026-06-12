@@ -1,0 +1,66 @@
+# Source-Available License
+
+Copyright © 2026 Kazem Abou Setta. All rights reserved.
+
+This repository and its contents are made available for transparency, learning, review, and contribution purposes only.
+
+## 1. Scope
+
+This license applies to the original source code, documentation, design files, assets, configuration files, and other materials created by Kazem Abou Setta and included in this repository, unless a file clearly states otherwise.
+
+Third-party libraries, dependencies, frameworks, fonts, images, icons, packages, services, and other external materials are governed by their own respective licenses and terms.
+
+## 2. Permitted Use
+
+You may:
+
+1. view and inspect the contents of this repository;
+2. fork this repository on GitHub as permitted by GitHub’s platform functionality;
+3. clone, install, build, and run the project locally solely for evaluation, testing, issue reproduction, or preparing contributions to this repository;
+4. submit issues, suggestions, bug reports, pull requests, or other contributions to this repository.
+
+These permissions are granted only for personal review, learning, testing, and contribution to this project.
+
+## 3. Restrictions
+
+You may not, without explicit prior written permission from the copyright owner:
+
+1. copy, reuse, redistribute, publish, sublicense, sell, rent, lease, or commercialize this repository, its code, or any substantial part of it;
+2. deploy this repository, its code, or any substantial part of it as another website, application, product, service, template, client project, or commercial project;
+3. create, publish, or distribute derivative works based on this repository, except for modifications made solely for the purpose of submitting contributions back to this repository;
+4. use this repository or any substantial part of it in a competing or commercial product or service;
+5. remove, obscure, or alter copyright notices, license notices, attribution notices, or ownership markings;
+6. claim ownership of this repository, its code, design, structure, documentation, or original assets;
+7. use the project name, logos, branding, visual identity, or trademarks except as necessary to refer to the project when submitting contributions.
+
+## 4. Contributions
+
+By submitting a pull request, issue, suggestion, bug report, code change, documentation change, design change, or other contribution, you confirm that:
+
+1. you have the legal right to submit the contribution;
+2. the contribution does not infringe the rights of any third party;
+3. the contribution does not contain code or material that is incompatible with this project’s licensing terms.
+
+You grant Kazem Abou Setta a non-exclusive, worldwide, royalty-free, irrevocable license to use, reproduce, modify, publish, distribute, display, and include your contribution in this project under these same terms.
+
+You retain any copyright you may have in your contribution, unless otherwise agreed in writing.
+
+## 5. No Patent or Trademark License
+
+No patent rights, trademark rights, or branding rights are granted under this license.
+
+## 6. Termination
+
+Any permission granted under this license terminates automatically if you violate these terms.
+
+## 7. No Warranty
+
+This software is provided “as is,” without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+## 8. Limitation of Liability
+
+In no event shall the copyright owner be liable for any claim, damages, or other liability arising from, out of, or in connection with the software or the use of this repository.
+
+## 9. Permission Requests
+
+For permission to use, license, deploy, redistribute, commercialize, or otherwise use this project outside the terms above, contact the copyright owner directly and obtain explicit written permission.
