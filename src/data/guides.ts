@@ -1091,9 +1091,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     tips: [
       "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost. Filling journals yourself removes the buy cost and is the most profitable approach.",
       "This guide assumes a full T8 setup: T8 laborer houses with T8 furniture processing T7 journals at the 150% happiness cap (~58 T7 resources per journal).",
-      "Carry two journals at once: one generalist trophy journal (fills on any fame) plus one profession journal (gathering, crafting, or mercenary).",
-      "T7 gathering journals fill while harvesting T7 or T8 resources of the matching type.",
-      "Laborers process journals at or below their tier, a T8 laborer handles T7 journals. You hire laborers at the house tier; they do not level up from journal turn-ins.",
+      "Laborers process journals at or below their tier: a T8 laborer handles T7 journals at 150% return rate.",
       "Check market prices before buying filled journals, margins vary by city and journal tier. Caerleon and Brecilien often have the best journal spreads.",
       "Other ways to profit: flip empty/full journals on the market, use returned resources for crafting, or sell leveled laborer contracts.",
     ],
