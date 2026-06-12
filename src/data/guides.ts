@@ -367,7 +367,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Generalist trophy journals fill from any fame: fishing, camps, and gank kills all progress them passively.",
       "The lucky-sample tier (~750k–1.2M/hr from 11.5M ÷ 10–15 hr) is not a stable baseline. Typical roam hours are much lower before tax, deaths, and bad RNG.",
       "The profit calculator excludes listing tax (~6.5% with Premium). Death cost models ~0.15 full kit replacements per hour, not a single cheap weapon.",
-      "Bank after every good kill or when journals are full. One gank can spike income; a death with a full bag hurts more than losing T2 gear.",
+      "Bank after every good kill or when journals are full. PvP gear and tomes from the sample haul are high-variance; do not treat them as steady hourly income.",
       "Popularized by Stalker313's T2 black zone series: low IP bait, mixed open-world income, not a single-trick gank build.",
     ],
     references: [

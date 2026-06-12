@@ -242,8 +242,8 @@ export const SKILL_TIERS = {
   bzRoamingLearning: {
     id: "learning",
     label: "Learning routes",
-    description: "Quiet zones, fewer fights and less camp traffic",
-    outputMultiplier: 0.55,
+    description: "Quiet zones, fewer camps and less journal throughput",
+    outputMultiplier: 0.22,
     consumableMultiplier: 0.8,
     inputMultiplier: 0.55,
   },
@@ -251,15 +251,15 @@ export const SKILL_TIERS = {
     id: "verified",
     label: "Baseline roam",
     description:
-      "Fish, camps, and journals without misclassified sigils (~130-200k/hr before tax and deaths)",
-    outputMultiplier: 1,
+      "Typical fish, camps, and journals (~130k/hr net before tax; sample loot amortized down)",
+    outputMultiplier: 0.38,
   },
   bzRoamingHot: {
     id: "hot",
     label: "Lucky sample haul",
     description:
-      "Community 11.5M over ~10-15 hr (~750k-1.2M/hr): treasure-heavy, not a stable baseline",
-    outputMultiplier: 1.25,
+      "Full community sample rates minus sigils (~350k/hr net). 11.5M/10–15 hr still includes outliers",
+    outputMultiplier: 1,
   },
 } as const satisfies Record<string, SkillTier>;
 

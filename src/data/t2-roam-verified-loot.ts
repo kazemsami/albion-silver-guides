@@ -55,19 +55,19 @@ const verifiedSessionLoot: VerifiedLootLine[] = [
   { id: "TREASURE_DECORATIVE_RARITY3", name: "Dragon Bust / Stone Statue (T6)", sessionQty: 4 },
   { id: "TREASURE_DECORATIVE_RARITY2", name: "Black Horn / Stone Statue (T5)", sessionQty: 16 },
 
-  // Tomes & PvP gear (estimated, thin market)
-  {
-    id: "TREASURE_KNOWLEDGE_RARITY2",
-    name: "Tomes of Insight (mixed tiers)",
-    sessionQty: 16,
-    estimatedSilverPerUnit: 95_000,
-  },
-  {
-    id: "T5_ARMOR_LEATHER_SET1",
-    name: "PvP gear loot (mixed tiers / enchants)",
-    sessionQty: 42,
-    estimatedSilverPerUnit: 72_000,
-  },
+  // PvP gear and tomes vary wildly in price and drop rate — excluded from hourly economics.
+  // {
+  //   id: "TREASURE_KNOWLEDGE_RARITY2",
+  //   name: "Tomes of Insight (mixed tiers)",
+  //   sessionQty: 16,
+  //   estimatedSilverPerUnit: 95_000,
+  // },
+  // {
+  //   id: "T5_ARMOR_LEATHER_SET1",
+  //   name: "PvP gear loot (mixed tiers / enchants)",
+  //   sessionQty: 42,
+  //   estimatedSilverPerUnit: 72_000,
+  // },
 ];
 
 export function getT2RoamVerifiedHourlyOutput(): HourlyItem[] {

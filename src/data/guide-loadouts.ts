@@ -513,6 +513,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between camps and chests" },
         { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Major income when full" },
+        { id: "T4_JOURNAL_MERCENARY_EMPTY", name: "Adept Mercenary's Journal (Empty)", hint: "Fills on camp mob kills" },
         { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on fish, camps, kills" },
         { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Extract with journal stacks" },
         { id: "T4_POTION_ENERGY", name: "Energy Potion", hint: "Extra ability uptime in PvP" },
@@ -521,7 +522,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     hot: {
       title: "T2 Roam (Active Zone)",
       description:
-        "Same kit when zones are busy: more PvP and chests on top of the fishing + journal baseline.",
+        "Same kit on busy days: more PvP and chest RNG. Matches the lucky 11.5M sample tier, not typical hourly income.",
       slots: {
         head: {
           id: "T2_HEAD_PLATE_SET1",
@@ -575,6 +576,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between fights" },
         { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Fills while fishing" },
+        { id: "T4_JOURNAL_MERCENARY_EMPTY", name: "Adept Mercenary's Journal (Empty)", hint: "Fills on camp mob kills" },
         { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on any fame" },
         { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage" },
         { id: "T4_POTION_ENERGY", name: "Energy Potion", hint: "Ability energy" },
