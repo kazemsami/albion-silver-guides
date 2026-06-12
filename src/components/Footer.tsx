@@ -2,7 +2,12 @@ import Link from "next/link";
 import { categoryLabels } from "@/types/guide";
 import type { GuideCategory } from "@/types/guide";
 import { FeedbackButton } from "@/components/FeedbackDialog";
-import { copyrightHolder, copyrightYear, licenseName } from "@/lib/license";
+import {
+  copyrightHolder,
+  copyrightYear,
+  gplLicenseUrl,
+  licenseName,
+} from "@/lib/license";
 import {
   paypalDonateUrl,
   siteLicensePath,
@@ -77,8 +82,16 @@ export function Footer() {
 
         <div className="mt-10 border-t border-gold/10 pt-6 text-center text-xs leading-relaxed text-parchment/30">
           <p>
-            Copyright © {copyrightYear} {copyrightHolder}. Free software under
-            the {licenseName}. No warranty.
+            Copyright © {copyrightYear} {copyrightHolder}. This project is free
+            software licensed under the{" "}
+            <Link
+              href={siteLicensePath}
+              className="text-parchment/45 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              {licenseName}
+            </Link>
+            . You may redistribute and modify it under those terms. There is no
+            warranty.
           </p>
           <p className="mt-2">
             <a
@@ -90,20 +103,22 @@ export function Footer() {
               Source code
             </a>
             {" · "}
-            <Link
-              href={siteLicensePath}
-              className="text-parchment/45 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-            >
-              License
-            </Link>
-            {" · "}
             <a
               href={sourceLicenseUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-parchment/45 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
             >
-              Full GPLv3 text
+              LICENSE file
+            </a>
+            {" · "}
+            <a
+              href={gplLicenseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-parchment/45 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              GPLv3 on gnu.org
             </a>
             {" · "}
             Albion Silver Guides · Fan-made project

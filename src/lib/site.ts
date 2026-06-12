@@ -31,7 +31,7 @@ export const siteUrl = normalizeSiteUrl();
 
 export const paypalDonateUrl = "https://www.paypal.me/kazemsam";
 
-export const sourceRepoUrl = "https://github.com/kazemsami/albion-silver";
+export const sourceRepoUrl = "https://github.com/kazemsami/albion-silver-guides";
 export const sourceLicenseUrl = `${sourceRepoUrl}/blob/main/LICENSE`;
 export const siteLicensePath = "/license";
 
