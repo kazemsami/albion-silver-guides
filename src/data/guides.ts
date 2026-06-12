@@ -1,6 +1,7 @@
 import type { Guide } from "@/types/guide";
+import { attachGuideReliability } from "@/data/guide-reliability";
 
-export const guides: Guide[] = [
+const rawGuides: Omit<Guide, "reliability">[] = [
   {
     slug: "t4-ore-mining-yellow-zone",
     title: "T4 Ore Mining in Yellow Zones",
@@ -1074,6 +1075,8 @@ export const guides: Guide[] = [
     readTime: 8,
   },
 ];
+
+export const guides: Guide[] = attachGuideReliability(rawGuides);
 
 export function getGuideBySlug(slug: string): Guide | undefined {
   return guides.find((g) => g.slug === slug);

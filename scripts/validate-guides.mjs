@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 
 const src = readFileSync("src/data/guides.ts", "utf8");
+const reliabilitySrc = readFileSync("src/data/guide-reliability.ts", "utf8");
 const economicsSrc = readFileSync("src/data/guide-economics.ts", "utf8");
 const loadoutsSrc = readFileSync("src/data/guide-loadouts.ts", "utf8");
 const laborerSrc = readFileSync("src/data/laborer-specialties.ts", "utf8");
@@ -55,6 +56,10 @@ const uniqueIds = [...new Set(itemIds)];
 for (const slug of blocks.map((b) => b.slice(0, b.indexOf('"')))) {
   if (!economicsSrc.includes(`"${slug}"`)) {
     console.log(`WARN ${slug} has no hourly economics config`);
+  }
+  if (!reliabilitySrc.includes(`"${slug}"`)) {
+    console.log(`FAIL ${slug} missing reliability label`);
+    failed++;
   }
 }
 

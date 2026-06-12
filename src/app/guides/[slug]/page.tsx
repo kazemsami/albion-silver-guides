@@ -11,6 +11,7 @@ import {
   fetchAllGuidesProfitRangesByCity,
   fetchGuidePricing,
 } from "@/lib/guide-economics";
+import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import { GuideComments } from "@/components/GuideComments";
 import { RelatedGuides } from "@/components/RelatedGuides";
 import { GuideProfitCalculator } from "@/components/GuideProfitCalculator";
@@ -112,6 +113,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
           >
             {difficultyLabels[guide.difficulty]}
           </span>
+          <GuideReliabilityBadges reliability={guide.reliability} size="md" />
           <span className="text-xs text-parchment/40">
             {guide.readTime} min read
           </span>
