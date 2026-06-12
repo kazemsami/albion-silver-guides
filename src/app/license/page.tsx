@@ -5,8 +5,10 @@ import {
   copyrightHolder,
   copyrightYear,
   gplLicenseUrl,
+  licenseGrant,
   licenseName,
-  licenseNotice,
+  licenseShortNotice,
+  licenseSummary,
   programName,
 } from "@/lib/license";
 
@@ -35,8 +37,7 @@ export default function LicensePage() {
       </h1>
 
       <p className="mt-4 leading-relaxed text-parchment/70">
-        {programName} is free software. You may redistribute and modify it under
-        the terms of the {licenseName}.
+        {licenseSummary}
       </p>
 
       <section className="theme-surface mt-8 rounded-xl border border-gold/15 bg-obsidian-light p-6">
@@ -53,18 +54,20 @@ export default function LicensePage() {
           Warranty disclaimer
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-parchment/65">
-          This program is provided without warranty of any kind, including
-          implied warranties of merchantability or fitness for a particular
-          purpose. See the full license for details.
+          {licenseGrant} See the LICENSE file or GPLv3 text for details.
         </p>
       </section>
 
       <section className="theme-surface mt-6 rounded-xl border border-gold/15 bg-obsidian-light p-6">
         <h2 className="font-display text-xl font-semibold text-parchment">
-          Full license text
+          Program notice
         </h2>
+        <p className="mt-3 text-sm leading-relaxed text-parchment/65">
+          The repository LICENSE file contains the complete GPLv3 text. This
+          notice identifies {programName} and its copyright holder.
+        </p>
         <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg border border-parchment/10 bg-slot-bg p-4 font-mono text-xs leading-relaxed text-parchment/70">
-          {licenseNotice}
+          {licenseShortNotice}
         </pre>
         <ul className="mt-4 space-y-2 text-sm">
           <li>

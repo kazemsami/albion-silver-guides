@@ -6,6 +6,7 @@ import {
   copyrightHolder,
   copyrightYear,
   gplLicenseUrl,
+  licenseGrant,
   licenseName,
 } from "@/lib/license";
 import {
@@ -90,8 +91,7 @@ export function Footer() {
             >
               {licenseName}
             </Link>
-            . You may redistribute and modify it under those terms. There is no
-            warranty.
+            . {licenseGrant}
           </p>
           <p className="mt-2">
             <a
