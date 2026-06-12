@@ -6,7 +6,6 @@ import {
 } from "@/data/laborer-specialties";
 import type { HourlyItem } from "@/types/guide";
 import { SKILL_TIERS, tiers } from "@/data/guide-skill-tiers";
-import { getT2RoamVerifiedHourlyOutput } from "@/data/t2-roam-verified-loot";
 
 /** Butchered T7-and-lower bycatch → chopped fish (avg). */
 const AVA_CHOPS_PER_FISH = 15;
@@ -195,84 +194,6 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       SKILL_TIERS.corruptedSlayer,
     ),
     defaultSkillTierId: "stalker",
-  },
-  "t2-blackzone-roaming": {
-    // Community sample loot (minus Royal Sigils — not from roaming). Death cost uses full T2 kit replace rate.
-    hourlyOutput: getT2RoamVerifiedHourlyOutput(),
-    hourlyInputs: [
-      {
-        id: "T4_JOURNAL_FISHING_EMPTY",
-        name: "Empty fisher journals (restock)",
-        quantity: 2,
-        side: "buy",
-      },
-      {
-        id: "T4_JOURNAL_MERCENARY_EMPTY",
-        name: "Empty mercenary journals (restock)",
-        quantity: 1,
-        side: "buy",
-      },
-      {
-        id: "T2_HEAD_PLATE_SET1",
-        name: "Novice's Soldier Helmet (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_ARMOR_PLATE_SET1",
-        name: "Novice's Soldier Armor (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_SHOES_PLATE_SET1",
-        name: "Novice's Soldier Boots (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_MAIN_FIRESTAFF",
-        name: "Novice's Fire Staff (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_OFF_SHIELD",
-        name: "Novice's Shield (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_CAPE",
-        name: "Novice's Cape (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_BAG",
-        name: "Novice's Bag (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-      {
-        id: "T2_MOUNT_MULE",
-        name: "Novice's Mule (kit replacement)",
-        quantity: 0.15,
-        side: "buy",
-      },
-    ],
-    hourlyConsumables: [
-      { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
-      { id: "T4_MEAL_STEW", name: "Goat Stew", quantity: 2 },
-      { id: "T3_POTION_STONESKIN", name: "Minor Resistance Potion", quantity: 2 },
-      { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", quantity: 1 },
-    ],
-    skillTiers: tiers(
-      SKILL_TIERS.bzRoamingLearning,
-      SKILL_TIERS.bzRoamingVerified,
-      SKILL_TIERS.bzRoamingHot,
-    ),
-    defaultSkillTierId: "verified",
   },
   "shoreline-fishing-guide": {
     hourlyOutput: [

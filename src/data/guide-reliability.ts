@@ -45,10 +45,6 @@ export const guideReliabilityBySlug: Record<string, GuideReliability> = {
     status: "needs-review",
     lastUpdated: "2026-06-12",
   },
-  "t2-blackzone-roaming": {
-    status: "community-checked",
-    lastUpdated: "2026-06-12",
-  },
 };
 
 export function attachGuideReliability(

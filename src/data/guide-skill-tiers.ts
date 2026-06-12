@@ -239,28 +239,6 @@ export const SKILL_TIERS = {
     outputMultiplier: 1.25,
     inputMultiplier: 1.1,
   },
-  bzRoamingLearning: {
-    id: "learning",
-    label: "Learning routes",
-    description: "Quiet zones, fewer camps and less journal throughput",
-    outputMultiplier: 0.22,
-    consumableMultiplier: 0.8,
-    inputMultiplier: 0.55,
-  },
-  bzRoamingVerified: {
-    id: "verified",
-    label: "Baseline roam",
-    description:
-      "Typical fish, camps, and journals (~130k/hr net before tax; sample loot amortized down)",
-    outputMultiplier: 0.38,
-  },
-  bzRoamingHot: {
-    id: "hot",
-    label: "Lucky sample haul",
-    description:
-      "Full community sample rates minus sigils (~350k/hr net). 11.5M/10–15 hr still includes outliers",
-    outputMultiplier: 1,
-  },
 } as const satisfies Record<string, SkillTier>;
 
 export function tiers(...items: SkillTier[]): SkillTier[] {
