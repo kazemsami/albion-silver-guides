@@ -225,7 +225,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.fishing30_60,
         description:
-          "Master's gear, seek T7 yellow Mist zones for a chance at Puremist Snapper",
+          "Master's gear, fish in T7 yellow Mist. Snapper is a random zone-tier catch, not a separate school.",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
@@ -237,7 +237,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.fishing60plus,
         description:
-          "Grandmaster gear, best odds of Puremist Snapper in T7 yellow Mist",
+          "Grandmaster gear, T7 yellow Mist. Best Snapper odds from zone-tier fishing, not dedicated schools.",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
@@ -298,7 +298,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         ...SKILL_TIERS.avaExpert,
         hourlyOutput: avaRoadsFishOutput(550, AVA_T8_STURGEON_SHARE),
         description:
-          "T8 max spec, ~550 fish/hr on deep T8 road maps + snapper pools",
+          "T8 max spec, ~550 fish/hr on deep T8 road maps. Sturgeon/Snapper from zone-tier RNG on normal schools.",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",

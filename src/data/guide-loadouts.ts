@@ -43,7 +43,7 @@ const FISHING_COMBAT_SLOTS = {
   mainhand: {
     id: "T4_MAIN_RAPIER_MORGANA",
     name: "Adept's Bloodletter",
-    hint: "Keep equipped while mounted: swap from rod if attacked",
+    hint: "Escape if dismounted on dangerous maps",
   },
   cape: {
     id: "T4_CAPEITEM_FW_THETFORD",
@@ -785,7 +785,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Master's fisherman set for T7 yellow Mist zones. Rod in bag, no need to equip it to cast.",
+        "Master's fisherman set for T7 yellow Mist zones. Snapper/Sturgeon come from zone tier, not special schools.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Fishing yield" },
@@ -821,7 +821,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
   "ava-roads-fishing": {
     safe: {
       title: "Safe Escape Build",
-      description: "Cheap mobility setup: fisherman cap, pork pie ×2, rod in bag. Bloodletter equipped if dismounted.",
+      description: "Cheap mobility setup: fisherman cap, pork pie ×2, rod in bag. Bloodletter for escape if dismounted.",
       slots: {
         head: { id: "T7_HEAD_GATHERER_FISH", name: "Grandmaster's Fisherman Cap", hint: "Fishing yield bonus" },
         ...ESCAPE_SLOTS,
@@ -830,7 +830,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         mount: { id: "T3_MOUNT_HORSE", name: "Journeyman's Riding Horse", hint: "Cheap replacement mount" },
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "Equip at T8 schools only" },
+        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Every cast" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -849,7 +849,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight on road loops" },
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "Equip at T8 schools only" },
+        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Every cast" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -857,7 +857,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     profit: {
       title: "T8 Max Profit Gear",
       description:
-        "Full T8 fisherman set + pork pie (~4 T7/down + ~3 T8 fish per cast. Rod in bag between schools.",
+        "Full T8 fisherman set + pork pie (~4 T7/down + ~3 T8 fish per cast. Rod in bag, cast without equipping.",
       slots: {
         head: { id: "T8_HEAD_GATHERER_FISH", name: "Elder's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T8_ARMOR_GATHERER_FISH", name: "Elder's Fisherman Garb", hint: "Fishing yield" },
@@ -868,7 +868,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight on road loops" },
       },
       inventory: [
-        { id: "T8_2H_TOOL_FISHINGROD", name: "Elder's Fishing Rod", hint: "Equip at T8 schools only" },
+        { id: "T8_2H_TOOL_FISHINGROD", name: "Elder's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Every cast" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -876,7 +876,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     expert: {
       title: "T8 Max Spec (Deep Roads)",
       description:
-        "Max fishing specs on T8 road maps: highest fish-per-cast and best Puremist Snapper odds.",
+        "Max fishing specs on T8 road maps: highest fish-per-cast and best Snapper drop odds from T7/T8 zone fishing.",
       slots: {
         head: { id: "T8_HEAD_GATHERER_FISH", name: "Elder's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T8_ARMOR_GATHERER_FISH", name: "Elder's Fisherman Garb", hint: "Fishing yield" },
@@ -889,7 +889,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight on road loops" },
       },
       inventory: [
-        { id: "T8_2H_TOOL_FISHINGROD", name: "Elder's Fishing Rod", hint: "Equip at T8 schools only" },
+        { id: "T8_2H_TOOL_FISHINGROD", name: "Elder's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Every cast" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],

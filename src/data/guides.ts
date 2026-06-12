@@ -787,13 +787,13 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Enter the Mists through a portal in a royal city or outpost.",
       "Locate active fish schools near water. Use T3 Fancy Fish Bait at schools, bait is optional but strongly recommended for faster bites and more casts per hour.",
       "Wear your best fisherman set, cape, bag, and mount. Keep the fishing rod in your bag, cast at schools without equipping it.",
-      "At fishing level 30+, seek T7 yellow Mist zones for a chance at rare Puremist Snapper.",
+      "At fishing level 30+, fish in T7 yellow Mist zones. Puremist Snapper is a random catch from the zone tier, not its own school.",
       "Fish schools matching your rod tier for the best catch rate.",
       "Sell raw fish, chopped fish, or rare catches on the market. Check Caerleon for premium prices.",
     ],
     tips: [
       "Income scales sharply with fishing level: ~600k/hr at 10-30, ~900k/hr at 30-60, and ~1M/hr at 60+.",
-      "From fishing level 30+, T7 yellow Mist zones can spawn Puremist Snapper, a valuable rare fish worth hunting.",
+      "Puremist Snapper can drop while fishing in T7+ zones. There are no dedicated snapper schools, only normal fish schools.",
       "Fish during off-peak hours to avoid competition for schools and portal camps.",
       "Yellow-zone Mists are knockdown-only, bring your best gear for max yield, not a budget PvP setup.",
       "An Avalonian gathering cape and pork pie (+15% yield) stack well with high-level fishing for extra throughput.",
@@ -881,7 +881,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "ava-roads-fishing",
     title: "Avalonian Roads Fishing (T8)",
     description:
-      "Fish T8 schools on Avalonian Roads for top-tier silver income. Expect ~2M+/hr with T7 gear on a T8 road map, ~2.5-3.5M with full T8 fisherman gear, and 4-5M+ at max specs when Puremist Snapper pools show up. Use the profit calculator tabs to compare setups.",
+      "Fish T8 schools on Avalonian Roads for top-tier silver income. Expect ~2M+/hr with T7 gear on a T8 road map, ~2.5-3.5M with full T8 fisherman gear, and 4-5M+ at max specs when Snapper RNG is strong. Use the profit calculator tabs to compare setups.",
     category: "fishing",
     difficulty: "advanced",
     zoneType: "dangerous",
@@ -905,7 +905,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         mainhand: {
           id: "T4_MAIN_RAPIER_MORGANA",
           name: "Adept's Bloodletter",
-          hint: "Stay equipped while mounted: rod stays in bag until you cast",
+          hint: "Escape if dismounted on roads",
         },
         armor: {
           id: "T4_ARMOR_LEATHER_SET3",
@@ -938,7 +938,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         {
           id: "T7_2H_TOOL_FISHINGROD",
           name: "Grandmaster's Fishing Rod",
-          hint: "Equip at T8 schools only: keep in bag while traveling",
+          hint: "In bag, cast without equipping",
         },
         {
           id: "T3_FISHINGBAIT",
@@ -955,7 +955,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     profitBuild: {
       title: "Max Profit Fishing Gear",
       description:
-        "Full T8 fisherman set with pork pie. Rod in bag: Bloodletter. Thetford cape, bag, and Giant Stag equipped between schools.",
+        "Full T8 fisherman set with pork pie. Rod in bag; Thetford cape, Giant Stag, and invis for road escapes.",
       slots: {
         head: {
           id: "T8_HEAD_GATHERER_FISH",
@@ -985,7 +985,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         bag: {
           id: "T5_BAG",
           name: "Expert's Bag",
-          hint: "Carry Sturgeon stacks: rod stays in bag until you cast",
+          hint: "Carry fish stacks between schools",
         },
         food: {
           id: "T7_MEAL_PIE",
@@ -1001,14 +1001,14 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         mount: {
           id: "T4_MOUNT_GIANTSTAG",
           name: "Adept's Giant Stag",
-          hint: "High carry weight for Sturgeon hauls between schools",
+          hint: "High carry weight between schools",
         },
       },
       inventory: [
         {
           id: "T8_2H_TOOL_FISHINGROD",
           name: "Elder's Fishing Rod",
-          hint: "Equip at T8 schools only",
+          hint: "In bag, cast without equipping",
         },
         {
           id: "T3_FISHINGBAIT",
@@ -1034,22 +1034,27 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Enter an Avalonian Road from a yellow or blue zone and travel inward until you find a T8 map with large water bodies.",
       "Scout for T8 fishing schools (visible nodes on the water), only cast on schools, not open water.",
       "Pick a loadout tab: safe escape (mobility only). T7 gear (middle specs), T8 max profit, or T8 max spec on deep road maps.",
-      "T7/T8 geared tabs: equip fisherman armor, eat 2 Pork Pies per hour, and carry an invisibility potion. Keep the rod in your bag, wear Bloodletter, a cape, bag, and mount while riding between schools.",
+      "T7/T8 geared tabs: equip fisherman armor, eat 2 Pork Pies per hour, and carry an invisibility potion. Keep the fishing rod in your bag and cast at schools without equipping it.",
       "Safe setup: wear the escape build. Grandmaster fisherman cap, 2 Pork Pies per hour, rod and journal in bag. No fishing garb, boots, or invis potion.",
-      "Fish T8 River Sturgeon schools, rare Puremist Snapper can also appear as a bonus catch.",
       "Fill your Grandmaster fishing journal as you go for extra sell value.",
       "Bank when full or if scouts appear. Sell River Sturgeon. Puremist Snapper, and filled journals raw; butcher lower-tier bycatch into chopped fish before listing.",
     ],
     tips: [
       "You catch ~350-550 fish/hr depending on gear, premium, and specs. T7 gear ≈400/hr (40% Sturgeon, 60% butchered). T8 gear ≈450/hr (3/7 Sturgeon, 4/7 butchered). Each butchered fish yields ~15 chopped fish.",
       "Sell River Sturgeon and Puremist Snapper raw. Butcher T7-and-lower bycatch into chopped fish. Never chop Sturgeon (raw sells for far more).",
-      "Puremist Snapper is the big swing factor, common on Ava Roads and also in T7 yellow Mists. Finding snapper schools pushes a good hour into a great one.",
+      "Puremist Snapper is the big swing factor on T7/T8 maps. Strong Snapper RNG on a normal school pushes a good hour into a great one.",
       "Do not cheap out on T7 gear long-term: T8 fisherman armor gives a significant fish-per-cast bonus and faster spec/journal progress.",
       "Pork Pie ×2 per hour grants +15% gathering yield (which also boosts fishing yield) and +30% carry weight, including on the safe escape build.",
       "If dismounted on the safe build, pop Flee on Miner's Workboots, then Ambush on the Assassin's Jacket to juke and remount your T3 horse.",
       "A single death in expensive fishing gear can wipe hours of profit, use a good mount (Giant Stag) once your kit is valuable.",
       "Carry invisibility potions on geared tabs. They work while silenced and help on Ava Roads.",
-      "Never ride with the rod equipped on Ava Roads, swap to it only at the school, then back to Bloodletter before you remount.",
+      "The fishing rod stays in your bag. Cast at schools without equipping it.",
+    ],
+    references: [
+      {
+        title: "GremmyAngler: Fishing on the Avalonian Roads (Beginners Guide)",
+        url: "https://www.youtube.com/watch?v=sHCPd84O-50",
+      },
     ],
     featured: true,
     readTime: 9,
