@@ -15,6 +15,7 @@ import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import { GuideComments } from "@/components/GuideComments";
 import { RelatedGuides } from "@/components/RelatedGuides";
 import { GuideProfitCalculator } from "@/components/GuideProfitCalculator";
+import { TrackingProfitCalculator } from "@/components/TrackingProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
 import { guideHowToJsonLd } from "@/lib/structured-data";
@@ -129,14 +130,25 @@ export default async function GuidePage({ params }: GuidePageProps) {
       </div>
 
       {economicsConfig && marketPricing.serializedPricesByCity && (
-        <GuideProfitCalculator
-          economics={economicsConfig}
-          pricesByCity={marketPricing.serializedPricesByCity}
-          pricedAt={
-            marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
-          }
-          tierLoadouts={marketPricing.tierLoadoutBundles}
-        />
+        slug === "high-tier-group-tracking" ? (
+          <TrackingProfitCalculator
+            economics={economicsConfig}
+            pricesByCity={marketPricing.serializedPricesByCity}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
+            tierLoadouts={marketPricing.tierLoadoutBundles}
+          />
+        ) : (
+          <GuideProfitCalculator
+            economics={economicsConfig}
+            pricesByCity={marketPricing.serializedPricesByCity}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
+            tierLoadouts={marketPricing.tierLoadoutBundles}
+          />
+        )
       )}
 
       <section className="mt-10">

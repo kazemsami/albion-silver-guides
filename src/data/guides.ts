@@ -453,11 +453,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "high-tier-group-tracking",
     title: "High-Tier Group Tracking for Silver",
     description:
-      "Run 5-man veteran tracking in red zones or Roads of Avalon for T7 Runestone Golem and T8 Dawnbird hunts. Rewards include shapeshifter remnants, potion essences, and Rare Animal Remains, but remnant drops are low-chance RNG. Use this for the method; treat calculator output as an optimistic ceiling, not a steady hourly wage.",
+      "Run 5-man veteran tracking in red zones or Roads of Avalon for T7 Runestone Golem and T8 Dawnbird hunts. Rewards include Rare Animal Remains, potion essences, and low-chance shapeshifter remnants. The calculator shows group loot vs per-player take-home with Expected, Good, and Lucky scenarios. Plan on Expected values; 1.5M to 3M/hr per player needs optimized routes, high prices, low downtime, and strong RNG.",
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 150_000, max: 900_000 },
+    silverPerHour: { min: 80_000, max: 450_000 },
     requirements: [
       "Party of 4-8 for veteran targets (5 players is the sweet spot)",
       "One tracker with a T7 Tracking Toolkit, tracks T7 Golem and T8 Dawnbird (toolkit tier +1)",
@@ -481,8 +481,10 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Too many players near the engagement zone, even outside it, can spook the target. Keep scouts minimal during the fight.",
       "De-aggroing resets the target's HP for the current hunt step, don't reset progress with bad pulls.",
       "Rare Quarries (Earthdaughter, Harvester of Souls, Shadowmask) drop Black Market loot and faction mount upgrades, worth a detour when tracks appear.",
-      "Shapeshifter remnants are the main silver swing but drop rarely. A fast 5-man group might see zero remnants in a session, then spike on a lucky hunt.",
-      "The profit calculator excludes listing tax (~6.5% with Premium), deaths, repairs, travel downtime, failed hunts, PvP losses, and bad splits.",
+      "Shapeshifter remnants are the main silver swing but drop rarely (~1-2% per kill on published tables). A fast 5-man group might see zero remnants in a session, then spike on a lucky hunt.",
+      "Use the profit calculator Expected tab for planning. Good and Lucky tabs show above-average and jackpot hours, not stable income.",
+      "Per-player profit = group loot minus consumables, tax, repairs, deaths, and downtime, split across your party size (default 5).",
+      "Claims of 2M to 3M silver/hour per player usually combine a lucky remnant, high market prices, minimal travel, and no wipes. That is not the average Expected line.",
       "Dawnbird pays more per remnant but hunts run longer and drops stay RNG-heavy. Only pivot once Golem routes are clean and your group rarely wipes.",
     ],
     profitBuild: {

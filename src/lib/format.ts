@@ -53,3 +53,8 @@ export function formatItemQuantity(quantity: number): string {
 export function formatLoadoutQuantity(quantity: number): string {
   return Math.max(1, Math.round(quantity)).toLocaleString("en-US");
 }
+
+/** Percentage for drop odds and downtime sliders (0.018 → 1.8%). */
+export function formatPercent(fraction: number): string {
+  return `${(fraction * 100).toFixed(1)}%`;
+}

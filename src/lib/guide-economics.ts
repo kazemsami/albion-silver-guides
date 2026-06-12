@@ -7,6 +7,7 @@ import {
 } from "@/data/laborer-specialties";
 import { T8_HOUSE_BUILD_ITEM_IDS } from "@/data/t8-house-cost";
 import { getAllTierLoadouts, loadoutVariantForTier } from "@/data/guide-loadouts";
+import { computeTrackingProfitRange } from "@/lib/tracking-economics";
 import type {
   AlbionItem,
   EquipmentLoadout,
@@ -215,6 +216,11 @@ function computeAllGuideProfitRanges(
 
     for (const slug of slugs) {
       const economics = guideEconomicsBySlug[slug];
+      if (slug === "high-tier-group-tracking") {
+        const range = computeTrackingProfitRange(prices);
+        cityRanges[slug] = range;
+        continue;
+      }
       const range = computeProfitRange(economics, prices);
       if (range.min != null && range.max != null) {
         cityRanges[slug] = { min: range.min, max: range.max };
@@ -549,6 +555,11 @@ export async function fetchGuidePricing(
     hourlyEconomics: scaledEconomics
       ? computeHourlyEconomics(scaledEconomics, prices)
       : null,
-    profitRange: economics ? computeProfitRange(economics, prices) : null,
+    profitRange:
+      economics && slug === "high-tier-group-tracking"
+        ? computeTrackingProfitRange(prices)
+        : economics
+          ? computeProfitRange(economics, prices)
+          : null,
   };
 }
