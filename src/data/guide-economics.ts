@@ -45,7 +45,7 @@ const AVA_FISHING_JOURNAL_EMPTY: HourlyItem = {
   id: "T7_JOURNAL_FISHING_EMPTY",
   name: "Grandmaster Fisherman's Journal (Empty)",
   quantity: 1,
-  side: "buy",
+  side: "sell",
 };
 
 function avaRoadsDeathInputs(deathRate: number, geared: boolean): HourlyItem[] {
@@ -119,7 +119,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         id: "T4_JOURNAL_ORE_EMPTY",
         name: "Adept Prospector's Journal (Empty)",
         quantity: 1,
-        side: "buy",
+        side: "sell",
       },
     ],
     hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
@@ -141,7 +141,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         id: "T4_JOURNAL_FIBER_EMPTY",
         name: "Adept Cropper's Journal (Empty)",
         quantity: 2,
-        side: "buy",
+        side: "sell",
       },
     ],
     hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
@@ -208,7 +208,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         id: "T4_RUNE",
         name: "Silver bags (safe in inventory until death)",
         quantity: 1,
-        estimatedSilverPerUnit: 650_000,
+        fixedSilverPerUnit: 500_000,
       },
       { id: "T7_RUNE", name: "Grandmaster's Rune (room + altar chests)", quantity: 140 },
       { id: "T6_SOUL", name: "Master's Soul", quantity: 90 },
@@ -316,7 +316,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ],
     hourlyConsumables: [
       { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 12 },
-      { id: "T4_MEAL_STEW", name: "Goat Stew", quantity: 1 },
+      { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 },
     ],
     skillTiers: tiers(
       SKILL_TIERS.fishing10_30,
@@ -332,7 +332,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       { id: "T7_JOURNAL_FISHING_FULL", name: "Grandmaster Fisherman's Journal (Full)", quantity: 1 },
     ],
     hourlyInputs: [
-      { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", quantity: 1, side: "buy" },
+      { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", quantity: 1, side: "sell" },
     ],
     hourlyConsumables: [
       { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },

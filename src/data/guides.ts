@@ -163,7 +163,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "solo-dungeon-farming",
     title: "Solo Randomized Dungeon Farming",
     description:
-      "Farm T6 red-zone solo dungeons near Martlock for ~400 Master's Runes, ~120 souls, and leather per hour at a steady clear pace. Yellow zones are for learning; red zones pay more but full-loot deaths cut take-home. Use the calculator for after-tax loot minus modeled kit losses.",
+      "Farm T6 red-zone solo dungeons near Martlock for roughly 300 Master's Runes, ~90 souls, and leather per hour at a steady clear pace (closer to ~400 runes / ~120 souls in black zones). Yellow zones are for learning; red zones pay more but full-loot deaths cut take-home. Use the calculator for after-tax loot minus modeled kit losses.",
     category: "dungeons",
     difficulty: "intermediate",
     zoneType: "dangerous",
@@ -179,7 +179,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Enter, clear trash in a circle back to the entrance, pull mobs into corridors so you never fight more than 3 at once.",
       "Activate Small Combat Shrines when you find them, each gives a random 1-minute buff (damage, sustain, or cooldown reduction) to the first player who clicks it.",
       "Loot every chest: Master's Runes and Souls are the main silver (sell on Caerleon). Grab silver bags and tomes but do not slow the run for green loot.",
-      "Exit after the boss chest, aim for 4-5 full clears per hour. Bank in Martlock every 2 runs so a death does not wipe your stack.",
+      "Exit after the boss chest, aim for 4-5 full clears per hour. A steady red-zone hour is around 300 runes and 90 souls; black zones push toward 400 and 120. Bank in Martlock every 2 runs so a death does not wipe your stack.",
       "Sell runes in stacks of 100+ on Caerleon during EU prime. Souls can be sold raw or saved for your own crafting; check which pays more today.",
     ],
     tips: [
@@ -367,7 +367,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "1200 IP is the efficient sweet spot, do not overspend on 8.4 for marginal gains. A .4 weapon keeps full Fame Bonus if you are leveling specs safely here.",
       "Run PvP abilities even while clearing mobs. If you get jumped mid-pull, there is no time to respec.",
       "Never fight without an active room buff if the enemy has one, buffs only proc below 40% HP but are the main edge beyond gear.",
-      "Solo PvE: Astral Staff + Cleric Robe or Great Axe for AoE room clears; extract floor 2 for ~1M/hr from silver bags + chests even with bad RNG (see reference video).",
+      "Solo PvE: Astral Staff + Cleric Robe or Great Axe for AoE room clears; a clean floor-2 extract is roughly ~700k-1M/hr from silver bags + chests, but bad RNG or an early reset pulls that down (see reference video).",
       "Reset early when stacks are below ~10, inventory is full, or you are outnumbered. Safe extracts beat greedy floor-3 throws; treat headline silver as a good hour, not a guarantee.",
       "Floor 3 is stacked and sweaty, only push when your team hit 15 stacks early and you are ready for key fights. Vault loot is high variance.",
       "Optional: empty T8 mercenary journals on floor 3 T8 mobs (~300k per 15 filled), inventory risk only.",
@@ -559,7 +559,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     requirements: [
       "T3+ fishing rod (T4 rod at fishing level 20+)",
       "T3 Fancy Fish Bait (~12 per hour",
-      "Goat Stew for carry weight",
+      "Pork Pie for +carry weight and +gathering yield (Goat Stew is a combat food and does not add carry weight)",
       "Butcher station access in Bridgewatch",
     ],
     steps: [
@@ -569,7 +569,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Play the minigame for perfect catches; each perfect adds ~10% more fish per hour.",
       "When inventory is full (~280 fish worth of catches), return to Bridgewatch butcher. Chop all fish into Chopped Fish, this almost always sells better than raw fish for shoreline tiers.",
       "List chopped fish on the Bridgewatch market in stacks of 100. Sell seaweed too (byproduct, ~90/hr); it adds 5-10% extra silver.",
-      "Buy more bait and stew, repeat. At fishing level 40+, upgrade rod to T4 and move toward Mists fishing for 3× income.",
+      "Buy more bait and Pork Pie, repeat. At fishing level 40+, upgrade rod to T4 and move toward Mists fishing for 3× income.",
     ],
     tips: [
       "Chopped fish is the product you sell, not raw fish. Always butcher before listing.",
@@ -604,9 +604,9 @@ const rawGuides: Omit<Guide, "reliability">[] = [
           hint: "Travel between shoreline spots",
         },
         food: {
-          id: "T4_MEAL_STEW",
-          name: "Goat Stew",
-          hint: "+carry weight for more fish per trip",
+          id: "T7_MEAL_PIE",
+          name: "Pork Pie",
+          hint: "+30% carry weight and +gathering yield for more fish per trip",
         },
       },
       inventory: [
@@ -1051,7 +1051,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "If any major potion margin drops below 10% after tax, pause that recipe and wait for the next ZvZ cycle.",
       "Craft at Brecilien for the potion city bonus. Thetford helps with herb prices, not alchemy station bonuses.",
       "The profit calculator uses live sell/buy prices but excludes listing tax (~6.5% with Premium) and station fees. Subtract both before you batch.",
-      "Mercenary's Journals fill from PvE combat fame, not alchemy crafting. Use an Alchemist's Journal if you want laborer returns from crafting.",
+      "Carry an Alchemist's Journal while crafting for laborer returns from your crafting fame.",
     ],
     profitBuild: {
       title: "Materials to Stock",

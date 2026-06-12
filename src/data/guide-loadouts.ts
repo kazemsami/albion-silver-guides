@@ -553,7 +553,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       description: "T4 rod in bag, combat kit equipped while riding between shoreline spots.",
       slots: {
         ...FISHING_COMBAT_SLOTS,
-        food: { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "+carry weight" },
+        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+carry weight and gathering yield" },
       },
       inventory: [
         { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Equip at the school only" },
@@ -569,7 +569,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
         shoes: { id: "T5_SHOES_GATHERER_FISH", name: "Expert's Fisherman Workboots", hint: "Weight reduction" },
         ...FISHING_COMBAT_SLOTS,
-        food: { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "+carry weight" },
+        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+carry weight and gathering yield" },
       },
       inventory: [
         { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "Equip at the school only" },
