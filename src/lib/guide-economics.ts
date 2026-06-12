@@ -8,6 +8,7 @@ import {
 import { T8_HOUSE_BUILD_ITEM_IDS } from "@/data/t8-house-cost";
 import { getAllTierLoadouts, loadoutVariantForTier } from "@/data/guide-loadouts";
 import { computeTrackingProfitRange } from "@/lib/tracking-economics";
+import { computePotionProfitRange } from "@/lib/potion-economics";
 import type {
   AlbionItem,
   EquipmentLoadout,
@@ -219,6 +220,10 @@ function computeAllGuideProfitRanges(
       if (slug === "high-tier-group-tracking") {
         const range = computeTrackingProfitRange(prices);
         cityRanges[slug] = range;
+        continue;
+      }
+      if (slug === "potions-crafting-bulk") {
+        cityRanges[slug] = computePotionProfitRange(prices);
         continue;
       }
       const range = computeProfitRange(economics, prices);
@@ -558,8 +563,10 @@ export async function fetchGuidePricing(
     profitRange:
       economics && slug === "high-tier-group-tracking"
         ? computeTrackingProfitRange(prices)
-        : economics
-          ? computeProfitRange(economics, prices)
-          : null,
+        : economics && slug === "potions-crafting-bulk"
+          ? computePotionProfitRange(prices)
+          : economics
+            ? computeProfitRange(economics, prices)
+            : null,
   };
 }

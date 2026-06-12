@@ -941,11 +941,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "potions-crafting-bulk",
     title: "Bulk Potion Crafting",
     description:
-      "Craft Major Healing Potion and Major Energy Potion at a Brecilien alchemy lab (potion crafting bonus city). Recipes: 72 Elusive Foxglove + eggs/milk + Potato Schnapps per 5 pots. Add Major Gigantify and Major Resistance before weekend ZvZ. Margins swing with buy prices, station fees, and market tax. Use the calculator, not a fixed silver/hour headline.",
+      "Craft Major Healing and Major Energy potions at a Brecilien alchemy lab. The calculator shows batch profit, profit per 10,000 focus, station fees, listing tax, and sell-through risk. Margins swing with buy prices, focus value, and how fast stacks sell, not a fixed silver/hour farm.",
     category: "crafting",
     difficulty: "intermediate",
     zoneType: "safe",
-    silverPerHour: { min: 100_000, max: 600_000 },
+    silverPerHour: { min: 80_000, max: 350_000 },
     requirements: [
       "T6 Alchemy with potions specialization (T7 for Gigantify / Resistance recipes)",
       "Brecilien city alchemy lab for the potion crafting bonus, or a personal island T6+ lab if you skip the city bonus",
@@ -968,7 +968,8 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Goose Eggs are shared by Major Healing Potion and Major Gigantify Potion; buy one bulk stack for both recipes.",
       "If any major potion margin drops below 10% after tax, pause that recipe and wait for the next ZvZ cycle.",
       "Craft at Brecilien for the potion city bonus. Thetford helps with herb prices, not alchemy station bonuses.",
-      "The profit calculator uses live sell/buy prices but excludes listing tax (~6.5% with Premium) and station fees. Subtract both before you batch.",
+      "The profit calculator includes station fees (~4.5% of output), Premium listing tax (~6.5%), and a sell-through haircut. Toggle focus valuation to see profit with focus treated as free vs at an opportunity cost.",
+      "Plan with batch profit and profit per 10,000 focus on Major Healing. Hourly lines assume ~150 batch actions in a busy session; listing 750+ pots may take hours to fully sell through.",
       "Carry an Alchemist's Journal while crafting for laborer returns from your crafting fame.",
     ],
     profitBuild: {

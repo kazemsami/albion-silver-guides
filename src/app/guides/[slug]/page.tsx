@@ -16,6 +16,7 @@ import { GuideComments } from "@/components/GuideComments";
 import { RelatedGuides } from "@/components/RelatedGuides";
 import { GuideProfitCalculator } from "@/components/GuideProfitCalculator";
 import { TrackingProfitCalculator } from "@/components/TrackingProfitCalculator";
+import { PotionProfitCalculator } from "@/components/PotionProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
 import { guideHowToJsonLd } from "@/lib/structured-data";
@@ -132,6 +133,15 @@ export default async function GuidePage({ params }: GuidePageProps) {
       {economicsConfig && marketPricing.serializedPricesByCity && (
         slug === "high-tier-group-tracking" ? (
           <TrackingProfitCalculator
+            economics={economicsConfig}
+            pricesByCity={marketPricing.serializedPricesByCity}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
+            tierLoadouts={marketPricing.tierLoadoutBundles}
+          />
+        ) : slug === "potions-crafting-bulk" ? (
+          <PotionProfitCalculator
             economics={economicsConfig}
             pricesByCity={marketPricing.serializedPricesByCity}
             pricedAt={
