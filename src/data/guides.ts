@@ -88,7 +88,6 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     silverPerHour: { min: 200_000, max: 500_000 },
     requirements: [
       "T5 sickle + T5 harvester gear (cap, garb, workboots)",
-      "Avalonian gathering cape (+gathering yield)",
       "Pork Pie (+15% yield, +30% carry weight) (~1 per hour",
       "Two empty Adept Cropper's Journals in inventory",
     ],
