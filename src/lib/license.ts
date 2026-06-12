@@ -2,7 +2,7 @@ export const copyrightHolder = "Kazem Abou Setta";
 export const copyrightYear = 2026;
 export const programName = "Albion Silver";
 
-/** SPDX identifier — matches package.json "license" field. */
+/** SPDX identifier, matches package.json "license" field. */
 export const licenseSpdxId = "GPL-3.0-or-later";
 
 export const licenseName = "GNU General Public License v3.0 or later";

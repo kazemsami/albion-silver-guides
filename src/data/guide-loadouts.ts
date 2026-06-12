@@ -19,7 +19,7 @@ const ESCAPE_SLOTS = {
   },
 } as const;
 
-/** Travel slots for yellow Mists — safe zone; wear your best gear. */
+/** Travel slots for yellow Mists, safe zone; wear your best gear. */
 const MISTS_FISHING_TRAVEL_SLOTS = {
   cape: {
     id: "T4_CAPEITEM_AVALON",
@@ -34,7 +34,7 @@ const MISTS_FISHING_TRAVEL_SLOTS = {
   mount: {
     id: "T8_MOUNT_OX",
     name: "Elder's Transport Ox",
-    hint: "Best carry mount — yellow Mists are knockdown-only",
+    hint: "Best carry mount, yellow Mists are knockdown-only",
   },
 } as const;
 
@@ -262,7 +262,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     standard: {
       title: "Floor 2 Farm",
       description:
-        "1200 IP softcap setup — stack 15 Demonic Ferocity on floor 1, extract floor 2 for baseline profit.",
+        "1200 IP softcap setup, stack 15 Demonic Ferocity on floor 1, extract floor 2 for baseline profit.",
       slots: {
         head: {
           id: "T6_HEAD_LEATHER_SET3",
@@ -305,7 +305,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     expert: {
       title: "Floor 3 Vault Push",
       description:
-        "3 keys (duo) or 5 keys (trio) for the Treasure Vault. Sweaty PvP — vault portal is the safe extract on collapse.",
+        "3 keys (duo) or 5 keys (trio) for the Treasure Vault. Sweaty PvP, vault portal is the safe extract on collapse.",
       slots: {
         head: {
           id: "T6_HEAD_LEATHER_SET3",
@@ -768,7 +768,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "10-30": {
       title: "Early Mists Fishing",
       description:
-        "Expert fisherman set with rod in bag. Yellow Mists are knockdown-only — wear your best gear.",
+        "Expert fisherman set with rod in bag. Yellow Mists are knockdown-only, wear your best gear.",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
@@ -777,7 +777,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
       inventory: [
-        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "In bag — cast without equipping" },
+        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -785,7 +785,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Master's fisherman set for T7 yellow Mist zones. Rod in bag — no need to equip it to cast.",
+        "Master's fisherman set for T7 yellow Mist zones. Rod in bag, no need to equip it to cast.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Fishing yield" },
@@ -794,7 +794,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
       },
       inventory: [
-        { id: "T6_2H_TOOL_FISHINGROD", name: "Master's Fishing Rod", hint: "In bag — cast without equipping" },
+        { id: "T6_2H_TOOL_FISHINGROD", name: "Master's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
       ],
@@ -811,7 +811,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
       },
       inventory: [
-        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag — cast without equipping" },
+        { id: "T7_2H_TOOL_FISHINGROD", name: "Grandmaster's Fishing Rod", hint: "In bag, cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
         { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Fill while fishing" },
         { id: "T1_MEAL_SEAWEEDSALAD", name: "Seaweed Salad", hint: "Optional speed buff" },

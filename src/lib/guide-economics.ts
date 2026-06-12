@@ -69,7 +69,7 @@ export function enrichLoadoutWithQuantities(
   for (const item of scaled.hourlyConsumables ?? []) {
     quantityById.set(item.id, item.quantity);
   }
-  // Only journals from inputs — bulk craft materials use per-recipe qty in loadout data.
+  // Only journals from inputs, bulk craft materials use per-recipe qty in loadout data.
   for (const item of scaled.hourlyInputs ?? []) {
     if (item.id.includes("JOURNAL")) {
       quantityById.set(item.id, item.quantity);

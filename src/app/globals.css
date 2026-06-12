@@ -35,7 +35,7 @@
   color-scheme: dark;
 }
 
-/* Light theme — parchment / OSRS wiki inspired */
+/* Light theme, parchment / OSRS wiki inspired */
 [data-theme="light"] {
   --obsidian: #c9c3b6;
   --obsidian-light: #e0dbd0;
@@ -352,7 +352,7 @@ body::before {
   border-bottom-color: var(--wiki-border) !important;
 }
 
-/* Article intro on guide pages — never inherit nav header chrome */
+/* Article intro on guide pages, never inherit nav header chrome */
 .guide-intro {
   background: transparent;
   border: none;

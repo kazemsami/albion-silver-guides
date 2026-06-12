@@ -12,7 +12,7 @@ export interface FeedbackPayload {
   message: string;
   email?: string;
   page?: string;
-  /** Honeypot — must stay empty. */
+  /** Honeypot, must stay empty. */
   website?: string;
 }
 

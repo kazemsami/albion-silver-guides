@@ -7,7 +7,7 @@ export type GuideCategory =
 
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
-/** Where the activity primarily takes place — safe royal/yellow zones vs full-loot risk. */
+/** Where the activity primarily takes place, safe royal/yellow zones vs full-loot risk. */
 export type ZoneType = "safe" | "dangerous";
 
 /** How thoroughly the guide's numbers and steps have been verified. */
@@ -114,7 +114,7 @@ export interface PricedLine {
   quantity: number;
   unitPrice: number | null;
   lineTotal: number | null;
-  /** Where unitPrice came from — helps explain N/A vs estimate vs live market. */
+  /** Where unitPrice came from, helps explain N/A vs estimate vs live market. */
   priceSource?: "market" | "fixed" | "estimated";
 }
 

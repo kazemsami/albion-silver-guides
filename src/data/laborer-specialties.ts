@@ -1,10 +1,10 @@
 import type { EquipmentLoadout, HourlyItem, SkillTier } from "@/types/guide";
 
-/** T8 house + T7 journal at 150% happiness — ~58 unrefined resources per job. */
+/** T8 house + T7 journal at 150% happiness, ~58 unrefined resources per job. */
 const GATHERING_RETURN = 58;
-/** T8 house + T7 crafting journal at 150% — ~14 refined materials per job. */
+/** T8 house + T7 crafting journal at 150%, ~14 refined materials per job. */
 const CRAFTING_RETURN = 14;
-/** T8 house + T7 mercenary journal at 150% — fixed silver loot per job. */
+/** T8 house + T7 mercenary journal at 150%, fixed silver loot per job. */
 const MERCENARY_SILVER = 6303;
 
 const BASE_LABORERS = 10;

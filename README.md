@@ -1,4 +1,4 @@
-# Albion Silver — Money Making Guides
+# Albion Silver, Money Making Guides
 
 A frontend-only Next.js site with Albion Online money making guides. Browse strategies by category, filter by difficulty, and read step-by-step walkthroughs with estimated silver/hour ranges.
 
@@ -8,7 +8,7 @@ A frontend-only Next.js site with Albion Online money making guides. Browse stra
 - **Category & difficulty filters** on the guides page
 - **Individual guide pages** with requirements, steps, and pro tips
 - **Dark medieval theme** inspired by Albion Online's aesthetic
-- **Static frontend** — no backend or database required
+- **Static frontend**, no backend or database required
 
 ## Getting Started
 

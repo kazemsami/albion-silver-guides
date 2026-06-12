@@ -10,7 +10,7 @@ export interface FallbackPrices {
   buy?: number;
 }
 
-/** Explicit overrides — thin markets, journals, rare drops, crafting mats. */
+/** Explicit overrides, thin markets, journals, rare drops, crafting mats. */
 export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   // T1 products
   T1_FISHCHOPS: { sell: 52, buy: 48 },
@@ -80,7 +80,7 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T7_SOUL: { sell: 5200, buy: 4400 },
   T8_SOUL: { sell: 12500, buy: 10500 },
 
-  // Tracking (trade-chat estimates — rarely on royal markets)
+  // Tracking (trade-chat estimates, rarely on royal markets)
   T7_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 950_000 },
   T8_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 2_100_000 },
   T7_ESSENCE_POTION: { sell: 110_000, buy: 85_000 },

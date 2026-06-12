@@ -108,13 +108,13 @@ export const SKILL_TIERS = {
   depthsStandard: {
     id: "standard",
     label: "Floor 2 extract (baseline)",
-    description: "Cash out floor 2 after ~30 min — best risk/reward for most teams and solo PvE",
+    description: "Cash out floor 2 after ~30 min, best risk/reward for most teams and solo PvE",
     outputMultiplier: 1,
   },
   depthsExpert: {
     id: "expert",
     label: "Floor 3 vault",
-    description: "3 keys (duo) or 5 keys (trio) + Treasure Vault — high variance, sweaty PvP",
+    description: "3 keys (duo) or 5 keys (trio) + Treasure Vault, high variance, sweaty PvP",
     outputMultiplier: 1.35,
     consumableMultiplier: 1.15,
   },
