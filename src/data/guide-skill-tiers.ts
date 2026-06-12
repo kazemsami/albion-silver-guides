@@ -83,20 +83,23 @@ export const SKILL_TIERS = {
   corruptedHunter: {
     id: "hunter",
     label: "Hunter (blue/yellow)",
-    description: "Knockdown only, learning PvP",
+    description: "Knockdown only, learning PvP (no gear-loss cost modeled)",
     outputMultiplier: 0.5,
+    inputMultiplier: 0,
   },
   corruptedStalker: {
     id: "stalker",
     label: "Stalker (red)",
-    description: "Full-loot, moderate infamy",
+    description: "Full-loot Stalker runs; profit swings with invasions and deaths",
     outputMultiplier: 0.8,
+    inputMultiplier: 1,
   },
   corruptedSlayer: {
     id: "slayer",
     label: "Slayer (black)",
-    description: "Max rewards, top PvP risk",
+    description: "Max rewards, highest death risk on full-loot Slayer",
     outputMultiplier: 1,
+    inputMultiplier: 1.15,
   },
   depthsLearning: {
     id: "learning",
@@ -121,56 +124,58 @@ export const SKILL_TIERS = {
   trackingT6Red: {
     id: "t6-red",
     label: "T6 red learning",
-    description: "T6 gear, learning T7 Golem veteran flow in red: slower kills",
+    description: "T6 gear, learning T7 Golem veteran flow in red: slower kills, fewer drops",
     outputMultiplier: 0.55,
     consumableMultiplier: 0.7,
     bonusOutput: [
       {
         id: "T7_ARTEFACT_2H_SHAPESHIFTER_KEEPER",
         name: "Grandmaster's Golem Remnant",
-        quantity: 0.6,
+        quantity: 0.05,
       },
       {
         id: "T7_ESSENCE_POTION",
         name: "Grandmaster's Essence",
-        quantity: 2,
+        quantity: 0.8,
       },
     ],
   },
   trackingT7Veteran: {
     id: "t7-veteran",
     label: "T7 Golem (5-man)",
-    description: "Runestone Golem veteran loop with a T7 toolkit (~2-3M/hr per player",
+    description:
+      "Runestone Golem veteran loop with a T7 toolkit (~5 kills/hr, low-chance remnants)",
     outputMultiplier: 1,
     bonusOutput: [
       {
         id: "T7_ARTEFACT_2H_SHAPESHIFTER_KEEPER",
         name: "Grandmaster's Golem Remnant",
-        quantity: 1.6,
+        quantity: 0.09,
       },
       {
         id: "T7_ESSENCE_POTION",
         name: "Grandmaster's Essence",
-        quantity: 5,
+        quantity: 1.5,
       },
     ],
   },
   trackingT8Expert: {
     id: "t8-expert",
     label: "T8 Dawnbird expert",
-    description: "Dawnbird veteran hunts with the same T7 toolkit (tier +1) (~3.5-5M/hr",
+    description:
+      "Dawnbird veteran hunts with the same T7 toolkit (tier +1); higher per-remnant upside, still RNG",
     outputMultiplier: 0.8,
     consumableMultiplier: 1.15,
     bonusOutput: [
       {
         id: "T8_ARTEFACT_2H_SHAPESHIFTER_AVALON",
         name: "Elder's Dawnbird Remnant",
-        quantity: 1.85,
+        quantity: 0.12,
       },
       {
         id: "T8_ESSENCE_POTION",
         name: "Elder's Essence",
-        quantity: 2.5,
+        quantity: 1.2,
       },
     ],
   },

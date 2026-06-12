@@ -122,7 +122,8 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "standard",
   },
   "high-tier-group-tracking": {
-    // Shared drop from any veteran kill; target-specific loot lives in skill-tier bonusOutput.
+    // Shared remains from veteran kills; target-specific remnants/essences in bonusOutput.
+    // Remnant rates are conservative (~1-2% drop odds on published tables, not 1+ per hour).
     hourlyOutput: [
       { id: "T1_ALCHEMY_COMMON", name: "Rare Animal Remains", quantity: 38 },
     ],
@@ -145,10 +146,43 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "t7-veteran",
   },
   "corrupted-dungeons-pvpve": {
+    // Conservative soul/rune pace for completed Stalker runs; not peak ZvZ liquidity.
     hourlyOutput: [
-      { id: "T7_SOUL", name: "Grandmaster's Soul", quantity: 180 },
-      { id: "T6_RUNE", name: "Master's Rune", quantity: 350 },
-      { id: "T8_SOUL", name: "Elder's Soul", quantity: 40 },
+      { id: "T7_SOUL", name: "Grandmaster's Soul", quantity: 110 },
+      { id: "T6_RUNE", name: "Master's Rune", quantity: 220 },
+      { id: "T8_SOUL", name: "Elder's Soul", quantity: 22 },
+    ],
+    hourlyInputs: [
+      {
+        id: "T6_HEAD_PLATE_SET1",
+        name: "Master's Soldier Helmet (kit replacement)",
+        quantity: 0.8,
+        side: "buy",
+      },
+      {
+        id: "T6_ARMOR_LEATHER_SET1",
+        name: "Master's Mercenary Jacket (kit replacement)",
+        quantity: 0.8,
+        side: "buy",
+      },
+      {
+        id: "T6_SHOES_PLATE_SET1",
+        name: "Master's Soldier Boots (kit replacement)",
+        quantity: 0.8,
+        side: "buy",
+      },
+      {
+        id: "T6_2H_CLAYMORE",
+        name: "Master's Claymore (kit replacement)",
+        quantity: 0.8,
+        side: "buy",
+      },
+      {
+        id: "T4_CAPEITEM_FW_THETFORD",
+        name: "Adept's Thetford Cape (kit replacement)",
+        quantity: 0.8,
+        side: "buy",
+      },
     ],
     hourlyConsumables: [
       { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2 },

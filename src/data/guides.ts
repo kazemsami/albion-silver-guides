@@ -244,11 +244,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "corrupted-dungeons-pvpve",
     title: "Corrupted Dungeons for PvPvE Profit",
     description:
-      "Run Stalker corrupted dungeons in red zones for Grandmaster's Souls, Elder's Souls, and runes worth 1M-3M/hr at a 60%+ win rate. Hunter in yellow to learn; Stalker in red for real profit.",
+      "Run Stalker corrupted dungeons in red zones for souls and runes. Hunter (knockdown) is for learning; Stalker and Slayer are full-loot. Use this for the flow and invasion rules; real profit depends on win rate, deaths, market tax, and how often you get contested.",
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 1_000_000, max: 3_000_000 },
+    silverPerHour: { min: 250_000, max: 650_000 },
     requirements: [
       "T6 Claymore burst build or equivalent 1v1 PvP setup",
       "Hunter (yellow/blue, knockdown) to learn; Stalker (red/black, full loot) for profit; Slayer needs 100k+ infamy",
@@ -262,7 +262,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Clear mobs for infamy until the final boss spawns. Loot Grandmaster's Souls and Elder's Souls from the chest; they are most of the run's value.",
       "When invaded before the boss: duel if you have the advantage, or destroy three Demonic Shards (they appear on your minimap) to banish the invader for free. Killing the invader also ends further invasions for that run.",
       "After the final boss dies, invasions stop. Exit normally or chain through the post-boss portal. Bank after each chest. Stalker deaths are full loot.",
-      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours.",
+      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours; subtract ~6.5% listing tax (Premium) from your margin.",
     ],
     tips: [
       "Stalker pays much more than Hunter but is full-loot PvP, only run it when your invasion win rate is solid.",
@@ -271,6 +271,9 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Healing is reduced 40% in Corrupted Dungeons, burst and shard-banish plays often beat trying to out-heal a geared invader.",
       "Slayer is for high-infamy veterans; higher IP cap and T8 mobs, but death risk dwarfs the extra loot for most farmers.",
       "Never chain runs with a full inventory. One death loses the chest and your kit on Stalker/Slayer.",
+      "The profit calculator excludes listing tax (~6.5% with Premium). Undercutting sell orders makes that bite harder.",
+      "Stalker gear losses dominate bad sessions. At ~290k kit value, even ~0.8 deaths/hour can erase ~230k before you count lost chest loot.",
+      "Bank after each chest when possible. Real hourly profit swings with invasion frequency, win rate, loot RNG, and infamy tier.",
     ],
     profitBuild: {
       title: "Required Gear",
@@ -300,7 +303,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         cape: {
           id: "T4_CAPEITEM_FW_THETFORD",
           name: "Adept's Thetford Cape",
-          hint: "Failsafe invis when HP drops low",
+          hint: "Chain Lightning burst; invis comes from your potion",
         },
         food: {
           id: "T6_MEAL_STEW",
@@ -584,11 +587,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "high-tier-group-tracking",
     title: "High-Tier Group Tracking for Silver",
     description:
-      "Run 5-man veteran tracking in red zones or Roads of Avalon for T7 Golem and T8 Dawnbird hunts. Shapeshifter artifacts, potion essences, and Rare Animal Remains sell for ~2M-5M/hr per player at a steady group pace.",
+      "Run 5-man veteran tracking in red zones or Roads of Avalon for T7 Runestone Golem and T8 Dawnbird hunts. Rewards include shapeshifter remnants, potion essences, and Rare Animal Remains, but remnant drops are low-chance RNG. Use this for the method; treat calculator output as an optimistic ceiling, not a steady hourly wage.",
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 2_000_000, max: 5_000_000 },
+    silverPerHour: { min: 150_000, max: 900_000 },
     requirements: [
       "Party of 4-8 for veteran targets (5 players is the sweet spot)",
       "One tracker with a T7 Tracking Toolkit, tracks T7 Golem and T8 Dawnbird (toolkit tier +1)",
@@ -601,8 +604,8 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Base in a red-zone royal city or Roads hub. The tracker equips a T7 Tracking Toolkit and uses it in a lethal zone to reveal tracks in a large radius.",
       "Study tracks with the toolkit in inventory. Clear any guard mobs before studying. Party members can study together to shorten the timer, veteran tracks require 4-8 players in party.",
       "Follow the highlighted region on the map through each hunt step. Deal enough damage before the hidden flee timer or the target escapes to the next zone. HP carries between steps.",
-      "Farm T7 Runestone Golem veteran hunts as your baseline (~4-6 kills/hr when routes are clean). Each kill drops Grandmaster's Golem Remnant, Rare Animal Remains, and a chance of Grandmaster's Essence.",
-      "When the group clears Golems reliably, study T8 Dawnbird tracks instead, same T7 toolkit (tier +1 rule). Each Dawnbird kill drops Elder's Dawnbird Remnant and Elder's Essence; it is a separate hunt, not loot from Golem.",
+      "Farm T7 Runestone Golem veteran hunts as your baseline (~4-6 kills/hr when routes are clean). Kills drop Rare Animal Remains and can roll Grandmaster's Golem Remnant or Grandmaster's Essence, remnant odds are low (roughly ~1-2% on published drop tables, not one per kill).",
+      "When the group clears Golems reliably, study T8 Dawnbird tracks instead, same T7 toolkit (tier +1 rule). Dawnbird kills can roll Elder's Dawnbird Remnant and Elder's Essence; it is a separate hunt, not loot from Golem.",
       "Bank after every successful kill, artifacts and essences are your payout. In red zones, loot is protected for your party only if you engaged the target in combat; PvP-flagged players can still contest drops.",
       "Sell Shapeshifter remnants and essences on Caerleon. List Rare Animal Remains in stacks of 100, crafters buy them for Arcane Extracts and war pots.",
     ],
@@ -611,8 +614,10 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "A T7 toolkit covers both your main farm targets: T7 Golem natively and T8 Dawnbird via the tier +1 rule. You do not need a T8 toolkit for Dawnbird.",
       "Too many players near the engagement zone, even outside it, can spook the target. Keep scouts minimal during the fight.",
       "De-aggroing resets the target's HP for the current hunt step, don't reset progress with bad pulls.",
-      "Rare Quarries (Earthdaughter. Harvester of Souls, Shadowmask) drop Black Market loot and faction mount upgrades, worth a detour when tracks appear.",
-      "Dawnbird pays more per kill but hunts run longer, budget 2-3M/hr on Golem, 3.5-5M/hr when the group pivots to Dawnbird.",
+      "Rare Quarries (Earthdaughter, Harvester of Souls, Shadowmask) drop Black Market loot and faction mount upgrades, worth a detour when tracks appear.",
+      "Shapeshifter remnants are the main silver swing but drop rarely. A fast 5-man group might see zero remnants in a session, then spike on a lucky hunt.",
+      "The profit calculator excludes listing tax (~6.5% with Premium), deaths, repairs, travel downtime, failed hunts, PvP losses, and bad splits.",
+      "Dawnbird pays more per remnant but hunts run longer and drops stay RNG-heavy. Only pivot once Golem routes are clean and your group rarely wipes.",
     ],
     profitBuild: {
       title: "Required Gear",
@@ -1150,25 +1155,25 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "potions-crafting-bulk",
     title: "Bulk Potion Crafting",
     description:
-      "Craft Major Healing Potion and Major Energy Potion daily at a Thetford alchemy lab (72 Elusive Foxglove + eggs/milk + Potato Schnapps per 5 pots), add Major Gigantify Potion and Major Resistance Potion before weekend ZvZ, and list on Caerleon when war consumables spike.",
+      "Craft Major Healing Potion and Major Energy Potion at a Brecilien alchemy lab (potion crafting bonus city). Recipes: 72 Elusive Foxglove + eggs/milk + Potato Schnapps per 5 pots. Add Major Gigantify and Major Resistance before weekend ZvZ. Margins swing with buy prices, station fees, and market tax—use the calculator, not a fixed silver/hour headline.",
     category: "crafting",
     difficulty: "intermediate",
     zoneType: "safe",
-    silverPerHour: { min: 150_000, max: 800_000 },
+    silverPerHour: { min: 100_000, max: 600_000 },
     requirements: [
       "T6 Alchemy with potions specialization (T7 for Gigantify / Resistance recipes)",
-      "Personal island T6+ alchemy lab or Thetford city station (-15% herb city bonus)",
+      "Brecilien city alchemy lab for the potion crafting bonus, or a personal island T6+ lab if you skip the city bonus",
       "Crafting focus saved for Major Healing Potion (768 focus per 5 pots) and Major Gigantify Potion (1,020 focus per 5 pots)",
-      "Silver to buy Elusive Foxglove. Goose Eggs, Sheep's Milk, Potato Schnapps, and T7 Firetouched Mullein + Corn Hooch for war pots",
+      "Silver to buy Elusive Foxglove, Goose Eggs, Sheep's Milk, Potato Schnapps, and T7 Firetouched Mullein + Corn Hooch for war pots",
     ],
     steps: [
-      "Tuesday-Wednesday: buy Elusive Foxglove [6.0]. Goose Eggs [5.0], Sheep's Milk [6.0], and Potato Schnapps [6.0] on Thetford when herb prices dip after the weekend rush.",
-      "Daily bulk (Mon-Wed): craft Major Healing Potion. 72× Elusive Foxglove, 18× Goose Eggs, 18× Potato Schnapps per 5 pots. Spend all focus here first.",
+      "Tuesday-Wednesday: buy Elusive Foxglove, Goose Eggs, Sheep's Milk, and Potato Schnapps where prices are lowest. Thetford often has cheap foxglove and mullein, but craft pots at Brecilien.",
+      "Daily bulk (Mon-Wed): at a Brecilien alchemy lab, craft Major Healing Potion. 72× Elusive Foxglove, 18× Goose Eggs, 18× Potato Schnapps per 5 pots. Spend all focus here first.",
       "Fill remaining lab time with Major Energy Potion, same 72× Elusive Foxglove and 18× Potato Schnapps, but swap eggs for 18× Sheep's Milk per 5 pots. Craft without focus.",
       "T5 starter path: craft Healing Potion (24× Crenellated Burdock + 6× Hen Eggs per 5) and Energy Potion (24× Crenellated Burdock + 6× Goat's Milk per 5) until you unlock T6 majors.",
-      "Thursday-Saturday (before CTAs): craft Major Gigantify Potion. 72× Firetouched Mullein, 36× Elusive Foxglove, 18× Goose Eggs, 18× Corn Hooch per 5 pots, and Major Resistance Potion. 72× Firetouched Mullein, 36× Elusive Foxglove, 36× Crenellated Burdock, 18× Sheep's Milk, 18× Corn Hooch per 5 pots.",
+      "Thursday-Saturday (before CTAs): craft Major Gigantify Potion at Brecilien. 72× Firetouched Mullein, 36× Elusive Foxglove, 18× Goose Eggs, 18× Corn Hooch per 5 pots, and Major Resistance Potion. 72× Firetouched Mullein, 36× Elusive Foxglove, 36× Crenellated Burdock, 18× Sheep's Milk, 18× Corn Hooch per 5 pots.",
       "List Major Healing Potion and Major Gigantify Potion on Caerleon 1 silver under the lowest sell order in stacks of 50. Major Energy Potion can stay on Thetford if Caerleon spread is under 5%.",
-      "Profit = (potion sell price × 5 per craft) - herb/egg/milk/alcohol buy cost - station fee - 6.5% market tax. Recheck each recipe before batching.",
+      "Profit = (potion sell price × 5 per craft) - herb/egg/milk/alcohol buy cost - station fee - 6.5% market tax (Premium). Recheck each recipe before batching.",
     ],
     tips: [
       "Major Healing Potion is ~70% of profit. Never burn focus on Major Energy Potion when heal margins are positive.",
@@ -1176,12 +1181,14 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Buy Firetouched Mullein and Corn Hooch early in the week. T7 war-pot inputs spike harder than T6 foxglove.",
       "Goose Eggs are shared by Major Healing Potion and Major Gigantify Potion; buy one bulk stack for both recipes.",
       "If any major potion margin drops below 10% after tax, pause that recipe and wait for the next ZvZ cycle.",
-      "Slot an empty Mercenary's Journal while crafting, alchemy fame fills it for bonus laborer silver.",
+      "Craft at Brecilien for the potion city bonus. Thetford helps with herb prices, not alchemy station bonuses.",
+      "The profit calculator uses live sell/buy prices but excludes listing tax (~6.5% with Premium) and station fees. Subtract both before you batch.",
+      "Mercenary's Journals fill from PvE combat fame, not alchemy crafting. Use an Alchemist's Journal if you want laborer returns from crafting.",
     ],
     profitBuild: {
       title: "Materials to Stock",
       description:
-        "Buy herbs, eggs, milk, and alcohol on Thetford mid-week. You craft Major Healing + Major Energy daily; stock mullein and corn hooch before ZvZ for Gigantify and Resistance.",
+        "Buy herbs, eggs, milk, and alcohol where prices are lowest. Craft Major Healing + Major Energy at Brecilien; stock mullein and corn hooch before ZvZ for Gigantify and Resistance.",
       slots: {},
       inventory: [
         {
@@ -1225,12 +1232,6 @@ const rawGuides: Omit<Guide, "reliability">[] = [
           name: "Crenellated Burdock",
           quantity: 36,
           hint: "Per 5 Major Resistance Potions",
-        },
-        {
-          id: "T4_JOURNAL_MERCENARY_EMPTY",
-          name: "Adept Mercenary's Journal (Empty)",
-          quantity: 1,
-          hint: "Optional: fill while crafting for bonus returns",
         },
       ],
     },

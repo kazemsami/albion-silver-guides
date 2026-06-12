@@ -106,6 +106,13 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T7_POTION_REVIVE: { sell: 11_000, buy: 4360 },
   T8_POTION_CLEANSE: { sell: 15_150, buy: 6850 },
 
+  // Stalker corrupted kit (approximate Caerleon buy prices for death-cost modeling)
+  T6_HEAD_PLATE_SET1: { sell: 52_000, buy: 45_000 },
+  T6_ARMOR_LEATHER_SET1: { sell: 82_000, buy: 72_000 },
+  T6_SHOES_PLATE_SET1: { sell: 48_000, buy: 42_000 },
+  T6_2H_CLAYMORE: { sell: 108_000, buy: 95_000 },
+  T4_CAPEITEM_FW_THETFORD: { sell: 42_000, buy: 37_600 },
+
   // Crafting inputs (potions guide)
   T3_EGG: { sell: 45, buy: 38 },
   T4_MILK: { sell: 120, buy: 95 },
