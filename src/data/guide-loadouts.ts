@@ -48,7 +48,7 @@ const FISHING_COMBAT_SLOTS = {
   cape: {
     id: "T4_CAPEITEM_FW_THETFORD",
     name: "Adept's Thetford Cape",
-    hint: "Vanisher invis when HP drops low",
+    hint: "Chain Lightning burst on dangerous maps",
   },
   bag: {
     id: "T4_BAG",
@@ -117,7 +117,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
       inventory: [
-        { id: "T5_JOURNAL_ORE_EMPTY", name: "Expert Prospector's Journal (Empty)", hint: "Higher-tier journal returns" },
+        { id: "T4_JOURNAL_ORE_EMPTY", name: "Adept Prospector's Journal (Empty)", hint: "Same T4 journal as baseline loop" },
       ],
     },
   },
@@ -184,18 +184,18 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
     red: {
       title: "Red Zone Build",
-      description: "T5 mixed gear for red-zone solo RDs with better clear speed.",
+      description: "T6 Bloodletter build for red-zone solo RDs; matches calculator loot and death-cost tab.",
       slots: {
         head: { id: "T4_HEAD_CLOTH_SET1", name: "Adept's Scholar Cowl", hint: "Energy regen" },
-        armor: { id: "T5_ARMOR_LEATHER_SET1", name: "Expert's Mercenary Jacket", hint: "Stronger defense" },
-        shoes: { id: "T5_SHOES_PLATE_SET1", name: "Expert's Soldier Boots", hint: "Gap close" },
-        mainhand: { id: "T5_MAIN_RAPIER_MORGANA", name: "Expert's Bloodletter", hint: "Lifesteal + mobility" },
-        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Emergency invis" },
-        food: { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "+damage" },
-        potion: { id: "T4_POTION_HEAL", name: "Healing Potion", hint: "Sustain" },
+        armor: { id: "T6_ARMOR_LEATHER_SET1", name: "Master's Mercenary Jacket", hint: "Stronger defense" },
+        shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
+        mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal + mobility" },
+        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
+        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage" },
+        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Sustain" },
       },
       inventory: [
-        { id: "T4_POTION_ENERGY", name: "Energy Potion", hint: "Ability energy" },
+        { id: "T6_POTION_ENERGY", name: "Major Energy Potion", hint: "Ability energy" },
       ],
     },
     black: {
@@ -206,7 +206,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         armor: { id: "T6_ARMOR_LEATHER_SET1", name: "Master's Mercenary Jacket", hint: "Strong damage + defense" },
         shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
         mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal sustain" },
-        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Emergency invis" },
+        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
         food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage" },
         potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Emergency heal" },
       },

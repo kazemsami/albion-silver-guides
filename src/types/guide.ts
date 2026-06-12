@@ -80,6 +80,8 @@ export interface SkillTier {
   hourlyConsumables?: HourlyItem[];
   /** When set, replaces guide hourlyOutput for this tier (still scaled by outputMultiplier). */
   hourlyOutput?: HourlyItem[];
+  /** When set, replaces guide hourlyInputs for this tier (still scaled by inputMultiplier). */
+  hourlyInputs?: HourlyItem[];
   /** Extra hourly output for this tier only (e.g. rare bonus catches). Not scaled. */
   bonusOutput?: HourlyItem[];
 }
@@ -140,7 +142,12 @@ export interface HourlyEconomicsResult {
   inputTotal: number | null;
   consumables: PricedLine[];
   consumableTotal: number | null;
+  /** Before listing tax: output - inputs - consumables. */
   netTotal: number | null;
+  /** Premium sell-order tax (~6.5% of gross output). */
+  marketTaxTotal: number | null;
+  /** netTotal minus marketTaxTotal. Best estimate of take-home silver. */
+  netAfterTax: number | null;
   pricedAt: string;
   locationNote: string;
   /** True when any line uses estimatedSilverPerUnit (thin market data). */

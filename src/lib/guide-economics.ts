@@ -113,7 +113,7 @@ export function scaleGuideEconomics(
       })),
       ...(tier.bonusOutput ?? []),
     ],
-    hourlyInputs: economics.hourlyInputs?.map((item) => ({
+    hourlyInputs: (tier.hourlyInputs ?? economics.hourlyInputs)?.map((item) => ({
       ...item,
       quantity: scaleQuantity(item.quantity, inM),
     })),
@@ -175,7 +175,7 @@ function netTotalsForEconomics(
         return computeHourlyEconomics(
           { ...economics, ...scaled },
           prices,
-        ).netTotal;
+        ).netAfterTax;
       }),
     );
   }
@@ -185,7 +185,7 @@ function netTotalsForEconomics(
     return computeHourlyEconomics(
       { ...economics, ...scaled },
       prices,
-    ).netTotal;
+    ).netAfterTax;
   });
 }
 
@@ -422,11 +422,13 @@ export function computeLoadoutPricing(
   return { lines, gearTotal, consumableTotal, total };
 }
 
+export const PREMIUM_LISTING_TAX_RATE = 0.065;
+
 export function marketCityLocationNote(city: MarketCityId): string {
   const label = getMarketCityLabel(city);
   return city === AVERAGE_MARKET_CITY_ID
-    ? `${label} (Albion Data Project). Excludes market tax and station fees.`
-    : `${label} market prices (Albion Data Project). Excludes market tax and station fees.`;
+    ? `${label} (Albion Data Project). Station fees not included. After-tax line uses ~6.5% Premium listing tax.`
+    : `${label} market prices (Albion Data Project). Station fees not included. After-tax line uses ~6.5% Premium listing tax.`;
 }
 
 export function computeHourlyEconomics(
@@ -455,6 +457,15 @@ export function computeHourlyEconomics(
         )
       : null;
 
+  const marketTaxTotal =
+    outputTotal != null
+      ? roundSilver(outputTotal * PREMIUM_LISTING_TAX_RATE)
+      : null;
+  const netAfterTax =
+    netTotal != null && marketTaxTotal != null
+      ? roundSilver(netTotal - marketTaxTotal)
+      : null;
+
   const hasEstimatedPrices = [...output, ...input, ...consumables].some(
     (line) => line.priceSource === "estimated",
   );
@@ -467,6 +478,8 @@ export function computeHourlyEconomics(
     consumables,
     consumableTotal,
     netTotal,
+    marketTaxTotal,
+    netAfterTax,
     pricedAt: new Date().toISOString(),
     locationNote: marketCityLocationNote(marketCity),
     hasEstimatedPrices,

@@ -41,12 +41,86 @@ const AVA_T7_STURGEON_SHARE = 2 / 5;
 /** T8 gear: ~4 T7/down + ~3 T8 per cast → 3/7 of fish are Sturgeon. */
 const AVA_T8_STURGEON_SHARE = 3 / 7;
 
+const AVA_FISHING_JOURNAL_EMPTY: HourlyItem = {
+  id: "T7_JOURNAL_FISHING_EMPTY",
+  name: "Grandmaster Fisherman's Journal (Empty)",
+  quantity: 1,
+  side: "buy",
+};
+
+function avaRoadsDeathInputs(deathRate: number, geared: boolean): HourlyItem[] {
+  const base: HourlyItem[] = [
+    {
+      id: "T4_MAIN_RAPIER_MORGANA",
+      name: "Bloodletter (death replacement)",
+      quantity: deathRate,
+      side: "buy",
+    },
+    {
+      id: "T4_CAPEITEM_FW_THETFORD",
+      name: "Thetford Cape (death replacement)",
+      quantity: deathRate,
+      side: "buy",
+    },
+  ];
+
+  if (geared) {
+    return [
+      AVA_FISHING_JOURNAL_EMPTY,
+      ...base,
+      {
+        id: "T5_BAG",
+        name: "Bag (death replacement)",
+        quantity: deathRate,
+        side: "buy",
+      },
+      {
+        id: "T4_MOUNT_GIANTSTAG",
+        name: "Giant Stag (death replacement)",
+        quantity: deathRate,
+        side: "buy",
+      },
+      {
+        id: "T8_2H_TOOL_FISHINGROD",
+        name: "Fishing rod (death replacement)",
+        quantity: deathRate * 0.65,
+        side: "buy",
+      },
+    ];
+  }
+
+  return [
+    AVA_FISHING_JOURNAL_EMPTY,
+    ...base,
+    {
+      id: "T4_BAG",
+      name: "Bag (death replacement)",
+      quantity: deathRate,
+      side: "buy",
+    },
+    {
+      id: "T3_MOUNT_HORSE",
+      name: "Riding horse (death replacement)",
+      quantity: deathRate,
+      side: "buy",
+    },
+  ];
+}
+
 /** Per-hour yields at skill tier multiplier 1.0, profit is scaled by chosen skill level. */
 export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   "t4-ore-mining-yellow-zone": {
     hourlyOutput: [
       { id: "T4_ORE", name: "Iron Ore", quantity: 2000 },
       { id: "T4_JOURNAL_ORE_FULL", name: "Adept Prospector's Journal (Full)", quantity: 1 },
+    ],
+    hourlyInputs: [
+      {
+        id: "T4_JOURNAL_ORE_EMPTY",
+        name: "Adept Prospector's Journal (Empty)",
+        quantity: 1,
+        side: "buy",
+      },
     ],
     hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
     skillTiers: tiers(
@@ -62,6 +136,14 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       { id: "T4_FIBER", name: "Hemp", quantity: 400 },
       { id: "T4_JOURNAL_FIBER_FULL", name: "Adept Cropper's Journal (Full)", quantity: 2 },
     ],
+    hourlyInputs: [
+      {
+        id: "T4_JOURNAL_FIBER_EMPTY",
+        name: "Adept Cropper's Journal (Empty)",
+        quantity: 2,
+        side: "buy",
+      },
+    ],
     hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
     skillTiers: tiers(
       SKILL_TIERS.gatheringLow,
@@ -75,6 +157,38 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       { id: "T6_RUNE", name: "Master's Rune", quantity: 400 },
       { id: "T6_SOUL", name: "Master's Soul", quantity: 120 },
       { id: "T6_LEATHER", name: "Hardened Leather", quantity: 25 },
+    ],
+    hourlyInputs: [
+      {
+        id: "T4_HEAD_CLOTH_SET1",
+        name: "Adept's Scholar Cowl (kit replacement)",
+        quantity: 0.08,
+        side: "buy",
+      },
+      {
+        id: "T6_ARMOR_LEATHER_SET1",
+        name: "Master's Mercenary Jacket (kit replacement)",
+        quantity: 0.08,
+        side: "buy",
+      },
+      {
+        id: "T6_SHOES_PLATE_SET1",
+        name: "Master's Soldier Boots (kit replacement)",
+        quantity: 0.08,
+        side: "buy",
+      },
+      {
+        id: "T6_MAIN_RAPIER_MORGANA",
+        name: "Master's Bloodletter (kit replacement)",
+        quantity: 0.08,
+        side: "buy",
+      },
+      {
+        id: "T4_CAPEITEM_FW_THETFORD",
+        name: "Adept's Thetford Cape (kit replacement)",
+        quantity: 0.08,
+        side: "buy",
+      },
     ],
     hourlyConsumables: [
       { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2 },
@@ -256,9 +370,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   "ava-roads-fishing": {
     // 350-550 fish/hr by gear; T8 baseline 450 fish → 193 Sturgeon + 257 butchered × 15 chops
     hourlyOutput: avaRoadsFishOutput(450, AVA_T8_STURGEON_SHARE),
-    hourlyInputs: [
-      { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", quantity: 1, side: "buy" },
-    ],
+    hourlyInputs: avaRoadsDeathInputs(0.12, true),
     hourlyConsumables: [
       { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
       { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2 },
@@ -268,6 +380,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.avaSafe,
         hourlyOutput: avaRoadsFishOutput(345, AVA_T7_STURGEON_SHARE),
+        hourlyInputs: avaRoadsDeathInputs(0.06, false),
         hourlyConsumables: [
           { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
           { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2 },
@@ -276,6 +389,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.avaGrandmaster,
         hourlyOutput: avaRoadsFishOutput(400, AVA_T7_STURGEON_SHARE),
+        hourlyInputs: avaRoadsDeathInputs(0.1, true),
         description:
           "T7 fisherman set, ~400 fish/hr, 2/5 Sturgeon and 3/5 butchered to chops",
         bonusOutput: [
@@ -288,6 +402,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       },
       {
         ...SKILL_TIERS.avaProfit,
+        hourlyInputs: avaRoadsDeathInputs(0.12, true),
         description:
           "T8 fisherman set, ~450 fish/hr, 3/7 Sturgeon and 4/7 butchered to chops",
         bonusOutput: [
@@ -301,6 +416,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.avaExpert,
         hourlyOutput: avaRoadsFishOutput(550, AVA_T8_STURGEON_SHARE),
+        hourlyInputs: avaRoadsDeathInputs(0.18, true),
         description:
           "T8 max spec, ~550 fish/hr on deep T8 road maps. Sturgeon/Snapper from zone-tier RNG on normal schools.",
         bonusOutput: [

@@ -40,9 +40,11 @@ export const SKILL_TIERS = {
   avaSafe: {
     id: "safe",
     label: "Safe escape build",
-    description: "Fisherman cap + pork pie + GM rod, no garb/boots (~345 fish/hr)",
+    description:
+      "Fisherman cap + pork pie + GM rod, no garb/boots (~345 fish/hr). Full-loot roads: calculator includes ~0.06 deaths/hr on cheap kit.",
     outputMultiplier: 1,
     consumableMultiplier: 1,
+    inputMultiplier: 1,
   },
   avaGrandmaster: {
     id: "grandmaster",
@@ -53,26 +55,33 @@ export const SKILL_TIERS = {
   avaProfit: {
     id: "profit",
     label: "T8 max profit",
-    description: "Full T8 fisherman set + pork pie (~450 fish/hr",
+    description:
+      "Full T8 fisherman set + pork pie (~450 fish/hr). Calculator models ~0.12 gear deaths/hr on lethal roads.",
     outputMultiplier: 1,
+    inputMultiplier: 1,
   },
   avaExpert: {
     id: "expert",
     label: "T8 max spec (deep roads)",
-    description: "Max fishing specs (~550 fish/hr on T8 road maps",
+    description:
+      "Max fishing specs (~550 fish/hr on T8 road maps). Deep roads: ~0.18 deaths/hr in calculator.",
     outputMultiplier: 1,
+    inputMultiplier: 1,
   },
   dungeonYellow: {
     id: "yellow",
     label: "Yellow / blue zones",
     description: "Knockdown only, safer solo RDs",
     outputMultiplier: 0.45,
+    inputMultiplier: 0,
   },
   dungeonRed: {
     id: "red",
     label: "Red zones",
-    description: "Better loot, full-loot risk",
+    description:
+      "T6 red solo RDs (~400 runes/hr). Calculator models ~0.08 full-kit deaths/hr.",
     outputMultiplier: 0.75,
+    inputMultiplier: 1,
   },
   dungeonBlack: {
     id: "black",
@@ -111,7 +120,8 @@ export const SKILL_TIERS = {
   depthsStandard: {
     id: "standard",
     label: "Floor 2 extract (baseline)",
-    description: "Cash out floor 2 after ~30 min, best risk/reward for most teams and solo PvE",
+    description:
+      "Cash out floor 2 after ~30 min. Calculator figures are pre-tax and swing with PvP wins and extract timing.",
     outputMultiplier: 1,
   },
   depthsExpert: {

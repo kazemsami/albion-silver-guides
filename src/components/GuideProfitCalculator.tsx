@@ -125,16 +125,23 @@ export function GuideProfitCalculator({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-              Your estimated profit / hour
+              Est. take-home / hour (after tax)
             </p>
             <p className="mt-1 text-3xl font-bold text-gold tabular-nums">
-              {result.netTotal != null
-                ? formatSilverPrice(result.netTotal)
-                : "N/A"}
+              {result.netAfterTax != null
+                ? formatSilverPrice(result.netAfterTax)
+                : result.netTotal != null
+                  ? formatSilverPrice(result.netTotal)
+                  : "N/A"}
             </p>
+            {result.netTotal != null && result.netAfterTax != null && (
+              <p className="mt-1 text-xs text-parchment/45">
+                Before tax: {formatSilverPrice(result.netTotal)}/hr
+              </p>
+            )}
             {profitRange?.min != null && profitRange.max != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                All skill levels: {formatSilverRange(profitRange.min, profitRange.max)}/hr
+                All skill levels (after tax): {formatSilverRange(profitRange.min, profitRange.max)}/hr
               </p>
             )}
           </div>
@@ -287,16 +294,27 @@ export function GuideProfitCalculator({
             />
           )}
           <EconomicsSummaryRow
-            label="Net profit / hour"
+            label="Net before listing tax"
             value={result.netTotal}
+          />
+          {result.marketTaxTotal != null && (
+            <EconomicsSummaryRow
+              label="Minus Premium listing tax (~6.5%)"
+              value={-result.marketTaxTotal}
+            />
+          )}
+          <EconomicsSummaryRow
+            label="Est. take-home / hour"
+            value={result.netAfterTax ?? result.netTotal}
             emphasis
           />
         </div>
 
         <p className="mt-3 text-xs text-parchment/40">
-          Profit = output sell value - input buys - consumables. Market tax
-          (~6.5% with Premium) not included. Yields scale with your selected
-          skill level.
+          Take-home = output sell value - input buys - consumables - ~6.5% Premium
+          listing tax on gross output. Deaths, repairs, and station fees are not
+          included unless listed as inputs. Yields scale with your selected skill
+          level.
         </p>
       </section>
     </>

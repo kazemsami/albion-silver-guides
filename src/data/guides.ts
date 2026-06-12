@@ -19,10 +19,10 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     ],
     steps: [
       "Start in Martlock. Run the Haytor → Pennine Forest → Slimehag loop (T4-T5 yellow highland), only mine T4 Iron Ore nodes your pick can hit in one swing.",
-      "Carry an empty T4 prospector journal; it fills passively while you mine. One full journal per hour is a realistic target at mid-tier gathering.",
+      "One full Adept Prospector's Journal per hour is realistic at mid-tier gathering. Buy the matching empty journal back each loop; the calculator subtracts that cost.",
       "Bank when carry weight hits ~80% (~2,000 ore per trip with pork pie). Do not refine. Sell raw T4 Iron Ore on the Martlock market (list 1 silver under the lowest sell order).",
       "After depositing, buy another Pork Pie and repeat the loop. Upgrade to T5 pick only when you can one-shot T5 Titanium nodes without slowing the route.",
-      "Track profit as: (ore sold × price) + (full journal sold × price) - pork pie cost. Ignore refining unless steel bars are 20%+ more profitable after the 6.5% market tax.",
+      "Track profit as: (ore sold × price) + (full journal sold × price) - empty journal buy - pork pie cost. Subtract ~6.5% Premium listing tax from sell value unless you price that in yourself.",
     ],
     tips: [
       "Iron ore is the money maker here, skip copper (T2) and tin (T3) nodes entirely; they waste time per silver.",
@@ -103,7 +103,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     tips: [
       "Skyflower (T5) is ~70% of your silver, prioritize T5 nodes even if it means skipping a T4 cluster.",
       "Thetford is the fiber city; local sell orders move faster than hauling to Caerleon unless the spread exceeds 10%.",
-      "Two journals = double the journal profit per hour for zero extra travel. Always carry two empties.",
+      "Two journals = double journal profit per hour for zero extra travel. Buy two empty Adept Cropper's Journals each hour if you sell the full ones.",
       "Stay in yellow zones for knockdown safety, blue zones are not more profitable, just less punishing on death than red.",
     ],
     profitBuild: {
@@ -163,7 +163,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "solo-dungeon-farming",
     title: "Solo Randomized Dungeon Farming",
     description:
-      "Farm red-zone solo dungeons near Martlock for ~400 Master's Runes, ~120 souls, and leather per hour. Sell runes and souls on Caerleon; yellow zones are for learning, red zones are where the silver is.",
+      "Farm T6 red-zone solo dungeons near Martlock for ~400 Master's Runes, ~120 souls, and leather per hour at a steady clear pace. Yellow zones are for learning; red zones pay more but full-loot deaths cut take-home. Use the calculator for after-tax loot minus modeled kit losses.",
     category: "dungeons",
     difficulty: "intermediate",
     zoneType: "dangerous",
@@ -185,6 +185,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     tips: [
       "Bloodletter E → Q → W rotation with Scholar Cowl energy refund is the standard speed-clear, practice the rotation until trash dies in under 8 seconds.",
       "Red zone deaths are full loot. Never carry more than 2 runs of loot on you. Bank is free insurance.",
+      "The profit calculator models ~0.08 full-kit replacements per hour on the red tab. Fewer deaths = higher take-home.",
       "Dungeon tier = zone tier. T6 red near Martlock is the sweet spot for T6 rune income without black-zone risk.",
       "Skip dungeons with other players inside, shared loot cuts your runes/hour in half.",
     ],
@@ -216,7 +217,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         cape: {
           id: "T4_CAPEITEM_FW_THETFORD",
           name: "Adept's Thetford Cape",
-          hint: "Vanisher: emergency invis when taking burst damage",
+          hint: "Chain Lightning burst on burst damage",
         },
         food: {
           id: "T6_MEAL_STEW",
@@ -336,11 +337,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "abyssal-depths-farming",
     title: "Abyssal Depths Silver Farming",
     description:
-      "Run The Depths from any royal city's Antiquarian's Den, orange-zone PvE/PvP with collapsing floors, souls, and stacking buffs. Duo or trio is best for consistent wins; solo PvE floor-2 extracts still pay ~800k–1.5M/hr. Gear stays equipped on death; only bag loot is at risk.",
+      "Run The Depths from any royal city's Antiquarian's Den: orange-zone PvE/PvP with collapsing floors, souls, and stacking buffs. Duo or trio is best for consistent wins; solo floor-2 extracts can still pay well. Calculator figures are after listing tax but swing hard with win rate, PvP loot, and how early you extract. Gear stays equipped on death; only bag loot is at risk.",
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 800_000, max: 2_500_000 },
+    silverPerHour: { min: 500_000, max: 1_800_000 },
     requirements: [
       "Antiquarian's Den in any royal city or Caerleon, enter unflagged, bank everything in the shared Den bank",
       "Queue duo or trio with a full team when possible; solo works for PvE but is handicapped in PvP",
@@ -367,7 +368,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Run PvP abilities even while clearing mobs. If you get jumped mid-pull, there is no time to respec.",
       "Never fight without an active room buff if the enemy has one, buffs only proc below 40% HP but are the main edge beyond gear.",
       "Solo PvE: Astral Staff + Cleric Robe or Great Axe for AoE room clears; extract floor 2 for ~1M/hr from silver bags + chests even with bad RNG (see reference video).",
-      "Reset early when stacks are below ~10, inventory is full, or you are outnumbered. The Depths pays well enough that safe extracts beat greedy floor-3 throws.",
+      "Reset early when stacks are below ~10, inventory is full, or you are outnumbered. Safe extracts beat greedy floor-3 throws; treat headline silver as a good hour, not a guarantee.",
       "Floor 3 is stacked and sweaty, only push when your team hit 15 stacks early and you are ready for key fights. Vault loot is high variance.",
       "Optional: empty T8 mercenary journals on floor 3 T8 mobs (~300k per 15 filled), inventory risk only.",
     ],
@@ -574,13 +575,13 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Chopped fish is the product you sell, not raw fish. Always butcher before listing.",
       "Bridgewatch has the best local demand for low-tier fish products; hauling to Caerleon rarely beats the travel time.",
       "Schools are contested during peak hours, fish 06:00-10:00 UTC for empty shores.",
-      "Never ride with the rod equipped. Bloodletter. Thetford cape, bag, and riding horse let you fight back or flee if someone dives you.",
+      "Never ride with the rod equipped. Bloodletter, Thetford cape (Chain Lightning), bag, and riding horse while traveling between schools.",
       "This is a stepping stone: at fishing 10+ switch to yellow Mists for 600k+/hr.",
     ],
     profitBuild: {
       title: "Required Gear",
       description:
-        "Rod in bag: equip Bloodletter. Thetford cape, bag, and a riding horse while traveling. Swap to the rod only at a school.",
+        "Rod in bag: equip Bloodletter, Thetford cape, bag, and a riding horse while traveling. Swap to the rod only at a school.",
       slots: {
         mainhand: {
           id: "T4_MAIN_RAPIER_MORGANA",
@@ -590,7 +591,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         cape: {
           id: "T4_CAPEITEM_FW_THETFORD",
           name: "Adept's Thetford Cape",
-          hint: "Vanisher invis when HP drops low",
+          hint: "Chain Lightning burst, not invisibility",
         },
         bag: {
           id: "T4_BAG",
@@ -617,7 +618,8 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         {
           id: "T3_FISHINGBAIT",
           name: "Fancy Fish Bait",
-          hint: "T3 bait: best silver-to-bite ratio",
+          quantity: 12,
+          hint: "~12 bait per hour at schools",
         },
         {
           id: "T4_JOURNAL_FISHING_EMPTY",
@@ -633,7 +635,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "mists-fishing",
     title: "Yellow Zone Mists Fishing",
     description:
-      "Fish in yellow-zone Mists for some of the best fishing income in Albion. Knockdown-only PvP keeps risk low while earnings scale heavily with your fishing level; level 60+ anglers can pull in around 1M silver per hour.",
+      "Fish in yellow-zone Mists for strong fishing income with knockdown-only PvP. Earnings scale heavily with fishing level and market prices; use the calculator for after-tax take-home with journal empty costs included.",
     category: "fishing",
     difficulty: "intermediate",
     zoneType: "safe",
@@ -662,7 +664,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Sell raw fish, chopped fish, or rare catches on the market. Check Caerleon for premium prices.",
     ],
     tips: [
-      "Income scales sharply with fishing level: ~600k/hr at 10-30, ~900k/hr at 30-60, and ~1M/hr at 60+.",
+      "Income scales sharply with fishing level and fish prices. Calculator ranges are after ~6.5% Premium listing tax; yields still swing with competition and Snapper RNG.",
       "Puremist Snapper can drop while fishing in T7+ zones. There are no dedicated snapper schools, only normal fish schools.",
       "Fish during off-peak hours to avoid competition for schools and portal camps.",
       "Yellow-zone Mists are knockdown-only, bring your best gear for max yield, not a budget PvP setup.",
@@ -751,7 +753,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "ava-roads-fishing",
     title: "Avalonian Roads Fishing (T8)",
     description:
-      "Fish normal schools on T8 Avalonian Road maps for top-tier silver income. Net profit scales from about 1.5M/hr on the safe escape build to roughly 3.8-5M/hr at max fishing specs. Use the profit calculator tabs to compare setups.",
+      "Fish normal schools on T8 Avalonian Road maps for top-tier silver income. Roads are full-loot black zones: one death can erase hours of fish. Calculator shows after-tax take-home with modeled gear deaths per tab.",
     category: "fishing",
     difficulty: "advanced",
     zoneType: "dangerous",
@@ -825,7 +827,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     profitBuild: {
       title: "Max Profit Fishing Gear",
       description:
-        "Full T8 fisherman set with pork pie. Rod in bag; Thetford cape, Giant Stag, and invis for road escapes.",
+        "Full T8 fisherman set with pork pie. Rod in bag; Thetford cape (Chain Lightning), Giant Stag, and invis potion for road escapes.",
       slots: {
         head: {
           id: "T8_HEAD_GATHERER_FISH",
@@ -850,7 +852,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         cape: {
           id: "T4_CAPEITEM_FW_THETFORD",
           name: "Adept's Thetford Cape",
-          hint: "Vanisher: auto-invis when low HP",
+          hint: "Chain Lightning burst; use invis potion to escape",
         },
         bag: {
           id: "T5_BAG",
@@ -916,8 +918,8 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Do not cheap out on T7 gear long-term: T8 fisherman armor gives a significant fish-per-cast bonus and faster spec/journal progress.",
       "Pork Pie ×2 per hour grants +15% gathering yield (which also boosts fishing yield) and +30% carry weight, including on the safe escape build.",
       "If dismounted on the safe build, pop Flee on Miner's Workboots, then Ambush on the Assassin's Jacket to juke and remount your T3 horse.",
-      "A single death in expensive fishing gear can wipe hours of profit, use a good mount (Giant Stag) once your kit is valuable.",
-      "Carry invisibility potions on geared tabs. They work while silenced and help on Ava Roads.",
+      "A single death in expensive fishing gear can wipe hours of profit. Calculator tabs include expected kit replacement; use Giant Stag and invis once your tab is geared.",
+      "Thetford Cape is Chain Lightning, not invisibility. Carry invisibility potions on geared tabs for dismount escapes.",
       "The fishing rod stays in your bag. Cast at schools without equipping it.",
     ],
     references: [
@@ -959,7 +961,8 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Repeat, specialize laborers to match whatever activity you already do so journal filling costs nothing extra.",
     ],
     tips: [
-      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost. Filling journals yourself removes the buy cost and is the most profitable approach.",
+      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - ~6.5% listing tax on sells. Filling journals yourself removes the buy cost and is the most profitable approach.",
+      "Breakeven island spend: compare total T8 house + furniture + trophy cost to (profit per journal × journals per day × 30). At ~150-500k per 22h batch, a full island often pays back over weeks, not hours.",
       "This guide assumes a full T8 setup: T8 laborer houses with T8 furniture processing T7 journals at the 150% happiness cap (~58 T7 resources per journal).",
       "Laborers process journals at or below their tier: a T8 laborer handles T7 journals at 150% return rate.",
       "Check market prices before buying filled journals, margins vary by city and journal tier. Caerleon and Brecilien often have the best journal spreads.",

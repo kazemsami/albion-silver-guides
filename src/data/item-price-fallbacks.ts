@@ -121,6 +121,8 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T6_ARMOR_LEATHER_SET1: { sell: 82_000, buy: 72_000 },
   T6_SHOES_PLATE_SET1: { sell: 48_000, buy: 42_000 },
   T6_2H_CLAYMORE: { sell: 108_000, buy: 95_000 },
+  T6_MAIN_RAPIER_MORGANA: { sell: 95_000, buy: 82_000 },
+  T4_HEAD_CLOTH_SET1: { sell: 18_000, buy: 15_000 },
   T4_CAPEITEM_FW_THETFORD: { sell: 42_000, buy: 37_600 },
 
   // Crafting inputs (potions guide)
