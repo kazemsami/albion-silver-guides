@@ -16,6 +16,10 @@ const SOURCE_FILES = [
   "src/data/guide-skill-tiers.ts",
   "src/data/laborer-specialties.ts",
   "src/data/t8-house-cost.ts",
+  "src/data/tracking-economics.ts",
+  "src/data/potion-economics.ts",
+  "src/data/abyssal-economics.ts",
+  "src/data/ava-roads-economics.ts",
 ];
 
 const ids = new Set();
