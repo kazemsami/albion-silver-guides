@@ -12,6 +12,125 @@ export interface FallbackPrices {
 
 /** Explicit overrides, thin markets, journals, rare drops, crafting mats. */
 export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
+  // Tracking generic loot: runes / souls / relics / tomes
+  T4_RUNE: { sell: 42, buy: 35 },
+  T5_RUNE: { sell: 95, buy: 80 },
+  T6_RUNE: { sell: 165, buy: 140 },
+  T7_RUNE: { sell: 420, buy: 350 },
+  T8_RUNE: { sell: 950, buy: 780 },
+
+  T4_SOUL: { sell: 180, buy: 145 },
+  T5_SOUL: { sell: 420, buy: 350 },
+  T6_SOUL: { sell: 850, buy: 720 },
+  T7_SOUL: { sell: 5200, buy: 4400 },
+  T8_SOUL: { sell: 12_500, buy: 10_500 },
+
+  T4_RELIC: { sell: 420, buy: 350 },
+  T5_RELIC: { sell: 980, buy: 820 },
+  T6_RELIC: { sell: 2400, buy: 2000 },
+  T7_RELIC: { sell: 11_000, buy: 9000 },
+  T8_RELIC: { sell: 32_000, buy: 26_000 },
+
+  T4_SKILLBOOK_STANDARD: { sell: 10_000, buy: 8500 },
+
+  // Legacy custom tracking IDs, keep only if old loot lines still use them
+  T4_SHADOW_FUR: { sell: 8500, buy: 6800 },
+  T5_SHADOW_FUR: { sell: 14_000, buy: 11_000 },
+
+  T4_SHADOW_CLAWS: { sell: 5200, buy: 4200 },
+  T5_SHADOW_CLAWS: { sell: 12_000, buy: 9500 },
+  T6_SHADOW_CLAWS: { sell: 75_000, buy: 60_000 },
+
+  T4_DAWNBIRD_FEATHER: { sell: 2800, buy: 2200 },
+  T5_DAWNBIRD_FEATHER: { sell: 6500, buy: 5200 },
+  T6_DAWNBIRD_FEATHER: { sell: 12_000, buy: 9500 },
+  T8_DAWNBIRD_FEATHER: { sell: 35_000, buy: 28_000 },
+
+  T5_DAWNBIRD_BEAK: { sell: 12_000, buy: 9500 },
+  T6_DAWNBIRD_BEAK: { sell: 22_000, buy: 17_000 },
+
+  T5_HELLFIRE_PAW: { sell: 15_000, buy: 12_000 },
+  T7_HELLFIRE_PAW: { sell: 75_000, buy: 60_000 },
+
+  T5_ROCKGIANT_HEART: { sell: 18_000, buy: 14_000 },
+  T6_ROCKGIANT_HEART: { sell: 32_000, buy: 25_000 },
+
+  T4_SPIRITBEAR_HEART: { sell: 8000, buy: 6400 },
+  T5_SPIRITBEAR_HEART: { sell: 14_000, buy: 11_000 },
+
+  T4_WEREWOLF_HEART: { sell: 9000, buy: 7200 },
+  T5_WEREWOLF_HEART: { sell: 16_000, buy: 12_500 },
+
+  T4_SPIRIT_REMAINS: { sell: 4500, buy: 3600 },
+  T5_SPIRIT_REMAINS: { sell: 9000, buy: 7200 },
+  T6_SPIRIT_REMAINS: { sell: 16_000, buy: 12_500 },
+
+  T6_ANCIENT_SOUL: { sell: 12_000, buy: 9500 },
+  T6_ANCIENT_STONE: { sell: 45_000, buy: 36_000 },
+  T7_ANCIENT_STONE: { sell: 75_000, buy: 60_000 },
+
+  // Real tracking animal-part IDs
+  T3_ALCHEMY_RARE_PANTHER: { sell: 5200, buy: 4200 },
+  T5_ALCHEMY_RARE_PANTHER: { sell: 12_000, buy: 9500 },
+  T7_ALCHEMY_RARE_PANTHER: { sell: 75_000, buy: 60_000 },
+
+  T3_ALCHEMY_RARE_EAGLE: { sell: 2800, buy: 2200 },
+  T5_ALCHEMY_RARE_EAGLE: { sell: 6500, buy: 5200 },
+  T7_ALCHEMY_RARE_EAGLE: { sell: 35_000, buy: 28_000 },
+
+  T3_ALCHEMY_RARE_DIREBEAR: { sell: 8000, buy: 6400 },
+  T5_ALCHEMY_RARE_DIREBEAR: { sell: 14_000, buy: 11_000 },
+  T7_ALCHEMY_RARE_DIREBEAR: { sell: 75_000, buy: 60_000 },
+
+  T3_ALCHEMY_RARE_WEREWOLF: { sell: 9000, buy: 7200 },
+  T5_ALCHEMY_RARE_WEREWOLF: { sell: 16_000, buy: 12_500 },
+  T7_ALCHEMY_RARE_WEREWOLF: { sell: 85_000, buy: 68_000 },
+
+  T3_ALCHEMY_RARE_IMP: { sell: 10_000, buy: 8000 },
+  T5_ALCHEMY_RARE_IMP: { sell: 15_000, buy: 12_000 },
+  T7_ALCHEMY_RARE_IMP: { sell: 75_000, buy: 60_000 },
+
+  T3_ALCHEMY_RARE_ELEMENTAL: { sell: 12_000, buy: 9500 },
+  T5_ALCHEMY_RARE_ELEMENTAL: { sell: 18_000, buy: 14_000 },
+  T7_ALCHEMY_RARE_ELEMENTAL: { sell: 75_000, buy: 60_000 },
+
+  T3_ALCHEMY_RARE_ENT: { sell: 4500, buy: 3600 },
+  T5_ALCHEMY_RARE_ENT: { sell: 9000, buy: 7200 },
+  T7_ALCHEMY_RARE_ENT: { sell: 45_000, buy: 36_000 },
+
+  // Shapeshifter artifact remnants: Dawnbird
+  T4_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 25_000, buy: 20_000 },
+  T5_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 85_000, buy: 68_000 },
+  T6_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 225_000, buy: 180_000 },
+  T7_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 650_000, buy: 520_000 },
+  T8_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 1_800_000, buy: 1_440_000 },
+
+  // Shapeshifter artifact remnants: Hellfire Imp
+  T4_ARTEFACT_2H_SHAPESHIFTER_HELL: { sell: 25_000, buy: 20_000 },
+  T5_ARTEFACT_2H_SHAPESHIFTER_HELL: { sell: 85_000, buy: 68_000 },
+  T6_ARTEFACT_2H_SHAPESHIFTER_HELL: { sell: 225_000, buy: 180_000 },
+  T7_ARTEFACT_2H_SHAPESHIFTER_HELL: { sell: 650_000, buy: 520_000 },
+  T8_ARTEFACT_2H_SHAPESHIFTER_HELL: { sell: 1_800_000, buy: 1_440_000 },
+
+  // Shapeshifter artifact remnants: Werewolf
+  T4_ARTEFACT_2H_SHAPESHIFTER_MORGANA: { sell: 25_000, buy: 20_000 },
+  T5_ARTEFACT_2H_SHAPESHIFTER_MORGANA: { sell: 85_000, buy: 68_000 },
+  T6_ARTEFACT_2H_SHAPESHIFTER_MORGANA: { sell: 225_000, buy: 180_000 },
+  T7_ARTEFACT_2H_SHAPESHIFTER_MORGANA: { sell: 650_000, buy: 520_000 },
+  T8_ARTEFACT_2H_SHAPESHIFTER_MORGANA: { sell: 1_800_000, buy: 1_440_000 },
+
+  // Shapeshifter artifact remnants: Runestone Golem
+  T4_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 25_000, buy: 20_000 },
+  T5_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 85_000, buy: 68_000 },
+  T6_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 225_000, buy: 180_000 },
+  T7_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 650_000, buy: 520_000 },
+  T8_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 1_800_000, buy: 1_440_000 },
+
+  // Tracking tool / essence
+  T7_ESSENCE_POTION: { sell: 110_000, buy: 85_000 },
+  T8_ESSENCE_POTION: { sell: 230_000, buy: 175_000 },
+  T7_2H_TOOL_TRACKING: { sell: 106_000, buy: 36_000 },
+
   // T1 products
   T1_FISHCHOPS: { sell: 52, buy: 48 },
   T1_SEAWEED: { sell: 38, buy: 32 },
@@ -65,11 +184,6 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T6_JOURNAL_TROPHY_GENERAL_FULL: { sell: 36_000, buy: 30_000 },
   T4_JOURNAL_FISHING_FULL: { sell: 9200, buy: 7800 },
   T5_JOURNAL_FISHING_FULL: { sell: 18_000, buy: 15_000 },
-  T4_RELIC: { sell: 420, buy: 350 },
-  T5_RELIC: { sell: 980, buy: 820 },
-  T5_RUNE: { sell: 95, buy: 80 },
-  T4_RUNE: { sell: 42, buy: 35 },
-  T5_SOUL: { sell: 420, buy: 350 },
   QUESTITEM_TOKEN_ROYAL_T4: { sell: 3200, buy: 2600 },
   QUESTITEM_TOKEN_ROYAL_T5: { sell: 6500, buy: 5200 },
   QUESTITEM_TOKEN_ROYAL_T6: { sell: 13_000, buy: 10_500 },
@@ -81,21 +195,6 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   TREASURE_DECORATIVE_RARITY3: { sell: 24_000, buy: 20_000 },
   TREASURE_KNOWLEDGE_RARITY2: { sell: 95_000, buy: 80_000 },
   T5_FISH_FRESHWATER_ALL_COMMON: { sell: 2800, buy: 2200 },
-
-  // Dungeon / Depths / Corrupted loot
-  T6_RUNE: { sell: 165, buy: 140 },
-  T7_RUNE: { sell: 420, buy: 350 },
-  T8_RUNE: { sell: 950, buy: 780 },
-  T6_SOUL: { sell: 850, buy: 720 },
-  T7_SOUL: { sell: 5200, buy: 4400 },
-  T8_SOUL: { sell: 12500, buy: 10500 },
-
-  // Tracking (trade-chat estimates, rarely on royal markets)
-  T7_ARTEFACT_2H_SHAPESHIFTER_KEEPER: { sell: 950_000 },
-  T8_ARTEFACT_2H_SHAPESHIFTER_AVALON: { sell: 2_100_000 },
-  T7_ESSENCE_POTION: { sell: 110_000, buy: 85_000 },
-  T8_ESSENCE_POTION: { sell: 230_000, buy: 175_000 },
-  T7_2H_TOOL_TRACKING: { sell: 106_000, buy: 36_000 },
 
   // Fishing
   T3_FISHINGBAIT: { sell: 210, buy: 180 },

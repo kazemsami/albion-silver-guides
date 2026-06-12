@@ -34,8 +34,8 @@ export const guideReliabilityBySlug: Record<string, GuideReliability> = {
     lastUpdated: "2026-06-12",
   },
   "high-tier-group-tracking": {
-    status: "needs-review",
-    lastUpdated: "2026-06-12",
+    status: "community-checked",
+    lastUpdated: "2026-06-13",
   },
   "potions-crafting-bulk": {
     status: "needs-review",

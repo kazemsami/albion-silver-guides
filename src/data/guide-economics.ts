@@ -6,6 +6,10 @@ import {
 } from "@/data/laborer-specialties";
 import type { HourlyItem } from "@/types/guide";
 import { SKILL_TIERS, tiers } from "@/data/guide-skill-tiers";
+import {
+  TRACKING_AVERAGE_LOOT_PER_KILL,
+  TRACKING_TIER_CONFIGS,
+} from "@/data/tracking-economics";
 
 /** Butchered T7-and-lower bycatch → chopped fish (avg). */
 const AVA_CHOPS_PER_FISH = 15;
@@ -235,11 +239,12 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "standard",
   },
   "high-tier-group-tracking": {
-    // Shared remains from veteran kills; target-specific remnants/essences in bonusOutput.
-    // Remnant rates are conservative (~1-2% drop odds on published tables, not 1+ per hour).
-    hourlyOutput: [
-      { id: "T1_ALCHEMY_COMMON", name: "Rare Animal Remains", quantity: 38 },
-    ],
+    // Average mixed Roads loot from a ~22 kill session (20-24 kills), scaled to 7 kills/hr.
+    hourlyOutput: TRACKING_AVERAGE_LOOT_PER_KILL.map((loot) => ({
+      id: loot.id,
+      name: loot.name,
+      quantity: Math.round(loot.perKill * TRACKING_TIER_CONFIGS[0]!.killsPerHour * 10) / 10,
+    })),
     hourlyConsumables: [
       {
         id: "T7_2H_TOOL_TRACKING",
@@ -251,12 +256,8 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", quantity: 1 },
       { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", quantity: 0.4 },
     ],
-    skillTiers: tiers(
-      SKILL_TIERS.trackingT6Red,
-      SKILL_TIERS.trackingT7Veteran,
-      SKILL_TIERS.trackingT8Expert,
-    ),
-    defaultSkillTierId: "t7-veteran",
+    skillTiers: tiers(SKILL_TIERS.trackingAvaRoads),
+    defaultSkillTierId: "ava-roads",
   },
   "corrupted-dungeons-pvpve": {
     // Conservative soul/rune pace for completed Stalker runs; not peak ZvZ liquidity.

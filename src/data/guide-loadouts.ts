@@ -385,52 +385,10 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
   },
   "high-tier-group-tracking": {
-    "t6-red": {
-      title: "T6 Red Learning Group",
+    "ava-roads": {
+      title: "Avalonian Roads Group Tracking",
       description:
-        "Budget T6 kit for learning T7 Golem veteran hunts in red zones. Tracker uses T6 toolkit (tracks up to T7 Golem).",
-      slots: {
-        head: {
-          id: "T6_HEAD_LEATHER_SET1",
-          name: "Master's Mercenary Hood",
-          hint: "Budget DPS for learning clears",
-        },
-        armor: {
-          id: "T6_ARMOR_LEATHER_SET1",
-          name: "Master's Mercenary Jacket",
-          hint: "Damage + defense",
-        },
-        shoes: {
-          id: "T6_SHOES_LEATHER_SET3",
-          name: "Master's Stalker Shoes",
-          hint: "Mobility between hunt steps",
-        },
-        mainhand: {
-          id: "T6_2H_FIRESTAFF",
-          name: "Master's Wildfire Staff",
-          hint: "AoE on Golem phases",
-        },
-        cape: {
-          id: "T4_CAPEITEM_FW_FORTSTERLING",
-          name: "Adept's Fort Sterling Cape",
-          hint: "CC reduction",
-        },
-        food: { id: "T6_MEAL_SANDWICH", name: "Beef Sandwich", hint: "+defense food" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Sustain" },
-      },
-      inventory: [
-        {
-          id: "T6_2H_TOOL_TRACKING",
-          name: "Master's Tracking Toolkit",
-          hint: "Tracker: T6 toolkit tracks up to T7 Golem",
-        },
-        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Escape ganks" },
-      ],
-    },
-    "t7-veteran": {
-      title: "T7 Golem 5-Man Build",
-      description:
-        "Standard Golem farm comp: Wildfire DPS. Incubus tank, Fallen healer. Tracker uses T7 toolkit.",
+        "4-man mixed veteran comp on Roads: Wildfire DPS, Incubus tank, Fallen healer. Tracker uses T7 toolkit for Golem, Dawnbird, Panther, Werewolf, and Rare Quarry hunts.",
       slots: {
         head: {
           id: "T7_HEAD_LEATHER_SET1",
@@ -464,63 +422,10 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         {
           id: "T7_2H_TOOL_TRACKING",
           name: "Grandmaster's Tracking Toolkit",
-          hint: "Tracker: T7 Golem and T8 Dawnbird (tier +1)",
+          hint: "Tracker: mixed T7/T8 veteran hunts on Roads (tier +1)",
         },
         { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Burst on engage" },
-        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage gankers" },
-      ],
-    },
-    "t8-expert": {
-      title: "T8 Dawnbird Expert Group",
-      description:
-        "Heavier T7-T8 combat kit for Dawnbird veteran hunts. Tracker still uses a T7 toolkit (tier +1).",
-      slots: {
-        head: {
-          id: "T7_HEAD_PLATE_SET2",
-          name: "Grandmaster's Guardian Helmet",
-          hint: "Tank slot: face Dawnbird burst",
-        },
-        armor: {
-          id: "T7_ARMOR_PLATE_SET2",
-          name: "Grandmaster's Guardian Armor",
-          hint: "Tank survivability",
-        },
-        shoes: {
-          id: "T7_SHOES_PLATE_SET2",
-          name: "Grandmaster's Guardian Boots",
-          hint: "Hold engage zone",
-        },
-        mainhand: {
-          id: "T7_MAIN_MACE_HELL",
-          name: "Grandmaster's Incubus Mace",
-          hint: "Standard tracking tank weapon",
-        },
-        offhand: {
-          id: "T7_OFF_SHIELD_HELL",
-          name: "Grandmaster's Infernal Shield",
-          hint: "Mitigation for Dawnbird phases",
-        },
-        cape: {
-          id: "T4_CAPEITEM_FW_FORTSTERLING",
-          name: "Adept's Fort Sterling Cape",
-          hint: "CC reduction",
-        },
-        food: { id: "T8_MEAL_SANDWICH", name: "Beef Sandwich", hint: "+defense for long hunts" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Sustain" },
-      },
-      inventory: [
-        {
-          id: "T7_2H_TOOL_TRACKING",
-          name: "Grandmaster's Tracking Toolkit",
-          hint: "Tracker: T8 Dawnbird via tier +1 (no T8 toolkit required)",
-        },
-        {
-          id: "T7_2H_HOLYSTAFF_HELL",
-          name: "Grandmaster's Fallen Staff",
-          hint: "Healer off-set: swap with tank gear",
-        },
-        { id: "T7_POTION_REVIVE", name: "Major Gigantify Potion", hint: "Burst damage window" },
-        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage contested hunts" },
+        { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Disengage gankers on Roads" },
       ],
     },
   },

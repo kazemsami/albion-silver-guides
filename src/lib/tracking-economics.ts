@@ -132,9 +132,9 @@ function sumLines(lines: PricedLine[]): number | null {
 
 interface ScenarioQuantities {
   killsPerHour: number;
-  remainsPerKill: number;
-  essencePerKill: number;
+  lootMultiplier: number;
   remnantDropChance: number;
+  extraRemnantDropChances: number[];
   luckyRemnantCount: number;
 }
 
@@ -144,18 +144,20 @@ function scenarioQuantities(
 ): ScenarioQuantities {
   const base = {
     killsPerHour: tier.killsPerHour,
-    remainsPerKill: tier.remainsPerKill,
-    essencePerKill: tier.essence.perKill,
+    lootMultiplier: 1,
     remnantDropChance: tier.remnant.dropChance,
+    extraRemnantDropChances:
+      tier.extraRemnants?.map((r) => r.dropChance) ?? [],
     luckyRemnantCount: 0,
   };
 
   if (scenarioId === "good") {
     return {
       killsPerHour: tier.killsPerHour + 0.5,
-      remainsPerKill: tier.remainsPerKill * 1.15,
-      essencePerKill: tier.essence.perKill * 1.3,
-      remnantDropChance: tier.remnant.dropChance * 2.5,
+      lootMultiplier: 1.08,
+      remnantDropChance: tier.remnant.dropChance * 1.8,
+      extraRemnantDropChances:
+        tier.extraRemnants?.map((r) => r.dropChance * 1.8) ?? [],
       luckyRemnantCount: 0,
     };
   }
@@ -163,9 +165,10 @@ function scenarioQuantities(
   if (scenarioId === "lucky") {
     return {
       killsPerHour: tier.killsPerHour + 0.5,
-      remainsPerKill: tier.remainsPerKill * 1.15,
-      essencePerKill: tier.essence.perKill * 1.4,
+      lootMultiplier: 1.1,
       remnantDropChance: tier.remnant.dropChance,
+      extraRemnantDropChances:
+        tier.extraRemnants?.map((r) => r.dropChance) ?? [],
       luckyRemnantCount: 1,
     };
   }
@@ -182,45 +185,63 @@ export function computeTrackingEconomics(
   const qty = scenarioQuantities(tier, inputs.scenarioId);
   const groupSize = Math.max(4, Math.min(8, inputs.groupSize));
 
-  const remainsQty = qty.killsPerHour * qty.remainsPerKill;
-  const essenceQty = qty.killsPerHour * qty.essencePerKill;
+  const outputLines: PricedLine[] = tier.averageLoot.map((loot) =>
+    priceOutputLine(
+      prices,
+      loot.id,
+      `${loot.name} (group)`,
+      qty.killsPerHour * loot.perKill * qty.lootMultiplier,
+    ),
+  );
 
-  const expectedRemnantsPerHour =
+  const expectedPrimaryRemnantsPerHour =
     inputs.scenarioId === "lucky"
       ? qty.luckyRemnantCount
       : qty.killsPerHour * qty.remnantDropChance;
 
-  const remnantPrice = resolveSellPrice(prices, tier.remnant.id);
-  const zeroRemnantProbability = Math.pow(
-    1 - tier.remnant.dropChance,
-    qty.killsPerHour,
-  );
-
-  const outputLines: PricedLine[] = [
-    priceOutputLine(
-      prices,
-      "T1_ALCHEMY_COMMON",
-      "Rare Animal Remains (group)",
-      remainsQty,
-    ),
-    priceOutputLine(
-      prices,
-      tier.essence.id,
-      `${tier.essence.name} (group)`,
-      essenceQty,
-    ),
-  ];
-
-  if (expectedRemnantsPerHour > 0) {
+  if (expectedPrimaryRemnantsPerHour > 0) {
     outputLines.push(
       priceOutputLine(
         prices,
         tier.remnant.id,
         `${tier.remnant.name} (${inputs.scenarioId === "lucky" ? "1 lucky drop" : "expected value"})`,
-        expectedRemnantsPerHour,
+        expectedPrimaryRemnantsPerHour,
       ),
     );
   }
+
+  for (const [index, extra] of (tier.extraRemnants ?? []).entries()) {
+    const dropChance = qty.extraRemnantDropChances[index] ?? extra.dropChance;
+    const expectedExtraRemnantsPerHour = qty.killsPerHour * dropChance;
+    if (expectedExtraRemnantsPerHour <= 0) continue;
+
+    outputLines.push(
+      priceOutputLine(
+        prices,
+        extra.id,
+        `${extra.name} (${inputs.scenarioId === "lucky" ? "included in lucky hour" : "expected value"})`,
+        expectedExtraRemnantsPerHour,
+      ),
+    );
+  }
+
+  const expectedRemnantsPerHour =
+    expectedPrimaryRemnantsPerHour +
+    (tier.extraRemnants ?? []).reduce((total, extra, index) => {
+      const dropChance =
+        qty.extraRemnantDropChances[index] ?? extra.dropChance;
+      return total + qty.killsPerHour * dropChance;
+    }, 0);
+
+  const remnantPrice = resolveSellPrice(prices, tier.remnant.id);
+  const combinedRemnantDropChance =
+    tier.remnant.dropChance +
+    (tier.extraRemnants?.reduce((total, extra) => total + extra.dropChance, 0) ??
+      0);
+  const zeroRemnantProbability = Math.pow(
+    1 - combinedRemnantDropChance,
+    qty.killsPerHour,
+  );
 
   const grossGroupLoot = sumLines(outputLines);
   const marketTaxTotal =

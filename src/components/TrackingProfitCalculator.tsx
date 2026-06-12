@@ -117,11 +117,12 @@ export function TrackingProfitCalculator({
         </p>
         <p className="mt-1">
           Rare remnant drops can make one hour look amazing, but dry streaks are
-          normal. Use <span className="text-parchment/90">Expected</span> profit
-          for planning and <span className="text-parchment/90">Lucky</span> profit
-          only as upside. Claims of 1.5M to 3M silver/hour per player usually need
-          optimized routes, high remnant prices, minimal downtime, and strong RNG,
-          not a typical average session.
+          normal. Top Roads groups rotate Golem, Dawnbird, Panther, Werewolf, and
+          Rare Quarry hunts rather than farming one target. Use{" "}
+          <span className="text-parchment/90">Expected</span> profit for planning,{" "}
+          <span className="text-parchment/90">Good</span> for clean mixed-rotation
+          routes (~700-750k group loot per kill), and{" "}
+          <span className="text-parchment/90">Lucky</span> profit only as upside.
         </p>
       </div>
 
@@ -150,7 +151,7 @@ export function TrackingProfitCalculator({
             )}
             {profitRange.min != null && profitRange.max != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                Expected per player (all tiers):{" "}
+                Per player by scenario:{" "}
                 {formatSilverRange(profitRange.min, profitRange.max)}/hr
                 {"luckyMax" in profitRange && profitRange.luckyMax != null && (
                   <>
@@ -207,26 +208,32 @@ export function TrackingProfitCalculator({
           <p className="mt-2 text-sm text-parchment/55">{result.scenarioNote}</p>
         </div>
 
-        <div className="mt-5">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-            Hunt target
-          </p>
-          <div
-            className="mt-2 flex flex-wrap gap-2"
-            role="radiogroup"
-            aria-label="Hunt target"
-          >
-            {TRACKING_TIER_CONFIGS.map((option) => (
-              <FilterChip
-                key={option.id}
-                label={option.label}
-                selected={tierId === option.id}
-                onSelect={() => setTierId(option.id)}
-              />
-            ))}
+        {TRACKING_TIER_CONFIGS.length > 1 && (
+          <div className="mt-5">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
+              Hunt target
+            </p>
+            <div
+              className="mt-2 flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-label="Hunt target"
+            >
+              {TRACKING_TIER_CONFIGS.map((option) => (
+                <FilterChip
+                  key={option.id}
+                  label={option.label}
+                  selected={tierId === option.id}
+                  onSelect={() => setTierId(option.id)}
+                />
+              ))}
+            </div>
+            <p className="mt-2 text-sm text-parchment/55">{tierConfig.description}</p>
           </div>
-          <p className="mt-2 text-sm text-parchment/55">{tierConfig.description}</p>
-        </div>
+        )}
+
+        {TRACKING_TIER_CONFIGS.length === 1 && (
+          <p className="mt-5 text-sm text-parchment/55">{tierConfig.description}</p>
+        )}
 
         <div className="mt-5">
           <label
@@ -257,8 +264,7 @@ export function TrackingProfitCalculator({
             Recommended Gear
           </h2>
           <p className="mt-1 text-sm text-parchment/50">
-            Loadout for{" "}
-            <span className="text-parchment/70">{tier.label}</span>
+            Avalonian Roads group tracking loadout.
           </p>
           <div className="mt-4">
             <EquipmentPanel
@@ -279,7 +285,8 @@ export function TrackingProfitCalculator({
           Modeled for a {groupSize}-player group at{" "}
           <span className="text-parchment/70">{tierConfig.label}</span>,{" "}
           <span className="text-parchment/70">{result.scenarioLabel}</span>{" "}
-          scenario, using {getMarketCityLabel(marketCity).toLowerCase()} prices
+          scenario. Average material loot is from a ~22 kill mixed Roads session.
+          Using {getMarketCityLabel(marketCity).toLowerCase()} prices
           (Albion Data Project). Updated {formattedAt}.
           {result.hasEstimatedPrices && (
             <>
