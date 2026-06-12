@@ -22,6 +22,11 @@ export interface GuideReliability {
   lastUpdated: string;
 }
 
+export interface GuideReference {
+  title: string;
+  url: string;
+}
+
 export interface SilverTier {
   label: string;
   amount?: number;
@@ -165,6 +170,8 @@ export interface Guide {
   requirements: string[];
   steps: string[];
   tips: string[];
+  /** External videos, posts, or docs this guide is based on. */
+  references?: GuideReference[];
   featured: boolean;
   readTime: number;
   reliability: GuideReliability;

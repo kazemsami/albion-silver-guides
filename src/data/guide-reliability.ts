@@ -30,8 +30,8 @@ export const guideReliabilityBySlug: Record<string, GuideReliability> = {
     lastUpdated: "2026-05-15",
   },
   "abyssal-depths-farming": {
-    status: "needs-review",
-    lastUpdated: "2026-05-15",
+    status: "community-checked",
+    lastUpdated: "2026-06-12",
   },
   "high-tier-group-tracking": {
     status: "needs-review",
@@ -44,6 +44,10 @@ export const guideReliabilityBySlug: Record<string, GuideReliability> = {
   "potions-crafting-bulk": {
     status: "needs-review",
     lastUpdated: "2026-05-15",
+  },
+  "t2-blackzone-roaming": {
+    status: "community-checked",
+    lastUpdated: "2026-06-12",
   },
 };
 
