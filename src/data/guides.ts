@@ -881,7 +881,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     slug: "ava-roads-fishing",
     title: "Avalonian Roads Fishing (T8)",
     description:
-      "Fish normal schools on T8 Avalonian Road maps for top-tier silver income. River Sturgeon and Puremist Snapper are random zone-tier catches while fishing, not separate school types or pools. Net profit scales from about 1.5M/hr on the safe escape build to roughly 3.8-5M/hr at max fishing specs. Use the profit calculator tabs to compare setups.",
+      "Fish normal schools on T8 Avalonian Road maps for top-tier silver income. Net profit scales from about 1.5M/hr on the safe escape build to roughly 3.8-5M/hr at max fishing specs. Use the profit calculator tabs to compare setups.",
     category: "fishing",
     difficulty: "advanced",
     zoneType: "dangerous",
