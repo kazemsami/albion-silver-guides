@@ -3,6 +3,7 @@ import {
   DEFAULT_TRACKING_RISK,
   getTrackingTierConfig,
   TRACKING_CONSUMABLES_PER_PLAYER_HOUR,
+  TRACKING_REFERENCE_SESSION,
   TRACKING_SCENARIO_META,
   TRACKING_TIER_CONFIGS,
   TRACKING_TOOLKIT_WEAR_PER_HOUR,
@@ -26,12 +27,13 @@ export interface TrackingComputeInputs {
 
 export interface TrackingRemnantAssumptions {
   killsPerHour: number;
-  dropChance: number;
-  remnantUnitPrice: number | null;
-  expectedRemnantsPerHour: number;
-  expectedRemnantValue: number | null;
-  zeroRemnantProbability: number;
-  luckyRemnantCount: number;
+  referenceGroupLoot: number;
+  referencePerPlayerLoot: number;
+  referenceHours: number;
+  referenceKills: number;
+  referenceHourlyGross: number;
+  referencePerPlayerHourlyGross: number;
+  lootQuantityScale: number;
 }
 
 export interface TrackingEconomicsResult {
@@ -107,9 +109,6 @@ function sumLines(lines: PricedLine[]): number | null {
 interface ScenarioQuantities {
   killsPerHour: number;
   lootMultiplier: number;
-  remnantDropChance: number;
-  extraRemnantDropChances: number[];
-  luckyRemnantCount: number;
 }
 
 function scenarioQuantities(
@@ -119,35 +118,46 @@ function scenarioQuantities(
   const base = {
     killsPerHour: tier.killsPerHour,
     lootMultiplier: 1,
-    remnantDropChance: tier.remnant.dropChance,
-    extraRemnantDropChances:
-      tier.extraRemnants?.map((r) => r.dropChance) ?? [],
-    luckyRemnantCount: 0,
   };
 
   if (scenarioId === "good") {
     return {
       killsPerHour: tier.killsPerHour + 0.5,
       lootMultiplier: 1.08,
-      remnantDropChance: tier.remnant.dropChance * 1.8,
-      extraRemnantDropChances:
-        tier.extraRemnants?.map((r) => r.dropChance * 1.8) ?? [],
-      luckyRemnantCount: 0,
     };
   }
 
   if (scenarioId === "lucky") {
     return {
       killsPerHour: tier.killsPerHour + 0.5,
-      lootMultiplier: 1.1,
-      remnantDropChance: tier.remnant.dropChance,
-      extraRemnantDropChances:
-        tier.extraRemnants?.map((r) => r.dropChance) ?? [],
-      luckyRemnantCount: 1,
+      lootMultiplier: 1.12,
     };
   }
 
   return base;
+}
+
+/** Scale loot quantities so Expected scenario matches the reference session hourly gross. */
+export function trackingReferenceLootScale(
+  prices: PriceMap,
+  tier: ReturnType<typeof getTrackingTierConfig>,
+): number {
+  let silverPerKill = 0;
+  for (const loot of tier.averageLoot) {
+    const { unitPrice } = resolveSellPrice(prices, loot.id);
+    if (unitPrice == null) continue;
+    silverPerKill += loot.perKill * unitPrice;
+  }
+
+  const referenceHourly =
+    TRACKING_REFERENCE_SESSION.groupLootSilver /
+    TRACKING_REFERENCE_SESSION.activeHours;
+  const referenceKillsPerHour =
+    TRACKING_REFERENCE_SESSION.sampleKills /
+    TRACKING_REFERENCE_SESSION.activeHours;
+
+  if (silverPerKill <= 0) return 1;
+  return referenceHourly / (referenceKillsPerHour * silverPerKill);
 }
 
 export function computeTrackingEconomics(
@@ -158,63 +168,15 @@ export function computeTrackingEconomics(
   const scenario = TRACKING_SCENARIO_META[inputs.scenarioId];
   const qty = scenarioQuantities(tier, inputs.scenarioId);
   const groupSize = Math.max(4, Math.min(8, inputs.groupSize));
+  const lootScale = trackingReferenceLootScale(prices, tier);
 
   const outputLines: PricedLine[] = tier.averageLoot.map((loot) =>
     priceOutputLine(
       prices,
       loot.id,
       `${loot.name} (group)`,
-      qty.killsPerHour * loot.perKill * qty.lootMultiplier,
+      qty.killsPerHour * loot.perKill * qty.lootMultiplier * lootScale,
     ),
-  );
-
-  const expectedPrimaryRemnantsPerHour =
-    inputs.scenarioId === "lucky"
-      ? qty.luckyRemnantCount
-      : qty.killsPerHour * qty.remnantDropChance;
-
-  if (expectedPrimaryRemnantsPerHour > 0) {
-    outputLines.push(
-      priceOutputLine(
-        prices,
-        tier.remnant.id,
-        `${tier.remnant.name} (${inputs.scenarioId === "lucky" ? "1 lucky drop" : "expected value"})`,
-        expectedPrimaryRemnantsPerHour,
-      ),
-    );
-  }
-
-  for (const [index, extra] of (tier.extraRemnants ?? []).entries()) {
-    const dropChance = qty.extraRemnantDropChances[index] ?? extra.dropChance;
-    const expectedExtraRemnantsPerHour = qty.killsPerHour * dropChance;
-    if (expectedExtraRemnantsPerHour <= 0) continue;
-
-    outputLines.push(
-      priceOutputLine(
-        prices,
-        extra.id,
-        `${extra.name} (${inputs.scenarioId === "lucky" ? "included in lucky hour" : "expected value"})`,
-        expectedExtraRemnantsPerHour,
-      ),
-    );
-  }
-
-  const expectedRemnantsPerHour =
-    expectedPrimaryRemnantsPerHour +
-    (tier.extraRemnants ?? []).reduce((total, extra, index) => {
-      const dropChance =
-        qty.extraRemnantDropChances[index] ?? extra.dropChance;
-      return total + qty.killsPerHour * dropChance;
-    }, 0);
-
-  const remnantPrice = resolveSellPrice(prices, tier.remnant.id);
-  const combinedRemnantDropChance =
-    tier.remnant.dropChance +
-    (tier.extraRemnants?.reduce((total, extra) => total + extra.dropChance, 0) ??
-      0);
-  const zeroRemnantProbability = Math.pow(
-    1 - combinedRemnantDropChance,
-    qty.killsPerHour,
   );
 
   const grossGroupLoot = sumLines(outputLines);
@@ -290,18 +252,19 @@ export function computeTrackingEconomics(
     groupSize,
     remnantAssumptions: {
       killsPerHour: qty.killsPerHour,
-      dropChance:
-        inputs.scenarioId === "lucky"
-          ? tier.remnant.dropChance
-          : qty.remnantDropChance,
-      remnantUnitPrice: remnantPrice.unitPrice,
-      expectedRemnantsPerHour,
-      expectedRemnantValue:
-        remnantPrice.unitPrice != null
-          ? roundSilver(expectedRemnantsPerHour * remnantPrice.unitPrice)
-          : null,
-      zeroRemnantProbability,
-      luckyRemnantCount: qty.luckyRemnantCount,
+      referenceGroupLoot: TRACKING_REFERENCE_SESSION.groupLootSilver,
+      referencePerPlayerLoot: TRACKING_REFERENCE_SESSION.perPlayerSilver,
+      referenceHours: TRACKING_REFERENCE_SESSION.activeHours,
+      referenceKills: TRACKING_REFERENCE_SESSION.sampleKills,
+      referenceHourlyGross: roundSilver(
+        TRACKING_REFERENCE_SESSION.groupLootSilver /
+          TRACKING_REFERENCE_SESSION.activeHours,
+      ),
+      referencePerPlayerHourlyGross: roundSilver(
+        TRACKING_REFERENCE_SESSION.perPlayerSilver /
+          TRACKING_REFERENCE_SESSION.activeHours,
+      ),
+      lootQuantityScale: roundSilver(lootScale * 1000) / 1000,
     },
     outputLines,
     grossGroupLoot,

@@ -284,52 +284,56 @@ export function TrackingProfitCalculator({
           Modeled for a {groupSize}-player group at{" "}
           <span className="text-parchment/70">{tierConfig.label}</span>,{" "}
           <span className="text-parchment/70">{result.scenarioLabel}</span>{" "}
-          scenario. Average material loot is from a ~22 kill mixed Roads session.
-          Estimated snapshot prices. Updated {formattedAt}.
+          scenario. Average material loot is calibrated to a reference session
+          (~4.95M per player, ~19.8M group in 3.6 hours, ~22 kills). Estimated
+          snapshot prices. Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-            Remnant assumptions ({result.scenarioLabel})
+            Reference session ({result.scenarioLabel})
           </p>
           <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
             <AssumptionRow
+              label="Reference per player loot"
+              value={formatSilverExact(result.remnantAssumptions.referencePerPlayerLoot)}
+            />
+            <AssumptionRow
+              label="Reference group loot (4-man)"
+              value={formatSilverExact(result.remnantAssumptions.referenceGroupLoot)}
+            />
+            <AssumptionRow
+              label="Reference active hours"
+              value={String(result.remnantAssumptions.referenceHours)}
+            />
+            <AssumptionRow
+              label="Reference kills (sample)"
+              value={String(result.remnantAssumptions.referenceKills)}
+            />
+            <AssumptionRow
               label="Kills per hour (group)"
-              value={String(result.remnantAssumptions.killsPerHour)}
+              value={result.remnantAssumptions.killsPerHour.toFixed(2)}
             />
             <AssumptionRow
-              label="Remnant drop chance per kill"
-              value={formatPercent(result.remnantAssumptions.dropChance)}
+              label="Reference hourly gross (group)"
+              value={formatSilverExact(result.remnantAssumptions.referenceHourlyGross)}
             />
             <AssumptionRow
-              label="Remnant est. price"
-              value={
-                result.remnantAssumptions.remnantUnitPrice != null
-                  ? formatSilverExact(result.remnantAssumptions.remnantUnitPrice)
-                  : "N/A"
-              }
+              label="Reference hourly gross (per player)"
+              value={formatSilverExact(
+                result.remnantAssumptions.referencePerPlayerHourlyGross,
+              )}
             />
             <AssumptionRow
-              label="Modeled remnants this hour"
-              value={result.remnantAssumptions.expectedRemnantsPerHour.toFixed(3)}
-            />
-            <AssumptionRow
-              label="Expected remnant silver"
-              value={
-                result.remnantAssumptions.expectedRemnantValue != null
-                  ? formatSilverExact(result.remnantAssumptions.expectedRemnantValue)
-                  : "N/A"
-              }
-            />
-            <AssumptionRow
-              label="Chance of zero remnants in 1 hr"
-              value={formatPercent(result.remnantAssumptions.zeroRemnantProbability)}
+              label="Loot quantity scale (Expected)"
+              value={result.remnantAssumptions.lootQuantityScale.toFixed(3)}
             />
           </dl>
           <p className="mt-3 text-xs text-parchment/40">
-            Expected remnant value = kills/hr × drop chance × remnant price.
-            Lucky scenario models one guaranteed remnant drop for the group, not
-            an average hourly rate.
+            Expected scenario scales loot quantities so hourly gross matches the
+            reference session at current estimated prices. Good and Lucky apply
+            higher pace or loot multipliers on top. Shapeshifter remnants are
+            averaged into the loot table, not rolled twice.
           </p>
         </div>
 
