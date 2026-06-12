@@ -30,9 +30,9 @@ const verifiedSessionLoot: VerifiedLootLine[] = [
   { id: "T3_JOURNAL_TROPHY_GENERAL_FULL", name: "Journeyman's Generalist Trophy Journal (Full)", sessionQty: 1 },
   { id: "T2_JOURNAL_TROPHY_GENERAL_FULL", name: "Novice's Generalist Trophy Journal (Full)", sessionQty: 614 },
 
-  // - Royal sigils - { id: "QUESTITEM_TOKEN_ROYAL_T6", name: "Master's Royal Sigil", sessionQty: 22 },
-  { id: "QUESTITEM_TOKEN_ROYAL_T5", name: "Expert's Royal Sigil", sessionQty: 55 },
-  { id: "QUESTITEM_TOKEN_ROYAL_T4", name: "Adept's Royal Sigil", sessionQty: 131 },
+  // Royal sigils come from Expeditions / Arena / crafting, not open-world roaming — excluded from economics.
+  // { id: "QUESTITEM_TOKEN_ROYAL_T5", name: "Expert's Royal Sigil", sessionQty: 55 },
+  // { id: "QUESTITEM_TOKEN_ROYAL_T4", name: "Adept's Royal Sigil", sessionQty: 131 },
 
   // - Runes - { id: "T8_RUNE", name: "Elder's Rune", sessionQty: 3 },
   { id: "T7_RUNE", name: "Grandmaster's Rune", sessionQty: 26 },

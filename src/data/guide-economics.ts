@@ -197,6 +197,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "stalker",
   },
   "t2-blackzone-roaming": {
+    // Community sample loot (minus Royal Sigils — not from roaming). Death cost uses full T2 kit replace rate.
     hourlyOutput: getT2RoamVerifiedHourlyOutput(),
     hourlyInputs: [
       {
@@ -206,8 +207,56 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         side: "buy",
       },
       {
+        id: "T4_JOURNAL_MERCENARY_EMPTY",
+        name: "Empty mercenary journals (restock)",
+        quantity: 1,
+        side: "buy",
+      },
+      {
+        id: "T2_HEAD_PLATE_SET1",
+        name: "Novice's Soldier Helmet (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_ARMOR_PLATE_SET1",
+        name: "Novice's Soldier Armor (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_SHOES_PLATE_SET1",
+        name: "Novice's Soldier Boots (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
         id: "T2_MAIN_FIRESTAFF",
-        name: "Full T2 kit replacement (avg deaths/hr)",
+        name: "Novice's Fire Staff (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_OFF_SHIELD",
+        name: "Novice's Shield (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_CAPE",
+        name: "Novice's Cape (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_BAG",
+        name: "Novice's Bag (kit replacement)",
+        quantity: 0.15,
+        side: "buy",
+      },
+      {
+        id: "T2_MOUNT_MULE",
+        name: "Novice's Mule (kit replacement)",
         quantity: 0.15,
         side: "buy",
       },

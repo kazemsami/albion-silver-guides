@@ -452,13 +452,14 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Swap in at schools only" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Fish between camps" },
         { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Fills while fishing" },
+        { id: "T4_JOURNAL_MERCENARY_EMPTY", name: "Adept Mercenary's Journal (Empty)", hint: "Fills on camp mob kills" },
         { id: "T4_JOURNAL_TROPHY_GENERAL_EMPTY", name: "Adept Generalist Trophy Journal (Empty)", hint: "Fills on any fame" },
       ],
     },
     verified: {
       title: "T2 Roam + Fish (Verified)",
       description:
-        "Same ~540 IP kit with invis pot for banking journal stacks. Community verified ~11.5M over ~10–15 hr.",
+        "Same ~540 IP kit with invis pot for banking journal stacks. Lucky-sample tier only (~11.5M over ~10–15 hr).",
       slots: {
         head: {
           id: "T2_HEAD_PLATE_SET1",

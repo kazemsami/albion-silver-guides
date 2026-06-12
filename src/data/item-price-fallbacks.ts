@@ -49,6 +49,16 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T7_JOURNAL_MERCENARY_FULL: { sell: 72_000, buy: 60_000 },
   T8_JOURNAL_MERCENARY_FULL: { sell: 145_000, buy: 120_000 },
   T2_JOURNAL_TROPHY_GENERAL_FULL: { sell: 2800, buy: 2200 },
+
+  // T2 black-zone roam kit (approximate buy prices for death-cost modeling)
+  T2_HEAD_PLATE_SET1: { sell: 2200, buy: 1900 },
+  T2_ARMOR_PLATE_SET1: { sell: 3200, buy: 2800 },
+  T2_SHOES_PLATE_SET1: { sell: 1800, buy: 1600 },
+  T2_MAIN_FIRESTAFF: { sell: 1500, buy: 1300 },
+  T2_OFF_SHIELD: { sell: 900, buy: 800 },
+  T2_CAPE: { sell: 700, buy: 600 },
+  T2_BAG: { sell: 3200, buy: 2800 },
+  T2_MOUNT_MULE: { sell: 5200, buy: 4500 },
   T3_JOURNAL_TROPHY_GENERAL_FULL: { sell: 6200, buy: 5200 },
   T4_JOURNAL_TROPHY_GENERAL_FULL: { sell: 9200, buy: 7800 },
   T5_JOURNAL_TROPHY_GENERAL_FULL: { sell: 18_000, buy: 15_000 },
