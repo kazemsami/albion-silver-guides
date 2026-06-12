@@ -65,11 +65,16 @@ export const POTION_RECIPES: PotionRecipe[] = [
   },
 ];
 
-/** T6 bulk session: ~150 batch actions/hr (100 heal + 50 energy). */
+/** Realistic T6 session per active hour: heal capped by daily focus, energy fills lab time. */
 export const T6_POTION_SESSION: PotionSessionMix = {
-  healBatchesPerHour: 100,
-  energyBatchesPerHour: 50,
+  /** ~15k focus/hr (768 × 20). Fits ~30k daily focus in a 2 hr craft block. */
+  healBatchesPerHour: 20,
+  energyBatchesPerHour: 35,
 };
+
+/** Planning defaults for optional focus opportunity cost (not spent silver). */
+export const DEFAULT_DAILY_FOCUS_BUDGET = 30_000;
+export const DEFAULT_FOCUS_SESSION_HOURS = 2;
 
 export const DEFAULT_POTION_DEFAULTS: PotionEconomicsDefaults = {
   stationFeeRate: 0.045,

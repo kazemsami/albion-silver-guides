@@ -9,6 +9,8 @@ import { T8_HOUSE_BUILD_ITEM_IDS } from "@/data/t8-house-cost";
 import { getAllTierLoadouts, loadoutVariantForTier } from "@/data/guide-loadouts";
 import { computeTrackingProfitRange } from "@/lib/tracking-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
+import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
+import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
 import type {
   AlbionItem,
   EquipmentLoadout,
@@ -224,6 +226,14 @@ function computeAllGuideProfitRanges(
       }
       if (slug === "potions-crafting-bulk") {
         cityRanges[slug] = computePotionProfitRange(prices);
+        continue;
+      }
+      if (slug === "ava-roads-fishing") {
+        cityRanges[slug] = computeAvaRoadsProfitRange(prices);
+        continue;
+      }
+      if (slug === "abyssal-depths-farming") {
+        cityRanges[slug] = computeAbyssalProfitRange(prices);
         continue;
       }
       const range = computeProfitRange(economics, prices);
@@ -565,8 +575,12 @@ export async function fetchGuidePricing(
         ? computeTrackingProfitRange(prices)
         : economics && slug === "potions-crafting-bulk"
           ? computePotionProfitRange(prices)
-          : economics
-            ? computeProfitRange(economics, prices)
-            : null,
+          : economics && slug === "ava-roads-fishing"
+            ? computeAvaRoadsProfitRange(prices)
+            : economics && slug === "abyssal-depths-farming"
+              ? computeAbyssalProfitRange(prices)
+              : economics
+                ? computeProfitRange(economics, prices)
+                : null,
   };
 }

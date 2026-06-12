@@ -17,6 +17,8 @@ import { RelatedGuides } from "@/components/RelatedGuides";
 import { GuideProfitCalculator } from "@/components/GuideProfitCalculator";
 import { TrackingProfitCalculator } from "@/components/TrackingProfitCalculator";
 import { PotionProfitCalculator } from "@/components/PotionProfitCalculator";
+import { AvaRoadsFishingCalculator } from "@/components/AvaRoadsFishingCalculator";
+import { AbyssalProfitCalculator } from "@/components/AbyssalProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
 import { guideHowToJsonLd } from "@/lib/structured-data";
@@ -142,6 +144,24 @@ export default async function GuidePage({ params }: GuidePageProps) {
           />
         ) : slug === "potions-crafting-bulk" ? (
           <PotionProfitCalculator
+            economics={economicsConfig}
+            pricesByCity={marketPricing.serializedPricesByCity}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
+            tierLoadouts={marketPricing.tierLoadoutBundles}
+          />
+        ) : slug === "ava-roads-fishing" ? (
+          <AvaRoadsFishingCalculator
+            economics={economicsConfig}
+            pricesByCity={marketPricing.serializedPricesByCity}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
+            tierLoadouts={marketPricing.tierLoadoutBundles}
+          />
+        ) : slug === "abyssal-depths-farming" ? (
+          <AbyssalProfitCalculator
             economics={economicsConfig}
             pricesByCity={marketPricing.serializedPricesByCity}
             pricedAt={

@@ -9,6 +9,8 @@ import {
 } from "@/components/EconomicsTable";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
 import {
+  DEFAULT_DAILY_FOCUS_BUDGET,
+  DEFAULT_FOCUS_SESSION_HOURS,
   DEFAULT_POTION_DEFAULTS,
   POTION_SELL_THROUGH_META,
   type PotionSellThroughId,
@@ -54,7 +56,7 @@ export function PotionProfitCalculator({
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [sellThroughId, setSellThroughId] =
     useState<PotionSellThroughId>("typical");
-  const [valueFocus, setValueFocus] = useState(true);
+  const [valueFocus, setValueFocus] = useState(false);
   const [defaults, setDefaults] = useState(DEFAULT_POTION_DEFAULTS);
 
   const tier =
@@ -104,10 +106,10 @@ export function PotionProfitCalculator({
           Bulk crafting is not a clean silver/hour farm
         </p>
         <p className="mt-1">
-          Margins depend on buy prices, Brecilien station fees, focus value,
-          listing tax, and how fast stacks sell. Use batch profit and profit per
-          10,000 focus for planning. The hourly line assumes a busy session, not
-          guaranteed passive income.
+          Margins depend on buy prices, Brecilien station fees, listing tax, and how
+          fast stacks sell. Focus on heal pots is your daily crafting budget, not
+          silver you spend at the lab. Use batch profit and profit per 10,000 focus;
+          the hourly line models one active craft hour, not passive income.
         </p>
       </div>
 
@@ -128,13 +130,16 @@ export function PotionProfitCalculator({
               result.hourlyFocusOpportunityCost != null &&
               result.hourlyFocusOpportunityCost > 0 && (
                 <p className="mt-1 text-xs text-parchment/45">
-                  Before focus cost:{" "}
+                  Before focus opportunity cost:{" "}
                   {formatSilverPrice(result.hourlyNetBeforeFocus)}/hr
+                  {" · "}
+                  {formatSilverExact(result.hourlyFocusPointsBilled)} focus billed
+                  at {formatSilverExact(defaults.focusSilverPerPoint)}/pt
                 </p>
               )}
             {profitRange.min != null && profitRange.max != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                All tiers (typical/slow, focus valued):{" "}
+                T5 slow to T6 typical (focus free):{" "}
                 {formatSilverRange(profitRange.min, profitRange.max)}/hr
               </p>
             )}
@@ -143,11 +148,11 @@ export function PotionProfitCalculator({
           <div className="space-y-2 text-sm">
             <MetricRow
               label="Batch profit (Major Healing, 5 pots)"
-              value={result.healBatch.netAfterFocus}
+              value={result.healBatch.netBeforeFocus}
             />
             <MetricRow
               label="Batch profit (Major Energy, 5 pots)"
-              value={result.energyBatch.netAfterFocus}
+              value={result.energyBatch.netBeforeFocus}
             />
             <MetricRow
               label="Profit per 10,000 focus (heal batch)"
@@ -199,7 +204,7 @@ export function PotionProfitCalculator({
               className="accent-gold"
             />
             Value focus at {formatSilverExact(defaults.focusSilverPerPoint)}{" "}
-            silver/point (opportunity cost)
+            silver/point (optional opportunity cost, capped to daily budget)
           </label>
         </div>
 
@@ -295,7 +300,7 @@ export function PotionProfitCalculator({
           />
           {valueFocus && result.hourlyFocusOpportunityCost != null && (
             <EconomicsSummaryRow
-              label="Minus focus opportunity cost"
+              label={`Minus focus opportunity cost (${formatSilverExact(result.hourlyFocusPointsBilled)} pts)`}
               value={-result.hourlyFocusOpportunityCost}
             />
           )}
@@ -310,9 +315,13 @@ export function PotionProfitCalculator({
 
         <p className="mt-3 text-xs text-parchment/40">
           Station fee, listing tax, and sell-through haircut are all included in
-          the breakdown above. Focus is either free (unchecked) or valued at the
-          silver/point you set. Hourly batch counts scale with alchemy tier;
-          they are not guaranteed passive income.
+          the breakdown above. Focus defaults to free (daily regen you spend on
+          heal pots). Optional focus valuation bills at most{" "}
+          {formatSilverExact(
+            DEFAULT_DAILY_FOCUS_BUDGET / DEFAULT_FOCUS_SESSION_HOURS,
+          )}{" "}
+          points per craft hour. Hourly batch counts are focus-realistic for T6,
+          not max lab throughput.
         </p>
       </section>
     </>

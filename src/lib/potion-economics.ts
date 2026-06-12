@@ -1,4 +1,6 @@
 import {
+  DEFAULT_DAILY_FOCUS_BUDGET,
+  DEFAULT_FOCUS_SESSION_HOURS,
   DEFAULT_POTION_DEFAULTS,
   getPotionTierMultiplier,
   POTION_RECIPES,
@@ -54,6 +56,7 @@ export interface PotionEconomicsResult {
   hourlySellThroughHaircut: number | null;
   hourlyNetBeforeFocus: number | null;
   hourlyFocusOpportunityCost: number | null;
+  hourlyFocusPointsBilled: number;
   hourlyNetAfterFocus: number | null;
   profitPerCraftingMinute: number | null;
   profitPerTenThousandFocus: number | null;
@@ -251,10 +254,16 @@ export function computePotionEconomics(
         )
       : null;
 
+  const hourlyFocusPointsBilled = inputs.valueFocus
+    ? Math.min(
+        healRecipe.focusCost * healBatchesPerHour,
+        DEFAULT_DAILY_FOCUS_BUDGET / DEFAULT_FOCUS_SESSION_HOURS,
+      )
+    : 0;
+
   const hourlyFocusOpportunityCost = inputs.valueFocus
     ? roundSilver(
-        healBatch.focusCost * healBatchesPerHour +
-          energyBatch.focusCost * energyBatchesPerHour,
+        hourlyFocusPointsBilled * inputs.defaults.focusSilverPerPoint,
       )
     : 0;
 
@@ -306,6 +315,7 @@ export function computePotionEconomics(
     hourlySellThroughHaircut,
     hourlyNetBeforeFocus,
     hourlyFocusOpportunityCost,
+    hourlyFocusPointsBilled: roundSilver(hourlyFocusPointsBilled),
     hourlyNetAfterFocus,
     profitPerCraftingMinute,
     profitPerTenThousandFocus: healBatch.profitPerTenThousandFocus,
@@ -316,50 +326,23 @@ export function computePotionEconomics(
 
 export type PotionProfitRange = { min: number; max: number };
 
-/** Conservative per-hour range for guide cards (typical sell-through, focus valued). */
+/** Per-hour range for guide cards (typical sell-through, focus treated as free). */
 export function computePotionProfitRange(prices: PriceMap): PotionProfitRange {
-  const scenarios: number[] = [];
-
-  for (const tierId of ["t5", "t6", "t7"]) {
-    for (const sellThroughId of ["slow", "typical", "instant"] as PotionSellThroughId[]) {
-      for (const valueFocus of [true, false]) {
-        const result = computePotionEconomics(prices, {
-          tierId,
-          sellThroughId,
-          valueFocus,
-          defaults: DEFAULT_POTION_DEFAULTS,
-        });
-        if (result.hourlyNetAfterFocus != null) {
-          scenarios.push(result.hourlyNetAfterFocus);
-        }
-      }
-    }
-  }
-
-  if (scenarios.length === 0) {
-    return { min: 50_000, max: 400_000 };
-  }
-
-  const typicalT6 = computePotionEconomics(prices, {
-    tierId: "t6",
-    sellThroughId: "typical",
-    valueFocus: true,
-    defaults: DEFAULT_POTION_DEFAULTS,
-  });
-
-  const conservativeT5 = computePotionEconomics(prices, {
+  const conservative = computePotionEconomics(prices, {
     tierId: "t5",
     sellThroughId: "slow",
-    valueFocus: true,
+    valueFocus: false,
+    defaults: DEFAULT_POTION_DEFAULTS,
+  });
+  const typical = computePotionEconomics(prices, {
+    tierId: "t6",
+    sellThroughId: "typical",
+    valueFocus: false,
     defaults: DEFAULT_POTION_DEFAULTS,
   });
 
   return {
-    min: roundSilver(
-      conservativeT5.hourlyNetAfterFocus ?? Math.min(...scenarios),
-    ),
-    max: roundSilver(
-      typicalT6.hourlyNetAfterFocus ?? Math.max(...scenarios),
-    ),
+    min: conservative.hourlyNetAfterFocus ?? 80_000,
+    max: typical.hourlyNetAfterFocus ?? 350_000,
   };
 }
