@@ -55,7 +55,8 @@ const verifiedSessionLoot: VerifiedLootLine[] = [
   { id: "TREASURE_DECORATIVE_RARITY3", name: "Dragon Bust / Stone Statue (T6)", sessionQty: 4 },
   { id: "TREASURE_DECORATIVE_RARITY2", name: "Black Horn / Stone Statue (T5)", sessionQty: 16 },
 
-  // - Tomes & PvP gear (estimated, thin market) - {
+  // Tomes & PvP gear (estimated, thin market)
+  {
     id: "TREASURE_KNOWLEDGE_RARITY2",
     name: "Tomes of Insight (mixed tiers)",
     sessionQty: 16,
