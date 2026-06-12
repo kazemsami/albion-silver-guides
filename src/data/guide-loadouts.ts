@@ -534,50 +534,6 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       ],
     },
   },
-  "shoreline-fishing-guide": {
-    "10-30": {
-      title: "New Angler Setup",
-      description:
-        "Weapon, cape, bag, and mount while traveling: equip the rod from your bag only at a school.",
-      slots: {
-        ...FISHING_COMBAT_SLOTS,
-        mount: { id: "T3_MOUNT_HORSE", name: "Journeyman's Riding Horse", hint: "Cheap travel" },
-      },
-      inventory: [
-        { id: "T3_2H_TOOL_FISHINGROD", name: "Journeyman's Fishing Rod", hint: "Equip at the school only" },
-        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use every cast" },
-      ],
-    },
-    "20-40": {
-      title: "Mid-Level Shore Setup",
-      description: "T4 rod in bag, combat kit equipped while riding between shoreline spots.",
-      slots: {
-        ...FISHING_COMBAT_SLOTS,
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+carry weight and gathering yield" },
-      },
-      inventory: [
-        { id: "T4_2H_TOOL_FISHINGROD", name: "Adept's Fishing Rod", hint: "Equip at the school only" },
-        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use every cast" },
-        { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Optional bonus" },
-      ],
-    },
-    "40+": {
-      title: "Optimized Shore Setup",
-      description: "T5 fisherman armor with rod in bag: swap to rod only when casting.",
-      slots: {
-        head: { id: "T5_HEAD_GATHERER_FISH", name: "Expert's Fisherman Cap", hint: "Fishing yield" },
-        armor: { id: "T5_ARMOR_GATHERER_FISH", name: "Expert's Fisherman Garb", hint: "Fishing yield" },
-        shoes: { id: "T5_SHOES_GATHERER_FISH", name: "Expert's Fisherman Workboots", hint: "Weight reduction" },
-        ...FISHING_COMBAT_SLOTS,
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+carry weight and gathering yield" },
-      },
-      inventory: [
-        { id: "T5_2H_TOOL_FISHINGROD", name: "Expert's Fishing Rod", hint: "Equip at the school only" },
-        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use every cast" },
-        { id: "T4_JOURNAL_FISHING_EMPTY", name: "Adept Fisherman's Journal (Empty)", hint: "Bonus income" },
-      ],
-    },
-  },
   "mists-fishing": {
     "10-30": {
       title: "Early Mists Fishing",

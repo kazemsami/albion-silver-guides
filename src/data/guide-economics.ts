@@ -309,22 +309,6 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ),
     defaultSkillTierId: "stalker",
   },
-  "shoreline-fishing-guide": {
-    hourlyOutput: [
-      { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 280 },
-      { id: "T1_SEAWEED", name: "Seaweed", quantity: 90 },
-    ],
-    hourlyConsumables: [
-      { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 12 },
-      { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 },
-    ],
-    skillTiers: tiers(
-      SKILL_TIERS.fishing10_30,
-      { ...SKILL_TIERS.fishing30_60, label: "Fishing 20-40", id: "20-40" },
-      { ...SKILL_TIERS.fishing60plus, label: "Fishing 40+", id: "40+", outputMultiplier: 1.15 },
-    ),
-    defaultSkillTierId: "20-40",
-  },
   "mists-fishing": {
     hourlyOutput: [
       { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
