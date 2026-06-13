@@ -9,7 +9,7 @@ import {
   TRACKING_TIER_CONFIGS,
 } from "@/data/tracking-economics";
 import { DEFAULT_ABYSSAL_RUN_DURATION } from "@/data/abyssal-economics";
-import { DEFAULT_POTION_DEFAULTS } from "@/data/potion-economics";
+import { DEFAULT_POTION_DEFAULTS, DEFAULT_POTION_EXTRACT_LEVEL } from "@/data/potion-economics";
 import type { GuideEconomics, GuideProfitOutcomes } from "@/types/guide";
 import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import {
@@ -255,7 +255,7 @@ export function computeGuideProfitOutcomes(
         tierId: "t6",
         sellThroughId: "normal",
         focusMode: "with-focus",
-        extractLevel: 0,
+        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
         defaults: DEFAULT_POTION_DEFAULTS,
         priceMapKind,
       },
@@ -268,7 +268,7 @@ export function computeGuideProfitOutcomes(
         tierId: "t6",
         sellThroughId: "normal",
         focusMode: "with-focus",
-        extractLevel: 0,
+        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
         defaults: DEFAULT_POTION_DEFAULTS,
         priceMapKind,
       },
@@ -282,7 +282,7 @@ export function computeGuideProfitOutcomes(
         tierId: "t6",
         sellThroughId: "event",
         focusMode: "with-focus",
-        extractLevel: 0,
+        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
         defaults: DEFAULT_POTION_DEFAULTS,
         priceMapKind,
       },

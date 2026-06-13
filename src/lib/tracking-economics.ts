@@ -297,37 +297,52 @@ export type TrackingProfitRange = {
 };
 
 /** Expected per-player profit across tiers; lucky upside as max for card range. */
-export function computeTrackingProfitRange(prices: PriceMap): TrackingProfitRange {
+export function computeTrackingProfitRange(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+): TrackingProfitRange {
   const expectedOnly = TRACKING_TIER_CONFIGS.map((tier) => {
-    const result = computeTrackingEconomics(prices, {
-      tierId: tier.id,
-      scenarioId: "expected",
-      groupSize: DEFAULT_GROUP_SIZE,
-      risk: DEFAULT_TRACKING_RISK,
-    });
+    const result = computeTrackingEconomics(
+      prices,
+      {
+        tierId: tier.id,
+        scenarioId: "expected",
+        groupSize: DEFAULT_GROUP_SIZE,
+        risk: DEFAULT_TRACKING_RISK,
+      },
+      listingTaxRate,
+    );
     return result.netPerPlayer ?? 0;
   }).filter((v) => v > 0);
 
   const luckyMax = Math.max(
     ...TRACKING_TIER_CONFIGS.map((tier) => {
-      const result = computeTrackingEconomics(prices, {
-        tierId: tier.id,
-        scenarioId: "lucky",
-        groupSize: DEFAULT_GROUP_SIZE,
-        risk: DEFAULT_TRACKING_RISK,
-      });
+      const result = computeTrackingEconomics(
+        prices,
+        {
+          tierId: tier.id,
+          scenarioId: "lucky",
+          groupSize: DEFAULT_GROUP_SIZE,
+          risk: DEFAULT_TRACKING_RISK,
+        },
+        listingTaxRate,
+      );
       return result.netPerPlayer ?? 0;
     }),
   );
 
   const goodMax = Math.max(
     ...TRACKING_TIER_CONFIGS.map((tier) => {
-      const result = computeTrackingEconomics(prices, {
-        tierId: tier.id,
-        scenarioId: "good",
-        groupSize: DEFAULT_GROUP_SIZE,
-        risk: DEFAULT_TRACKING_RISK,
-      });
+      const result = computeTrackingEconomics(
+        prices,
+        {
+          tierId: tier.id,
+          scenarioId: "good",
+          groupSize: DEFAULT_GROUP_SIZE,
+          risk: DEFAULT_TRACKING_RISK,
+        },
+        listingTaxRate,
+      );
       return result.netPerPlayer ?? 0;
     }),
   );

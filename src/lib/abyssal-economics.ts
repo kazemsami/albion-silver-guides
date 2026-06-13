@@ -276,31 +276,46 @@ export function computeAbyssalEconomics(
 
 export type AbyssalProfitRange = { min: number; max: number; highRoll?: number };
 
-export function computeAbyssalProfitRange(prices: PriceMap): AbyssalProfitRange {
-  const conservative = computeAbyssalEconomics(prices, {
-    scenarioId: "conservative",
-    teamSizeId: "solo",
-    winRate: 0.72,
-    runDurationMinutes: 20,
-    includePvpLoot: false,
-    includeMercJournal: false,
-  });
-  const floor2 = computeAbyssalEconomics(prices, {
-    scenarioId: "floor2",
-    teamSizeId: "duo",
-    winRate: 0.65,
-    runDurationMinutes: 30,
-    includePvpLoot: false,
-    includeMercJournal: false,
-  });
-  const vaultHigh = computeAbyssalEconomics(prices, {
-    scenarioId: "floor3Vault",
-    teamSizeId: "trio",
-    winRate: 0.5,
-    runDurationMinutes: 45,
-    includePvpLoot: true,
-    includeMercJournal: false,
-  });
+export function computeAbyssalProfitRange(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+): AbyssalProfitRange {
+  const conservative = computeAbyssalEconomics(
+    prices,
+    {
+      scenarioId: "conservative",
+      teamSizeId: "solo",
+      winRate: 0.72,
+      runDurationMinutes: 20,
+      includePvpLoot: false,
+      includeMercJournal: false,
+    },
+    listingTaxRate,
+  );
+  const floor2 = computeAbyssalEconomics(
+    prices,
+    {
+      scenarioId: "floor2",
+      teamSizeId: "duo",
+      winRate: 0.65,
+      runDurationMinutes: 30,
+      includePvpLoot: false,
+      includeMercJournal: false,
+    },
+    listingTaxRate,
+  );
+  const vaultHigh = computeAbyssalEconomics(
+    prices,
+    {
+      scenarioId: "floor3Vault",
+      teamSizeId: "trio",
+      winRate: 0.5,
+      runDurationMinutes: 45,
+      includePvpLoot: true,
+      includeMercJournal: false,
+    },
+    listingTaxRate,
+  );
 
   return {
     min: conservative.netAfterTaxAndDeath ?? 350_000,

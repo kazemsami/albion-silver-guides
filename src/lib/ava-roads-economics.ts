@@ -334,19 +334,38 @@ export function computeAvaRoadsEconomics(
 
 export type AvaRoadsProfitRange = { min: number; max: number; luckyMax?: number };
 
-export function computeAvaRoadsProfitRange(prices: PriceMap): AvaRoadsProfitRange {
-  const safe = computeAvaRoadsEconomics(prices, {
-    presetId: "safe",
-    snapperViewId: "expected",
-  });
-  const normal = computeAvaRoadsEconomics(prices, {
-    presetId: "normal",
-    snapperViewId: "expected",
-  });
-  const greedyLucky = computeAvaRoadsEconomics(prices, {
-    presetId: "greedy",
-    snapperViewId: "lucky",
-  });
+export function computeAvaRoadsProfitRange(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  gatheringYieldMultiplier: number = 1,
+): AvaRoadsProfitRange {
+  const safe = computeAvaRoadsEconomics(
+    prices,
+    {
+      presetId: "safe",
+      snapperViewId: "expected",
+    },
+    listingTaxRate,
+    gatheringYieldMultiplier,
+  );
+  const normal = computeAvaRoadsEconomics(
+    prices,
+    {
+      presetId: "normal",
+      snapperViewId: "expected",
+    },
+    listingTaxRate,
+    gatheringYieldMultiplier,
+  );
+  const greedyLucky = computeAvaRoadsEconomics(
+    prices,
+    {
+      presetId: "greedy",
+      snapperViewId: "lucky",
+    },
+    listingTaxRate,
+    gatheringYieldMultiplier,
+  );
 
   return {
     min: safe.netAfterTaxAndDeath ?? 400_000,

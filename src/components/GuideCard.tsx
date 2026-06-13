@@ -10,13 +10,12 @@ import {
 } from "@/types/guide";
 import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import { GuideRiskBadge } from "@/components/GuideRiskBadge";
-import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import {
   getGuideSilverDisplay,
   getCardPriceSourceLabel,
 } from "@/lib/guide-display";
 import type { GuideProfitRange } from "@/lib/guide-economics";
-import type { GuideProfitOutcomes } from "@/types/guide";
+import { formatSilverPrice } from "@/lib/format";
 
 const difficultyColors = {
   beginner: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
@@ -32,11 +31,9 @@ const zoneTypeColors = {
 export function GuideCard({
   guide,
   profitRange,
-  profitOutcomes,
 }: {
   guide: Guide;
   profitRange?: GuideProfitRange | null;
-  profitOutcomes?: GuideProfitOutcomes | null;
 }) {
   const { useLivePrices } = useMarketCity();
   const priceSourceLabel = getCardPriceSourceLabel(useLivePrices);
@@ -83,21 +80,21 @@ export function GuideCard({
         <span className="text-[10px] uppercase tracking-widest text-parchment/35">
           {profitRangeLabel}
         </span>
-        {profitOutcomes ? (
-          <div className="mt-1">
-            <ProfitOutcomesTable
-              outcomes={profitOutcomes}
-              compact
-              unitLabel={profitUnit}
-              priceSourceLabel={priceSourceLabel}
-            />
-          </div>
+        {profitRange ? (
+          <p className="mt-1 text-sm font-semibold text-gold tabular-nums">
+            {profitRange.min !== profitRange.max
+              ? `${formatSilverPrice(profitRange.min)} – ${formatSilverPrice(profitRange.max)}${profitUnit}`
+              : `${formatSilverPrice(profitRange.max)}${profitUnit}`}
+            <span className="ml-1 font-normal text-parchment/40">
+              · {priceSourceLabel}
+            </span>
+          </p>
         ) : (
           <p className="mt-1 text-sm font-semibold text-gold">
-            {getGuideSilverDisplay(guide, profitRange)}
+            {getGuideSilverDisplay(guide, null)}
             <span className="font-normal text-parchment/40">
               {" "}
-              · {priceSourceLabel}
+              {profitUnit} · {priceSourceLabel}
             </span>
           </p>
         )}

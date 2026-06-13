@@ -9,6 +9,7 @@ import {
 } from "@/components/EconomicsTable";
 import {
   DEFAULT_POTION_DEFAULTS,
+  DEFAULT_POTION_EXTRACT_LEVEL,
   MAJOR_HEALING_CRAFT_SILVER,
   POTION_EXTRACT_META,
   POTION_EXTRACT_LEVELS,
@@ -73,7 +74,9 @@ export function PotionProfitCalculator({
   const [sellThroughId, setSellThroughId] =
     useState<PotionSellThroughId>("normal");
   const [focusMode, setFocusMode] = useState<PotionFocusMode>("with-focus");
-  const [extractLevel, setExtractLevel] = useState<PotionExtractLevel>(0);
+  const [extractLevel, setExtractLevel] = useState<PotionExtractLevel>(
+    DEFAULT_POTION_EXTRACT_LEVEL,
+  );
   const [defaults, setDefaults] = useState(DEFAULT_POTION_DEFAULTS);
 
   const recipe = getPotionRecipe(recipeId);

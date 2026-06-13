@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 import {
-  AVERAGE_MARKET_CITY_ID,
   DEFAULT_MARKET_CITY_ID,
   isMarketCityId,
   LIVE_PRICES_STORAGE_KEY,
@@ -22,7 +21,7 @@ import {
   PREMIUM_SELLER_STORAGE_KEY,
 } from "@/lib/listing-tax";
 import type { GuidesListMarketData } from "@/lib/guide-economics";
-import { pickGuideProfitOutcomes } from "@/lib/guide-economics";
+import { pickGuideProfitOutcomes, pickGuideProfitRanges } from "@/lib/guide-economics";
 import { effectiveMarketCity } from "@/lib/guide-market-city";
 import { deserializePriceMap, pickGuideMarketPrices } from "@/lib/guide-economics";
 import type { PriceMapKind } from "@/lib/albion-prices";
@@ -156,14 +155,10 @@ export function useProfitRangesForCity(
   marketData: GuidesListMarketData,
   guideDefaultCity?: MarketCityId,
 ) {
-  const { marketCity } = useMarketCity();
+  const { marketCity, premiumSeller } = useMarketCity();
   const city = effectiveMarketCity(marketCity, guideDefaultCity);
   const source = useGuidesListMarketSource(marketData);
-  return (
-    source.ranges[city] ??
-    source.ranges[AVERAGE_MARKET_CITY_ID] ??
-    {}
-  );
+  return pickGuideProfitRanges(source.ranges, premiumSeller, city);
 }
 
 export function useGuideProfitOutcomes(

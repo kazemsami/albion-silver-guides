@@ -9,6 +9,9 @@ export const POTION_EXTRACT_LEVELS: PotionExtractLevel[] = [0, 1, 2];
 
 export const POTION_EXTRACT_PER_BATCH = 45;
 
+/** Default enchant tier for bulk majors in the guide and calculator (.1 = Basic Arcane Extract). */
+export const DEFAULT_POTION_EXTRACT_LEVEL: PotionExtractLevel = 1;
+
 export const POTION_EXTRACT_META: Record<
   PotionExtractLevel,
   {

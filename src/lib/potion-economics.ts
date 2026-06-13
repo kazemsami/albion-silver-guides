@@ -1,5 +1,6 @@
 import {
   DEFAULT_POTION_DEFAULTS,
+  DEFAULT_POTION_EXTRACT_LEVEL,
   getPotionRecipe,
   POTION_SELL_THROUGH_META,
   resolvePotionBatch,
@@ -283,23 +284,34 @@ export function computePotionEconomics(
 export type PotionProfitRange = { min: number; max: number };
 
 /** Per 10k focus range for guide cards (Major Healing with focus). */
-export function computePotionProfitRange(prices: PriceMap): PotionProfitRange {
-  const conservative = computePotionEconomics(prices, {
-    recipeId: "heal",
-    tierId: "t6",
-    sellThroughId: "normal",
-    focusMode: "with-focus",
-    extractLevel: 0,
-    defaults: DEFAULT_POTION_DEFAULTS,
-  });
-  const eventHold = computePotionEconomics(prices, {
-    recipeId: "heal",
-    tierId: "t6",
-    sellThroughId: "event",
-    focusMode: "with-focus",
-    extractLevel: 0,
-    defaults: DEFAULT_POTION_DEFAULTS,
-  });
+export function computePotionProfitRange(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+): PotionProfitRange {
+  const conservative = computePotionEconomics(
+    prices,
+    {
+      recipeId: "heal",
+      tierId: "t6",
+      sellThroughId: "normal",
+      focusMode: "with-focus",
+      extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
+      defaults: DEFAULT_POTION_DEFAULTS,
+    },
+    listingTaxRate,
+  );
+  const eventHold = computePotionEconomics(
+    prices,
+    {
+      recipeId: "heal",
+      tierId: "t6",
+      sellThroughId: "event",
+      focusMode: "with-focus",
+      extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
+      defaults: DEFAULT_POTION_DEFAULTS,
+    },
+    listingTaxRate,
+  );
 
   return {
     min: conservative.profitPerTenThousandFocus ?? 0,

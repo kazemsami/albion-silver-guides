@@ -14,6 +14,7 @@ import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
 import {
   PREMIUM_LISTING_TAX_RATE,
+  getGatheringYieldMultiplier,
   getListingTaxRate,
   isPremiumYieldItem,
 } from "@/lib/listing-tax";
@@ -279,7 +280,10 @@ export function computeProfitRange(
 function computeAllGuideProfitRanges(
   slugs: string[],
   priceMaps: PriceMapsByCity,
+  premiumSeller: boolean,
 ): GuideProfitRangesByCity {
+  const listingTaxRate = getListingTaxRate(premiumSeller);
+  const gatheringYieldMultiplier = getGatheringYieldMultiplier(premiumSeller);
   const result: GuideProfitRangesByCity = {};
 
   for (const city of Object.keys(priceMaps)) {
@@ -289,23 +293,32 @@ function computeAllGuideProfitRanges(
     for (const slug of slugs) {
       const economics = guideEconomicsBySlug[slug];
       if (slug === "high-tier-group-tracking") {
-        const range = computeTrackingProfitRange(prices);
+        const range = computeTrackingProfitRange(prices, listingTaxRate);
         cityRanges[slug] = range;
         continue;
       }
       if (slug === "potions-crafting-bulk") {
-        cityRanges[slug] = computePotionProfitRange(prices);
+        cityRanges[slug] = computePotionProfitRange(prices, listingTaxRate);
         continue;
       }
       if (slug === "ava-roads-fishing") {
-        cityRanges[slug] = computeAvaRoadsProfitRange(prices);
+        cityRanges[slug] = computeAvaRoadsProfitRange(
+          prices,
+          listingTaxRate,
+          gatheringYieldMultiplier,
+        );
         continue;
       }
       if (slug === "abyssal-depths-farming") {
-        cityRanges[slug] = computeAbyssalProfitRange(prices);
+        cityRanges[slug] = computeAbyssalProfitRange(prices, listingTaxRate);
         continue;
       }
-      const range = computeProfitRange(economics, prices);
+      const range = computeProfitRange(
+        economics,
+        prices,
+        listingTaxRate,
+        gatheringYieldMultiplier,
+      );
       if (range.min != null && range.max != null) {
         cityRanges[slug] = { min: range.min, max: range.max };
       }
@@ -332,14 +345,19 @@ export type GuideProfitOutcomesByPremium = {
   standard: GuideProfitOutcomesByCity;
 };
 
+export type GuideProfitRangesByPremium = {
+  premium: GuideProfitRangesByCity;
+  standard: GuideProfitRangesByCity;
+};
+
 /** Snapshot and live market data for guide list cards. */
 export type GuidesListMarketData = {
   estimated: {
-    ranges: GuideProfitRangesByCity;
+    ranges: GuideProfitRangesByPremium;
     outcomes: GuideProfitOutcomesByPremium;
   };
   live: {
-    ranges: GuideProfitRangesByCity;
+    ranges: GuideProfitRangesByPremium;
     outcomes: GuideProfitOutcomesByPremium;
   };
 };
@@ -349,7 +367,10 @@ function buildGuidesListMarketSlice(
   priceMaps: PriceMapsByCity,
 ): GuidesListMarketData["estimated"] {
   return {
-    ranges: computeAllGuideProfitRanges(slugs, priceMaps),
+    ranges: {
+      premium: computeAllGuideProfitRanges(slugs, priceMaps, true),
+      standard: computeAllGuideProfitRanges(slugs, priceMaps, false),
+    },
     outcomes: {
       premium: computeAllGuideProfitOutcomes(slugs, priceMaps, true),
       standard: computeAllGuideProfitOutcomes(slugs, priceMaps, false),
@@ -390,12 +411,21 @@ export function pickGuideProfitOutcomes(
   );
 }
 
+export function pickGuideProfitRanges(
+  data: GuideProfitRangesByPremium,
+  premiumSeller: boolean,
+  city: MarketCityId,
+): GuideProfitRangeMap {
+  const byCity = premiumSeller ? data.premium : data.standard;
+  return byCity[city] ?? byCity[AVERAGE_MARKET_CITY_ID] ?? {};
+}
+
 /** Profit ranges per market city for list pages and the city selector. */
 export async function fetchAllGuidesProfitRangesByCity(): Promise<
   GuideProfitRangesByCity
 > {
   const data = await fetchAllGuidesMarketDataByCity();
-  return data.estimated.ranges;
+  return data.estimated.ranges.premium;
 }
 
 export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarketData> {
