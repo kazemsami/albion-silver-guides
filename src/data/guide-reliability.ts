@@ -27,11 +27,11 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     status: "tested-and-community-checked",
     lastUpdated: "2026-06-13",
     evidence: {
-      runs: 1,
+      runs: 2,
       date: "2026-06-13",
-      gear: "Level 78 fishing, yellow Mists setup from guide",
-      rawLootSilver: 450_000,
-      netSilver: 450_000,
+      gear: "Level 78 fishing, max gear, yellow Mists setup, no Premium",
+      rawLootSilver: 300_000,
+      netSilver: 300_000,
       deathsOrKnockdowns: 0,
       sources: [
         {
@@ -44,7 +44,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         },
       ],
       notes:
-        "My run: ~450k in ~30 min at fishing level 78. Community reference (GremmyAngler): ~300k in ~30 min at fishing level 1-10 (~600k/hr).",
+        "Latest run (no Premium): ~240k fish + ~60k from half Grandmaster journal filled = ~300k in ~30 min at fishing 78. Earlier run ~450k with Premium. Community (GremmyAngler): ~300k in ~30 min at fishing 1-10 (~600k/hr).",
     },
   },
   "ava-roads-fishing": {
