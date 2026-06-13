@@ -128,17 +128,16 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
     mid: {
       title: "Standard Fiber Gear",
-      description: "T5 harvester set for skyflower routes in swamp yellow zones.",
+      description: "T5 harvester set, Lazygrass Plain (~280k/hr no Premium, ~450k/hr with Premium, before tax).",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FIBER", name: "Expert's Harvester Cap", hint: "Fiber yield bonus" },
         armor: { id: "T5_ARMOR_GATHERER_FIBER", name: "Expert's Harvester Garb", hint: "Fiber yield bonus" },
         shoes: { id: "T5_SHOES_GATHERER_FIBER", name: "Expert's Harvester Workboots", hint: "Yield + weight reduction" },
         mainhand: { id: "T5_2H_TOOL_SICKLE", name: "Expert's Sickle", hint: "Hemp + skyflower" },
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "Good carry weight" },
-        food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
       inventory: [
-        { id: "T4_JOURNAL_FIBER_EMPTY", name: "Adept Cropper's Journal (Empty)", quantity: 2, hint: "Carry two empties" },
+        { id: "T5_JOURNAL_FIBER_EMPTY", name: "Expert Cropper's Journal (Empty)", quantity: 2, hint: "Carry two empties; fill two per hour" },
       ],
     },
     high: {
@@ -153,7 +152,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
       inventory: [
-        { id: "T5_JOURNAL_FIBER_EMPTY", name: "Expert Cropper's Journal (Empty)", hint: "Better laborer returns" },
+        { id: "T5_JOURNAL_FIBER_EMPTY", name: "Expert Cropper's Journal (Empty)", quantity: 2, hint: "Carry two empties" },
       ],
     },
   },

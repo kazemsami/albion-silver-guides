@@ -115,6 +115,23 @@ function avaRoadsDeathInputs(
   ];
 }
 
+/** Bonus enchanted fiber spawns on Lazygrass Plain loops (RNG, not scaled by skill tier). */
+const FIBER_ENCHANT_BONUS_LOW: HourlyItem[] = [
+  { id: "T4_FIBER_LEVEL2@2", name: "Rare Hemp", quantity: 4 },
+  { id: "T5_FIBER_LEVEL1@1", name: "Uncommon Skyflower", quantity: 3 },
+  { id: "T5_FIBER_LEVEL2@2", name: "Rare Skyflower", quantity: 2 },
+];
+const FIBER_ENCHANT_BONUS_MID: HourlyItem[] = [
+  { id: "T4_FIBER_LEVEL2@2", name: "Rare Hemp", quantity: 8 },
+  { id: "T5_FIBER_LEVEL1@1", name: "Uncommon Skyflower", quantity: 6 },
+  { id: "T5_FIBER_LEVEL2@2", name: "Rare Skyflower", quantity: 5 },
+];
+const FIBER_ENCHANT_BONUS_HIGH: HourlyItem[] = [
+  { id: "T4_FIBER_LEVEL2@2", name: "Rare Hemp", quantity: 12 },
+  { id: "T5_FIBER_LEVEL1@1", name: "Uncommon Skyflower", quantity: 10 },
+  { id: "T5_FIBER_LEVEL2@2", name: "Rare Skyflower", quantity: 8 },
+];
+
 /** Per-hour yields at skill tier multiplier 1.0, profit is scaled by chosen skill level. */
 export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   "t4-ore-mining-yellow-zone": {
@@ -140,23 +157,46 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   },
   "fiber-farming-solo": {
     hourlyOutput: [
-      { id: "T5_FIBER", name: "Skyflower", quantity: 900 },
-      { id: "T4_FIBER", name: "Hemp", quantity: 400 },
-      { id: "T4_JOURNAL_FIBER_FULL", name: "Adept Cropper's Journal (Full)", quantity: 2 },
+      { id: "T5_FIBER", name: "Skyflower", quantity: 423 },
+      { id: "T4_FIBER", name: "Hemp", quantity: 750 },
+      { id: "T3_FIBER", name: "Flax", quantity: 675 },
+      { id: "T5_JOURNAL_FIBER_FULL", name: "Expert Cropper's Journal (Full)", quantity: 2 },
     ],
     hourlyInputs: [
       {
-        id: "T4_JOURNAL_FIBER_EMPTY",
-        name: "Adept Cropper's Journal (Empty)",
+        id: "T5_JOURNAL_FIBER_EMPTY",
+        name: "Expert Cropper's Journal (Empty)",
         quantity: 2,
         side: "sell",
       },
     ],
-    hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
     skillTiers: tiers(
-      SKILL_TIERS.gatheringLow,
-      SKILL_TIERS.gatheringMid,
-      SKILL_TIERS.gatheringHigh,
+      {
+        ...SKILL_TIERS.gatheringLow,
+        hourlyOutput: [
+          { id: "T5_FIBER", name: "Skyflower", quantity: 423 },
+          { id: "T4_FIBER", name: "Hemp", quantity: 750 },
+          { id: "T3_FIBER", name: "Flax", quantity: 675 },
+          { id: "T4_JOURNAL_FIBER_FULL", name: "Adept Cropper's Journal (Full)", quantity: 1.5 },
+        ],
+        hourlyInputs: [
+          {
+            id: "T4_JOURNAL_FIBER_EMPTY",
+            name: "Adept Cropper's Journal (Empty)",
+            quantity: 1.5,
+            side: "sell",
+          },
+        ],
+        bonusOutput: FIBER_ENCHANT_BONUS_LOW,
+      },
+      {
+        ...SKILL_TIERS.gatheringMid,
+        bonusOutput: FIBER_ENCHANT_BONUS_MID,
+      },
+      {
+        ...SKILL_TIERS.gatheringHigh,
+        bonusOutput: FIBER_ENCHANT_BONUS_HIGH,
+      },
     ),
     defaultSkillTierId: "mid",
   },

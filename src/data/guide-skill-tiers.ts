@@ -10,7 +10,7 @@ export const SKILL_TIERS = {
   gatheringMid: {
     id: "mid",
     label: "Intermediate",
-    description: "T5 gear, efficient loops, steady yield",
+    description: "T5 gear, Lazygrass Plain (~280k/hr gross without Premium, ~450k/hr with Premium)",
     outputMultiplier: 1,
   },
   gatheringHigh: {

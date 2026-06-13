@@ -4,7 +4,7 @@ import type { MarketCityId } from "@/lib/market-cities";
 /** Route-relevant default market for each guide's profit calculator. */
 export const guideDefaultMarketCityBySlug: Record<string, MarketCityId> = {
   "t4-ore-mining-yellow-zone": "Martlock",
-  "fiber-farming-solo": "Thetford",
+  "fiber-farming-solo": "Bridgewatch",
   "solo-dungeon-farming": "Martlock",
   "corrupted-dungeons-pvpve": "Caerleon",
   "abyssal-depths-farming": "Caerleon",

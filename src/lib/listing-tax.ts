@@ -14,9 +14,8 @@ export function getGatheringYieldMultiplier(premiumSeller: boolean): number {
 }
 
 export function isPremiumYieldItem(itemId: string): boolean {
-  if (itemId.includes("_JOURNAL_") && itemId.endsWith("_FULL")) {
-    return /_JOURNAL_(ORE|FIBER|WOOD|HIDE|ROCK|FISHING)_/.test(itemId);
-  }
+  // Journal fill rates are set explicitly per guide; do not scale with Premium toggle.
+  if (itemId.includes("_JOURNAL_")) return false;
   if (itemId.includes("_ORE") || itemId.includes("_FIBER")) return true;
   if (
     itemId.includes("_FISH") ||

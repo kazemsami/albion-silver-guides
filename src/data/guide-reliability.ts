@@ -92,8 +92,18 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     lastUpdated: "2026-05-15",
   },
   "fiber-farming-solo": {
-    status: "needs-review",
-    lastUpdated: "2026-05-15",
+    status: "tested-by-me",
+    lastUpdated: "2026-06-13",
+    evidence: {
+      runs: 1,
+      date: "2026-06-13",
+      gear: "T5 harvester set + Expert sickle, Lazygrass Plain (Bridgewatch), no Premium",
+      rawLootSilver: 140_000,
+      netSilver: 125_000,
+      deathsOrKnockdowns: 0,
+      notes:
+        "~30 min session without Premium (before listing tax): ~130k fiber + ~10k from 1 Expert journal = ~140k gross (~280k/hr gross, ~250k/hr net after Standard tax). With Premium on the same route, expect roughly ~450k/hr before tax. Pork pie not used.",
+    },
   },
   "solo-dungeon-farming": {
     status: "needs-review",
