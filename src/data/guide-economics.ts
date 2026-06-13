@@ -115,11 +115,9 @@ function avaRoadsDeathInputs(
   ];
 }
 
-/** Bonus enchanted fiber spawns on Lazygrass Plain loops (RNG, not scaled by skill tier). */
+/** Bonus enchanted fiber spawns on Lazygrass Plain loops (mid/advanced tiers only). */
 const FIBER_ENCHANT_BONUS_LOW: HourlyItem[] = [
   { id: "T4_FIBER_LEVEL2@2", name: "Rare Hemp", quantity: 4 },
-  { id: "T5_FIBER_LEVEL1@1", name: "Uncommon Skyflower", quantity: 3 },
-  { id: "T5_FIBER_LEVEL2@2", name: "Rare Skyflower", quantity: 2 },
 ];
 const FIBER_ENCHANT_BONUS_MID: HourlyItem[] = [
   { id: "T4_FIBER_LEVEL2@2", name: "Rare Hemp", quantity: 8 },
@@ -132,30 +130,58 @@ const FIBER_ENCHANT_BONUS_HIGH: HourlyItem[] = [
   { id: "T5_FIBER_LEVEL2@2", name: "Rare Skyflower", quantity: 8 },
 ];
 
+/** Bonus enchanted ore from logged mid-tier runs (not available at beginner T4). 30-min ×1.9/hr. */
+const ORE_ENCHANT_BONUS_MID: HourlyItem[] = [
+  { id: "T4_ORE_LEVEL1@1", name: "Uncommon Iron Ore", quantity: 53 },
+  { id: "T5_ORE_LEVEL1@1", name: "Uncommon Titanium Ore", quantity: 32 },
+];
+const ORE_ENCHANT_BONUS_HIGH: HourlyItem[] = [
+  { id: "T4_ORE_LEVEL1@1", name: "Uncommon Iron Ore", quantity: 68 },
+  { id: "T5_ORE_LEVEL1@1", name: "Uncommon Titanium Ore", quantity: 41 },
+];
+
 /** Per-hour yields at skill tier multiplier 1.0, profit is scaled by chosen skill level. */
 export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   "t4-ore-mining-yellow-zone": {
+    gatherYieldBaseline: "standard",
     hourlyOutput: [
-      { id: "T4_ORE", name: "Iron Ore", quantity: 2000 },
-      { id: "T4_JOURNAL_ORE_FULL", name: "Adept Prospector's Journal (Full)", quantity: 1 },
+      { id: "T4_ORE", name: "Iron Ore", quantity: 361 },
+      { id: "T3_ORE", name: "Tin Ore", quantity: 770 },
+      { id: "T5_ORE", name: "Titanium Ore", quantity: 129 },
     ],
-    hourlyInputs: [
-      {
-        id: "T4_JOURNAL_ORE_EMPTY",
-        name: "Adept Prospector's Journal (Empty)",
-        quantity: 1,
-        side: "sell",
-      },
-    ],
+    hourlyInputs: [],
     hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
     skillTiers: tiers(
-      SKILL_TIERS.gatheringLow,
-      SKILL_TIERS.gatheringMid,
-      SKILL_TIERS.gatheringHigh,
+      {
+        ...SKILL_TIERS.gatheringLow,
+        consumableMultiplier: 1,
+        description:
+          "T4 miner gear + Pork Pie, flat iron and tin only (no titanium or enchanted ore)",
+        hourlyOutput: [
+          { id: "T4_ORE", name: "Iron Ore", quantity: 361 },
+          { id: "T3_ORE", name: "Tin Ore", quantity: 770 },
+        ],
+      },
+      {
+        ...SKILL_TIERS.gatheringMid,
+        consumableMultiplier: 1,
+        description:
+          "T5 miner gear + Pork Pie + bag, Eldon Hill (Martlock). Logged 30-min run mining every node on path, extrapolated to 1 hr at ×1.9.",
+        bonusOutput: ORE_ENCHANT_BONUS_MID,
+      },
+      {
+        ...SKILL_TIERS.gatheringHigh,
+        consumableMultiplier: 1,
+        description:
+          "Iron-focused route + Pork Pie: skip tin, prioritize iron and titanium (projected ~15% more iron/hr, not logged)",
+        outputMultiplier: 1.15,
+        bonusOutput: ORE_ENCHANT_BONUS_HIGH,
+      },
     ),
     defaultSkillTierId: "mid",
   },
   "fiber-farming-solo": {
+    gatherYieldBaseline: "standard",
     hourlyOutput: [
       { id: "T5_FIBER", name: "Skyflower", quantity: 282 },
       { id: "T4_FIBER", name: "Hemp", quantity: 500 },
@@ -170,9 +196,11 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         side: "sell",
       },
     ],
+    hourlyConsumables: [{ id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 1 }],
     skillTiers: tiers(
       {
         ...SKILL_TIERS.gatheringLow,
+        consumableMultiplier: 1,
         hourlyOutput: [
           { id: "T5_FIBER", name: "Skyflower", quantity: 155 },
           { id: "T4_FIBER", name: "Hemp", quantity: 275 },
@@ -188,13 +216,17 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
           },
         ],
         bonusOutput: FIBER_ENCHANT_BONUS_LOW,
+        description:
+          "T4 harvester gear + Pork Pie, flat fiber only; rare hemp at most (no skyflower enchants)",
       },
       {
         ...SKILL_TIERS.gatheringMid,
+        consumableMultiplier: 1,
         bonusOutput: FIBER_ENCHANT_BONUS_MID,
       },
       {
         ...SKILL_TIERS.gatheringHigh,
+        consumableMultiplier: 1,
         bonusOutput: FIBER_ENCHANT_BONUS_HIGH,
       },
     ),
@@ -305,6 +337,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   },
   "corrupted-dungeons-pvpve": {
     // Conservative soul/rune pace for completed Stalker runs; not peak ZvZ liquidity.
+    // Kit replacement = ~0.3 full-loot deaths/hr at Stalker (banish via shards or flee unfavorable invasions).
     hourlyOutput: [
       { id: "T7_SOUL", name: "Grandmaster's Soul", quantity: 110 },
       { id: "T6_RUNE", name: "Master's Rune", quantity: 220 },
@@ -314,31 +347,31 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         id: "T6_HEAD_PLATE_SET1",
         name: "Master's Soldier Helmet (kit replacement)",
-        quantity: 0.8,
+        quantity: 0.3,
         side: "buy",
       },
       {
         id: "T6_ARMOR_LEATHER_SET1",
         name: "Master's Mercenary Jacket (kit replacement)",
-        quantity: 0.8,
+        quantity: 0.3,
         side: "buy",
       },
       {
         id: "T6_SHOES_PLATE_SET1",
         name: "Master's Soldier Boots (kit replacement)",
-        quantity: 0.8,
+        quantity: 0.3,
         side: "buy",
       },
       {
         id: "T6_2H_CLAYMORE",
         name: "Master's Claymore (kit replacement)",
-        quantity: 0.8,
+        quantity: 0.3,
         side: "buy",
       },
       {
         id: "T4_CAPEITEM_FW_THETFORD",
         name: "Adept's Thetford Cape (kit replacement)",
-        quantity: 0.8,
+        quantity: 0.3,
         side: "buy",
       },
     ],

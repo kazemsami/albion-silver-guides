@@ -21,7 +21,7 @@ import {
   getLaborerSpecialty,
 } from "@/data/laborer-specialties";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { listingTaxRowLabel } from "@/lib/listing-tax";
+import { getGatheringYieldMultiplier, listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeHourlyEconomics,
   computeLoadoutPricing,
@@ -50,8 +50,11 @@ export function GuideProfitCalculator({
   tierLoadouts,
   defaultMarketCity,
 }: GuideProfitCalculatorProps) {
-  const { marketCity, listingTaxRate, premiumSeller, gatheringYieldMultiplier } =
-    useMarketCity();
+  const { marketCity, listingTaxRate, premiumSeller } = useMarketCity();
+  const gatheringYieldMultiplier = getGatheringYieldMultiplier(
+    premiumSeller,
+    economics.gatherYieldBaseline,
+  );
   const { priceMap, mapKind, useLivePrices, serializedPrices } = useGuidePriceMap(
     guidePrices,
     defaultMarketCity,

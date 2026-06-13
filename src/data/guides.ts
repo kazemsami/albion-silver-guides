@@ -8,61 +8,70 @@ import {
 const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile">[] = [
   {
     slug: "t4-ore-mining-yellow-zone",
-    title: "T4 Ore Mining in Yellow Zones",
+    title: "Ore Mining in Yellow Zones",
     description:
-      "Farm ~2,000 iron ore per hour in Martlock highland yellow zones, sell raw ore on the Martlock market, and fill a prospector journal for bonus silver. Knockdown-only PvP keeps this viable from day one.",
+      "Mine Martlock highland yellow zones (logged route: Eldon Hill) for iron, tin, and titanium ore. Sell raw ore locally and optionally fill a prospector journal. Reviewed against 1 logged 30-min intermediate run with Pork Pie, no Premium: ~205k/hr net after Standard tax and 1 Pork Pie (~361 iron/hr at ×1.9 extrapolation).",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
-    silverPerHour: { min: 150_000, max: 350_000 },
+    silverPerHour: { min: 110_000, max: 205_000 },
     requirements: [
-      "T4 pickaxe + T4 miner gear (cap, garb, workboots)",
-      "Riding horse or giant stag for node-to-node travel",
-      "Empty Adept Prospector's Journal in inventory",
-      "Pork Pie (+15% yield, +30% carry weight), budget ~1 pie per hour",
+      "T4 pick in bag + T4 miner gear to start; T5 pick for titanium nodes (matches logged run)",
+      "Giant Stag for node-to-node travel and carry weight on every tier",
+      "Miner backpack (cape slot) plus a gatherer bag for longer trips before banking",
+      "Empty Adept Prospector's Journal in inventory (optional bonus silver)",
+      "Pork Pie (+15% yield, +30% carry weight), budget ~1 pie per hour on every tier",
     ],
     steps: [
-      "Start in Martlock. Run the Haytor → Pennine Forest → Slimehag loop (T4-T5 yellow highland), only mine T4 Iron Ore nodes your pick can hit in one swing.",
-      "One full Adept Prospector's Journal per hour is realistic at mid-tier gathering. Buy the matching empty journal back each loop; the calculator subtracts that cost.",
-      "Bank when carry weight hits ~80% (~2,000 ore per trip with pork pie). Do not refine. Sell raw T4 Iron Ore on the Martlock market (list 1 silver under the lowest sell order).",
-      "After depositing, buy another Pork Pie and repeat the loop. Upgrade to T5 pick only when you can one-shot T5 Titanium nodes without slowing the route.",
-      "Track profit as: (ore sold × price) + (full journal sold × price) - empty journal buy - pork pie cost. Subtract ~6.5% Premium listing tax from sell value unless you price that in yourself.",
+      "Start in Martlock. Logged test route: Eldon Hill yellow highland. Alternate loop: Haytor → Pennine Forest → Slimehag. Mine iron (T4) as the main value; tin and titanium spawn on the same paths.",
+      "For maximum silver per hour, skip copper (T2) and often tin (T3) and only hit iron and titanium. The logged run mined every ore on path, which adds tin volume but lowers iron/hr.",
+      "Bank when carry weight hits ~80%. With Pork Pie and a bag, a mixed-ore trip is roughly 700+ ore before banking (logged 30 min: 190 iron, 405 tin, 68 titanium, plus uncommon spawns).",
+      "Do not refine. Sell raw ore on the Martlock market (list 1 silver under the lowest sell order). Tin sells but iron and uncommon ore usually pay better per minute.",
+      "After depositing, buy another Pork Pie and repeat. Upgrade to T5 pick when you can one-shot titanium nodes without slowing the route.",
+      "Track profit as: (ore sold × price) minus Pork Pie cost minus listing tax. Journals add bonus silver if you fill one while mining.",
     ],
     tips: [
-      "Iron ore is the money maker here, skip copper (T2) and tin (T3) nodes entirely; they waste time per silver.",
-      "Martlock has the best local buy volume for raw ore; only haul to Caerleon if the price gap exceeds ~8% after transport time.",
-      "Mine during EU off-peak if your zone is crowded, contested nodes cut ore/hour directly.",
+      "Logged 30-min intermediate run (Eldon Hill, T5 gear, Pork Pie, miner backpack, gatherer bag, every node, no Premium): 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Calculator extrapolates yields to 1 hr at ×1.9 (banking/travel overhead, not straight ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~105k net in 30 min after Standard listing tax (10.5%) and 1 Pork Pie (~205k/hr). Premium (+50% gather yield, 6.5% tax) is projected only; toggle Premium in the header to compare.",
+      "Iron-only routing should raise iron/hr above 361 but total stack weight drops. Tin is fast to mine but lower silver per minute. Titanium and enchanted ore need T5 pick and higher spec (intermediate tier in the calculator).",
+      "Martlock has solid local ore buy volume; only haul to Caerleon if the price gap exceeds ~8% after transport time.",
+      "Mine during EU off-peak if your zone is crowded; contested nodes cut ore/hr directly.",
       "If you die, you only lose your pork pie and partial stack. Yellow zones knock down; they do not loot your ore.",
+      "Premium gather yield (+50%) and prospector journals were not on the logged run; treat those as upside only.",
     ],
     profitBuild: {
       title: "Required Gear",
       description:
-        "T4 miner set for the Martlock highland loop. Pork Pie boosts yield and extends each trip to ~2,000 ore before banking.",
+        "T5 miner set for Eldon Hill. Logged setup: Pork Pie, miner backpack, gatherer bag.",
       slots: {
         head: {
-          id: "T4_HEAD_GATHERER_ORE",
-          name: "Adept's Miner Cap",
+          id: "T5_HEAD_GATHERER_ORE",
+          name: "Expert's Miner Cap",
           hint: "Mining yield passive bonus",
         },
         armor: {
-          id: "T4_ARMOR_GATHERER_ORE",
-          name: "Adept's Miner Garb",
+          id: "T5_ARMOR_GATHERER_ORE",
+          name: "Expert's Miner Garb",
           hint: "Mining yield passive bonus",
         },
         shoes: {
-          id: "T4_SHOES_GATHERER_ORE",
-          name: "Adept's Miner Workboots",
+          id: "T5_SHOES_GATHERER_ORE",
+          name: "Expert's Miner Workboots",
           hint: "Yield bonus + reduced ore weight",
         },
-        mainhand: {
-          id: "T4_2H_TOOL_PICK",
-          name: "Adept's Pickaxe",
-          hint: "T4 pick mines up to iron (T4) ore",
+        cape: {
+          id: "T5_BACKPACK_GATHERER_ORE",
+          name: "Expert's Miner Backpack",
+          hint: "Cape slot: -30% ore weight",
+        },
+        bag: {
+          id: "T4_BAG",
+          name: "Adept's Bag",
+          hint: "Pick in bag until you mine; extra carry weight per trip",
         },
         mount: {
-          id: "T4_MOUNT_HORSE",
-          name: "Adept's Riding Horse",
-          hint: "Fast travel between ore clusters",
+          id: "T4_MOUNT_GIANTSTAG",
+          name: "Adept's Giant Stag",
+          hint: "Best yellow-zone gather mount: speed plus carry weight",
         },
         food: {
           id: "T7_MEAL_PIE",
@@ -71,6 +80,11 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
         },
       },
       inventory: [
+        {
+          id: "T5_2H_TOOL_PICK",
+          name: "Expert's Pickaxe",
+          hint: "In bag. Equip to mine iron (T4) and titanium (T5)",
+        },
         {
           id: "T4_JOURNAL_ORE_EMPTY",
           name: "Adept Prospector's Journal (Empty)",
@@ -83,39 +97,42 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
   },
   {
     slug: "fiber-farming-solo",
-    title: "Solo Fiber Farming Route",
+    title: "Fiber Farming in Yellow Zones",
     description:
-      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. Reviewed against 1 logged run without Premium or Pork Pie: ~250k/hr net after Standard tax. Premium and Pork Pie may raise that; those upside figures are projected.",
+      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. Reviewed against 1 logged 30-min run with Pork Pie (no Premium): ~250k/hr net after Standard tax and 1 Pork Pie.",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
     silverPerHour: { min: 250_000, max: 450_000 },
     requirements: [
-      "T5 sickle + T5 harvester gear (cap, garb, workboots)",
+      "T5 sickle in bag + T5 harvester gear (cap, garb, workboots)",
+      "Giant Stag for loop travel and carry weight on every tier",
+      "Harvester backpack (cape slot) plus a gatherer bag for longer loops",
       "Two empty Expert Cropper's Journals in inventory",
-      "Optional: Pork Pie (+15% yield, +30% carry weight). Not used on the logged test run.",
+      "Pork Pie (+15% yield, +30% carry weight), budget ~1 pie per hour on every tier",
     ],
     steps: [
       "Base out of Bridgewatch. Farm Lazygrass Plain (yellow zone): circle the map on a tight loop. Fiber is a secondary resource in steppe zones, so node density is lower than swamp fiber routes.",
-      "Harvest T5 Skyflower first, then T4 Hemp and T3 Flax on the return leg. Grab rare hemp (.2) and uncommon or rare skyflower (.1/.2) when those nodes spawn on your path.",
+      "Harvest T5 Skyflower first, then T4 Hemp and T3 Flax on the return leg. Grab rare hemp (.2) when it spawns. Uncommon and rare skyflower (.1/.2) need T5 gear and higher spec (intermediate tier in the calculator).",
       "Carry two empty Expert Cropper's Journals and fill them while gathering (about two full journals per hour on this loop). Sell full journals with your fiber in Bridgewatch.",
       "Sell raw fiber in Bridgewatch (do not weave to cloth unless cloth margins clearly beat raw fiber after tax).",
+      "After depositing, buy another Pork Pie and repeat the loop.",
       "Relist every 30 minutes during peak hours or undercut by 1 silver to move stacks before the next loop.",
     ],
     tips: [
-      "Reviewed against 1 logged run on Lazygrass Plain (Bridgewatch, no Premium, no Pork Pie). Swamp zones (Thetford side) have fiber as the primary resource and may feel denser, but those numbers are not tested here yet.",
-      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. ~140k gross before tax (~280k/hr); ~125k net after Standard listing tax (~250k/hr).",
-      "Enchanted nodes are bonus silver: rare hemp (.2) and uncommon or rare skyflower (.1/.2) sell for much more than flat fiber. The calculator includes average spawns on top of flat yields.",
+      "Reviewed against 1 logged run on Lazygrass Plain (Bridgewatch, T5 harvester gear, Pork Pie, no Premium). Logged fiber/hr already includes the Pork Pie gather bonus.",
+      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. ~140k gross before tax (~280k/hr); ~125k net after Standard listing tax and 1 Pork Pie (~250k/hr).",
+      "Enchanted nodes are bonus silver from intermediate tier up: rare hemp (.2) at beginner; uncommon or rare skyflower (.1/.2) once you run T5 gear and higher mining/fiber spec.",
       "With Premium on the same Lazygrass Plain loop, expect roughly ~450k/hr before tax (+50% gather yield and lower listing tax). That figure is projected, not logged. Toggle Premium in the header to compare.",
       "Skyflower (T5) is most of your silver; prioritize T5 nodes even if it means skipping a T4 cluster.",
       "Bridgewatch is your bank and market; sell locally instead of hauling to Caerleon unless the spread clearly covers travel time.",
-      "Pork Pie boosts yield and carry weight (+15% yield, +30% load per wiki) but was not used on the logged run. Add it when you want heavier bags, not as a baseline requirement.",
+      "Pork Pie (+15% yield, +30% carry weight) is part of every loadout tier and was active on the logged run.",
       "Stay in yellow zones for knockdown safety, blue zones are not more profitable, just less punishing on death than red.",
     ],
     profitBuild: {
       title: "Required Gear",
       description:
-        "T5 harvester set for Lazygrass Plain. Carry two empty Expert cropper journals.",
+        "T5 harvester set for Lazygrass Plain. Pork Pie, harvester backpack, gatherer bag; carry two empty cropper journals.",
       slots: {
         head: {
           id: "T5_HEAD_GATHERER_FIBER",
@@ -132,18 +149,33 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
           name: "Expert's Harvester Workboots",
           hint: "Yield bonus + reduced fiber weight",
         },
-        mainhand: {
-          id: "T5_2H_TOOL_SICKLE",
-          name: "Expert's Sickle",
-          hint: "T5 sickle for hemp (T4) and skyflower (T5)",
+        cape: {
+          id: "T5_BACKPACK_GATHERER_FIBER",
+          name: "Expert's Harvester Backpack",
+          hint: "Cape slot: -30% fiber weight",
+        },
+        bag: {
+          id: "T4_BAG",
+          name: "Adept's Bag",
+          hint: "Sickle in bag until you harvest; extra carry weight per loop",
         },
         mount: {
           id: "T4_MOUNT_GIANTSTAG",
           name: "Adept's Giant Stag",
-          hint: "Fast mount with good carry weight",
+          hint: "Best yellow-zone gather mount: speed plus carry weight",
+        },
+        food: {
+          id: "T7_MEAL_PIE",
+          name: "Pork Pie",
+          hint: "+15% gathering yield, +30% carry weight",
         },
       },
       inventory: [
+        {
+          id: "T5_2H_TOOL_SICKLE",
+          name: "Expert's Sickle",
+          hint: "In bag. Equip for hemp (T4) and skyflower (T5)",
+        },
         {
           id: "T5_JOURNAL_FIBER_EMPTY",
           name: "Expert Cropper's Journal (Empty)",
@@ -269,7 +301,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Slayer is for high-infamy veterans; higher IP cap and T8 mobs, but death risk dwarfs the extra loot for most farmers.",
       "Never chain runs with a full inventory. One death loses the chest and your kit on Stalker/Slayer.",
       "The profit calculator already subtracts ~6.5% Premium listing tax from sell value. Undercutting sell orders eats into the margin on top of that.",
-      "Stalker gear losses dominate bad sessions. At ~290k kit value, even ~0.8 deaths/hour can erase ~230k before you count lost chest loot.",
+      "Stalker gear losses swing your hourly. At ~290k kit value, the calculator assumes ~0.3 deaths/hour (~85k/hr); aggressive or unlucky sessions lose multiples of that plus the chest loot on each death.",
       "Bank after each chest when possible. Real hourly profit swings with invasion frequency, win rate, loot RNG, and infamy tier.",
     ],
     profitBuild: {

@@ -109,8 +109,11 @@ export function computeGuideProfitOutcomes(
 ): GuideProfitOutcomes {
   const listingTaxRate = options?.listingTaxRate ?? PREMIUM_LISTING_TAX_RATE;
   const priceMapKind = options?.priceMapKind ?? "snapshot";
+  const premiumSeller = options?.premiumSeller ?? true;
+  const economicsForSlug = guideEconomicsBySlug[slug];
   const gatheringYieldMultiplier = getGatheringYieldMultiplier(
-    options?.premiumSeller ?? true,
+    premiumSeller,
+    economicsForSlug?.gatherYieldBaseline,
   );
 
   if (slug === "high-tier-group-tracking") {

@@ -121,6 +121,11 @@ export interface SkillTier {
 }
 
 export interface GuideEconomics {
+  /**
+   * Whether hourlyOutput was logged with Premium gather yield (+50%).
+   * Defaults to premium. Use standard for guides reviewed without Premium.
+   */
+  gatherYieldBaseline?: "premium" | "standard";
   /** Items produced or sold per hour at the baseline skill tier (multiplier 1.0). */
   hourlyOutput: HourlyItem[];
   /** Materials purchased per hour (arbitrage, crafting, transport). */

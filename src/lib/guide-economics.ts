@@ -317,7 +317,10 @@ function computeAllGuideProfitRanges(
         economics,
         prices,
         listingTaxRate,
-        gatheringYieldMultiplier,
+        getGatheringYieldMultiplier(
+          premiumSeller,
+          economics.gatherYieldBaseline,
+        ),
       );
       if (range.min != null && range.max != null) {
         cityRanges[slug] = { min: range.min, max: range.max };

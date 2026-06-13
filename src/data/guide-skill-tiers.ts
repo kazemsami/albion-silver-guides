@@ -79,7 +79,7 @@ export const SKILL_TIERS = {
     id: "red",
     label: "Red zones",
     description:
-      "T6 red solo RDs (~400 runes/hr). Calculator models ~0.08 full-kit deaths/hr.",
+      "T6 red solo RDs (~300 runes/hr, ~90 souls/hr). Calculator models ~0.08 full-kit deaths/hr.",
     outputMultiplier: 0.75,
     inputMultiplier: 1,
   },
@@ -99,14 +99,16 @@ export const SKILL_TIERS = {
   corruptedStalker: {
     id: "stalker",
     label: "Stalker (red)",
-    description: "Full-loot Stalker runs; profit swings with invasions and deaths",
+    description:
+      "Full-loot Stalker runs; calculator models ~0.3 full-kit deaths/hr. Profit still swings with invasion win rate.",
     outputMultiplier: 0.8,
     inputMultiplier: 1,
   },
   corruptedSlayer: {
     id: "slayer",
     label: "Slayer (black)",
-    description: "Max rewards, highest death risk on full-loot Slayer",
+    description:
+      "Max rewards, highest death risk; calculator models ~0.35 full-kit deaths/hr on full-loot Slayer.",
     outputMultiplier: 1,
     inputMultiplier: 1.15,
   },

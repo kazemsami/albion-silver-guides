@@ -5,11 +5,21 @@ export const PREMIUM_SELLER_STORAGE_KEY = "albion-premium-seller";
 /** Premium adds +50% gathering and fishing yield vs non-Premium. */
 export const PREMIUM_GATHERING_YIELD_BONUS = 0.5;
 
+/** Whether configured hourly gather/fish yields were logged with Premium active. */
+export type GatherYieldBaseline = "premium" | "standard";
+
 /**
- * Guide baseline yields assume Premium is active. Non-Premium scales down;
- * Premium leaves configured rates unchanged.
+ * Scale gather/fish output lines when the Premium toggle changes.
+ * - premium baseline (default): configured yields match a Premium run; Standard scales down.
+ * - standard baseline: configured yields match a non-Premium run; Premium scales up.
  */
-export function getGatheringYieldMultiplier(premiumSeller: boolean): number {
+export function getGatheringYieldMultiplier(
+  premiumSeller: boolean,
+  baseline: GatherYieldBaseline = "premium",
+): number {
+  if (baseline === "standard") {
+    return premiumSeller ? 1 + PREMIUM_GATHERING_YIELD_BONUS : 1;
+  }
   return premiumSeller ? 1 : 1 / (1 + PREMIUM_GATHERING_YIELD_BONUS);
 }
 

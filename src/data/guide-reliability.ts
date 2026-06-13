@@ -92,8 +92,20 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     lastUpdated: "2026-06-13",
   },
   "t4-ore-mining-yellow-zone": {
-    status: "needs-review",
-    lastUpdated: "2026-05-15",
+    status: "reviewed",
+    lastUpdated: "2026-06-14",
+    evidence: {
+      runs: 1,
+      date: "2026-06-14",
+      gear:
+        "T5 miner set + Expert pickaxe, Pork Pie, Expert's Miner Backpack, Adept's Bag, Eldon Hill (Martlock yellow highland), no Premium",
+      market: "Martlock",
+      rawLootSilver: 124_000,
+      netSilver: 105_000,
+      deathsOrKnockdowns: 0,
+      notes:
+        "1 logged run (~30 min), intermediate tier, no Premium, mined every ore on path (not iron-only). 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Hourly calculator uses ×1.9 yield extrapolation (not ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~124k gross before tax in 30 min; ~105k net after Standard listing tax (10.5%) and 1 Pork Pie (~205k/hr extrapolated). Prospector journal was not confirmed on this run. Calculator mid tier uses logged yields ×1.9/hr; high tier is projected iron-focused (+15% output, not logged). Premium figures in tips are projected only.",
+    },
   },
   "fiber-farming-solo": {
     status: "reviewed",
@@ -101,13 +113,13 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     evidence: {
       runs: 1,
       date: "2026-06-13",
-      gear: "T5 harvester set + Expert sickle, Lazygrass Plain (Bridgewatch), no Premium, no Pork Pie",
+      gear: "T5 harvester set + Expert sickle + Pork Pie, Lazygrass Plain (Bridgewatch), no Premium",
       market: "Bridgewatch",
       rawLootSilver: 140_000,
       netSilver: 125_000,
       deathsOrKnockdowns: 0,
       notes:
-        "1 logged run (~30 min). Guide, calculator, and evidence all match this route: Lazygrass Plain near Bridgewatch (steppe, fiber secondary). ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. ~140k gross before tax (~280k/hr gross); ~125k net after Standard listing tax (~250k/hr). Pork Pie and Premium were not used; those upside figures in tips are projected only.",
+        "1 logged run (~30 min). Guide, calculator, and evidence all match this route: Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. ~140k gross before tax (~280k/hr gross); ~125k net after Standard listing tax and 1 Pork Pie (~250k/hr). Premium upside figures in tips are projected only.",
     },
   },
   "solo-dungeon-farming": {
