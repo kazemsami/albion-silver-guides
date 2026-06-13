@@ -114,8 +114,18 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     lastUpdated: "2026-06-12",
   },
   "potions-crafting-bulk": {
-    status: "needs-review",
-    lastUpdated: "2026-06-12",
+    status: "tested-by-me",
+    lastUpdated: "2026-06-13",
+    evidence: {
+      runs: 1,
+      date: "2026-06-13",
+      gear:
+        "T6+ alchemy at a royal city alchemist station in Bridgewatch (550 silver station fee per batch); focus costs read from the craft UI per batch of 5 pots",
+      market:
+        "Average buy/sell prices logged in Bridgewatch and saved as calculator defaults (see guide tips for the full table)",
+      notes:
+        "Focus per batch (5 pots): T6 Major Healing 2,746 (+ 2,500 silver lab fee), Major Energy 3,323, Poison 1,635; T7 Major Gigantify 4,413, Major Resistance 5,503, Major Sticky 5,503. Saved averages used in the calculator: buy Foxglove 550, Goose Eggs 470, Sheep's Milk 450, Potato Schnapps 450, Comfrey 526, Teasel 530, Burdock 545, Mullein 580, Corn Hooch 514; sell Healing 10,100, Energy 9,000, Poison 6,000, Gigantify 14,000, Resistance 14,500, Sticky 14,000.",
+    },
   },
 };
 

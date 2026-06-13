@@ -12,7 +12,7 @@ export const guideDefaultMarketCityBySlug: Record<string, MarketCityId> = {
   "mists-fishing": "Martlock",
   "ava-roads-fishing": "Caerleon",
   "laborer-passive-income": "Thetford",
-  "potions-crafting-bulk": "Caerleon",
+  "potions-crafting-bulk": "Bridgewatch",
 };
 
 export const guideRiskProfileBySlug: Record<string, GuideRiskProfile> = {

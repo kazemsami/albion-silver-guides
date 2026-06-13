@@ -611,19 +611,21 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     t6: {
       title: "T6 Bulk Alchemy",
       description:
-        "Daily stock for Major Healing Potion (focus) and Major Energy Potion (no focus). Craft at Brecilien.",
+        "Daily stock for Major Healing (2,746 focus), Major Energy (3,323 focus), and Poison (1,635 focus). Pick the best profit per 10k focus in the calculator.",
       slots: {},
       inventory: [
-        { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 pots: both T6 majors" },
+        { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 Major Healing or Energy" },
         { id: "T5_EGG", name: "Goose Eggs", quantity: 18, hint: "Per 5 Major Healing Potions" },
         { id: "T6_MILK", name: "Sheep's Milk", quantity: 18, hint: "Per 5 Major Energy Potions" },
-        { id: "T6_ALCOHOL", name: "Potato Schnapps", quantity: 18, hint: "Per 5 pots: both T6 majors" },
+        { id: "T6_ALCOHOL", name: "Potato Schnapps", quantity: 18, hint: "Per 5 Healing or Energy" },
+        { id: "T5_TEASEL", name: "Dragon Teasel", quantity: 12, hint: "Per 5 Poison Potions" },
+        { id: "T3_COMFREY", name: "Brightleaf Comfrey", quantity: 12, hint: "Per 5 Poison Potions" },
       ],
     },
     t7: {
       title: "T7 War Potions",
       description:
-        "Add T7 herbs and burdock before ZvZ: same T6 stock plus war-pot inputs for Gigantify and Resistance.",
+        "Before ZvZ: Gigantify (4,413 focus), Resistance (5,503 focus), and Sticky (5,503 focus). Each batch is 5 pots.",
       slots: {},
       inventory: [
         { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 T6 majors; 36 for war pots" },
