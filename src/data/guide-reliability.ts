@@ -4,7 +4,7 @@ type GuideReliabilityEntry = GuideReliability;
 
 export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
   "laborer-passive-income": {
-    status: "community-checked",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       date: "External references",
@@ -24,7 +24,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     },
   },
   "mists-fishing": {
-    status: "tested-and-community-checked",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       runs: 2,
@@ -44,11 +44,11 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         },
       ],
       notes:
-        "Latest run (no Premium): ~240k fish + ~60k from half Grandmaster journal filled = ~300k in ~30 min at fishing 78. Earlier run ~450k with Premium. Community (GremmyAngler): ~300k in ~30 min at fishing 1-10 (~600k/hr).",
+        "2 personal runs logged. Latest run (no Premium): ~240k fish + ~60k from half Grandmaster journal filled = ~300k in ~30 min at fishing 78. Earlier run ~450k with Premium. GremmyAngler video is a reference only. Yellow-zone Mists knockdown rules checked against the wiki.",
     },
   },
   "ava-roads-fishing": {
-    status: "tested-and-community-checked",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       runs: 1,
@@ -62,13 +62,17 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
           title: "GremmyAngler: Fishing on the Avalonian Roads (Beginners Guide)",
           url: "https://www.youtube.com/watch?v=sHCPd84O-50",
         },
+        {
+          title: "Albion Online: Roads of Avalon guide",
+          url: "https://albiononline.com/en/news/roads-of-avalon-guide",
+        },
       ],
       notes:
-        "My run: ~600k in ~30 min on Safe escape. Community reference (GremmyAngler): ~1.1M in ~40 min including ~15 min to find a T8 road (~5 min with luck).",
+        "1 personal run: ~600k in ~30 min on Safe escape. Full-loot Roads mechanics supported by official Roads guide. Income varies with portal search time, competition, deaths, and market.",
     },
   },
   "high-tier-group-tracking": {
-    status: "community-checked",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       runs: 1,
@@ -80,7 +84,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
       sourceTitle: "Group Tracking In Roads of Avalon | Albion Online",
       sourceUrl: "https://www.youtube.com/watch?v=rYnjYIeOCNU",
       notes:
-        "Reference session from a YouTube video: 22 kills, 3.6 hr, 4 players (~4.95M per player group loot). Server and market prices from the video are unknown; calculator uses estimated snapshot prices.",
+        "Single YouTube reference session: 22 kills, 3.6 hr, 4 players (~4.95M per player group loot). Server and market prices from the video are unknown; calculator uses estimated snapshot prices and session loot averages from screenshots.",
     },
   },
   "abyssal-depths-farming": {
@@ -92,17 +96,18 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     lastUpdated: "2026-05-15",
   },
   "fiber-farming-solo": {
-    status: "tested-by-me",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       runs: 1,
       date: "2026-06-13",
-      gear: "T5 harvester set + Expert sickle, Lazygrass Plain (Bridgewatch), no Premium",
+      gear: "T5 harvester set + Expert sickle, Lazygrass Plain (Bridgewatch), no Premium, no Pork Pie",
+      market: "Bridgewatch",
       rawLootSilver: 140_000,
       netSilver: 125_000,
       deathsOrKnockdowns: 0,
       notes:
-        "~30 min session without Premium (before listing tax): ~130k fiber + ~10k from 1 Expert journal = ~140k gross (~280k/hr gross, ~250k/hr net after Standard tax). With Premium on the same route, expect roughly ~450k/hr before tax. Pork pie not used.",
+        "1 logged run (~30 min). Guide, calculator, and evidence all match this route: Lazygrass Plain near Bridgewatch (steppe, fiber secondary). ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. ~140k gross before tax (~280k/hr gross); ~125k net after Standard listing tax (~250k/hr). Pork Pie and Premium were not used; those upside figures in tips are projected only.",
     },
   },
   "solo-dungeon-farming": {
@@ -114,17 +119,17 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
     lastUpdated: "2026-06-12",
   },
   "potions-crafting-bulk": {
-    status: "tested-by-me",
+    status: "reviewed",
     lastUpdated: "2026-06-13",
     evidence: {
       runs: 1,
       date: "2026-06-13",
       gear:
-        "T6+ alchemy at a royal city alchemist station in Bridgewatch (550 silver station fee per batch); focus costs read from the craft UI per batch of 5 pots",
+        "T6+ alchemy at a royal city alchemist station in Bridgewatch; focus costs read from the craft UI per batch of 5 pots",
       market:
         "Average buy/sell prices logged in Bridgewatch and saved as calculator defaults (see guide tips for the full table)",
       notes:
-        "Focus per batch (5 pots): T6 Major Healing 2,746 (+ 2,500 silver lab fee), Major Energy 3,323, Poison 1,635; T7 Major Gigantify 4,413, Major Resistance 5,503, Major Sticky 5,503. Saved averages used in the calculator: buy Foxglove 550, Goose Eggs 470, Sheep's Milk 450, Potato Schnapps 450, Comfrey 526, Teasel 530, Burdock 545, Mullein 580, Corn Hooch 514; sell Healing 10,100, Energy 9,000, Poison 6,000, Gigantify 14,000, Resistance 14,500, Sticky 14,000.",
+        "Recipes and material counts checked against game data. Focus per batch read from craft UI. Saved Bridgewatch prices used for income modeling. Focus per batch (5 pots): T6 Major Healing .1 = 3,461, .2 = 4,895 (+ 2,500 silver lab fee each), Major Energy .1 = 4,188, .2 = 5,923, Poison 1,635; T7 Major Gigantify .1 = 5,278, .2 = 7,009, Major Resistance .1 = 6,368, .2 = 8,103, Major Sticky 5,503.",
     },
   },
 };

@@ -128,7 +128,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
     mid: {
       title: "Standard Fiber Gear",
-      description: "T5 harvester set, Lazygrass Plain (~280k/hr no Premium, ~450k/hr with Premium, before tax).",
+      description: "T5 harvester set, Lazygrass Plain. Matches one logged 30-min run extrapolated to 1 hr (~250k/hr net, no Premium, no Pork Pie).",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FIBER", name: "Expert's Harvester Cap", hint: "Fiber yield bonus" },
         armor: { id: "T5_ARMOR_GATHERER_FIBER", name: "Expert's Harvester Garb", hint: "Fiber yield bonus" },
@@ -142,7 +142,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
     high: {
       title: "Advanced Fiber Gear",
-      description: "T6 set with pork pie for max swamp yields.",
+      description: "T6 set with Pork Pie. Not logged on this route yet; treat as an upside scenario.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FIBER", name: "Master's Harvester Cap", hint: "Max fiber yield" },
         armor: { id: "T6_ARMOR_GATHERER_FIBER", name: "Master's Harvester Garb", hint: "Max fiber yield" },
@@ -611,7 +611,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     t6: {
       title: "T6 Bulk Alchemy",
       description:
-        "Daily stock for Major Healing (2,746 focus), Major Energy (3,323 focus), and Poison (1,635 focus). Pick the best profit per 10k focus in the calculator.",
+        "Daily stock for Major Healing .1 (3,461 focus), Major Energy .1 (4,188 focus), and Poison (1,635 focus). Pick the best profit per 10k focus in the calculator.",
       slots: {},
       inventory: [
         { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 Major Healing or Energy" },
@@ -625,7 +625,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     t7: {
       title: "T7 War Potions",
       description:
-        "Before ZvZ: Gigantify (4,413 focus), Resistance (5,503 focus), and Sticky (5,503 focus). Each batch is 5 pots.",
+        "Before ZvZ: Gigantify .1 (5,278 focus), Resistance .1 (6,368 focus), and Sticky (5,503 focus). Each batch is 5 pots.",
       slots: {},
       inventory: [
         { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 T6 majors; 36 for war pots" },

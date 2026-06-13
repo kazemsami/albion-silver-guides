@@ -2,7 +2,9 @@ import {
   DEFAULT_POTION_DEFAULTS,
   getPotionRecipe,
   POTION_SELL_THROUGH_META,
+  resolvePotionBatch,
   type PotionEconomicsDefaults,
+  type PotionExtractLevel,
   type PotionRecipe,
   type PotionRecipeId,
   type PotionSellThroughId,
@@ -20,7 +22,7 @@ export interface PotionComputeInputs {
   tierId: string;
   sellThroughId: PotionSellThroughId;
   focusMode: PotionFocusMode;
-  valueFocus: boolean;
+  extractLevel: PotionExtractLevel;
   defaults: PotionEconomicsDefaults;
   priceMapKind?: PriceMapKind;
 }
@@ -38,13 +40,13 @@ export interface PotionBatchResult {
   netMaterialCost: number | null;
   materialReturnRate: number;
   craftSilverCost: number;
+  stationFeePerBatch: number;
+  focusPointsPerBatch: number;
   listingTax: number | null;
   grossOutput: number | null;
   sellThroughHaircut: number | null;
   netBeforeFocus: number | null;
   netAfterSellThrough: number | null;
-  focusCost: number;
-  netAfterFocus: number | null;
   profitPerTenThousandFocus: number | null;
 }
 
@@ -53,8 +55,8 @@ export interface PotionEconomicsResult {
   sellThroughId: PotionSellThroughId;
   sellThroughLabel: string;
   sellThroughNote: string;
-  valueFocus: boolean;
   focusMode: PotionFocusMode;
+  extractLevel: PotionExtractLevel;
   recipe: PotionRecipe;
   batch: PotionBatchResult;
   /** Batches craftable per 10,000 focus (with-focus recipes only). */
@@ -63,11 +65,9 @@ export interface PotionEconomicsResult {
   perTenThousandGrossOutput: number | null;
   perTenThousandMaterialCost: number | null;
   perTenThousandCraftSilver: number | null;
+  perTenThousandStationFee: number | null;
   perTenThousandListingTax: number | null;
   perTenThousandSellThroughHaircut: number | null;
-  perTenThousandNetBeforeFocus: number | null;
-  perTenThousandFocusOpportunityCost: number | null;
-  perTenThousandNetAfterFocus: number | null;
   profitPerTenThousandFocus: number | null;
   hasEstimatedPrices: boolean;
 }
@@ -108,14 +108,16 @@ function sumLines(lines: PricedLine[]): number | null {
 function computeBatch(
   prices: PriceMap,
   recipe: PotionRecipe,
+  extractLevel: PotionExtractLevel,
   defaults: PotionEconomicsDefaults,
   useFocusReturn: boolean,
-  valueFocus: boolean,
   sellThroughDiscount: number,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
   mapKind: PriceMapKind = "snapshot",
 ): PotionBatchResult {
-  const materialLines = recipe.materials.map((m) =>
+  const resolved = resolvePotionBatch(recipe, extractLevel);
+  const focusPointsPerBatch = resolved.focusCost;
+  const materialLines = resolved.materials.map((m) =>
     priceLine(prices, m.id, m.name, m.quantity, "buy", mapKind),
   );
   const materialCost = sumLines(materialLines);
@@ -144,8 +146,8 @@ function computeBatch(
 
   const outputLine = priceLine(
     prices,
-    recipe.outputId,
-    recipe.outputName,
+    resolved.outputId,
+    resolved.outputName,
     recipe.outputQuantity,
     "sell",
     mapKind,
@@ -153,6 +155,7 @@ function computeBatch(
   const grossOutput = outputLine.lineTotal;
 
   const craftSilverCost = recipe.craftSilverCost ?? 0;
+  const stationFeePerBatch = defaults.stationFeePerBatch;
 
   const listingTax =
     grossOutput != null
@@ -165,6 +168,7 @@ function computeBatch(
           grossOutput -
             (netMaterialCost ?? 0) -
             craftSilverCost -
+            stationFeePerBatch -
             (listingTax ?? 0),
         )
       : null;
@@ -179,19 +183,9 @@ function computeBatch(
       ? roundSilver(netBeforeFocus - (sellThroughHaircut ?? 0))
       : null;
 
-  const focusCost =
-    useFocusReturn && valueFocus
-      ? roundSilver(recipe.focusCost * defaults.focusSilverPerPoint)
-      : 0;
-
-  const netAfterFocus =
-    netAfterSellThrough != null
-      ? roundSilver(netAfterSellThrough - focusCost)
-      : null;
-
   const profitPerTenThousandFocus =
-    useFocusReturn && recipe.focusCost > 0 && netAfterSellThrough != null
-      ? roundSilver((netAfterSellThrough / recipe.focusCost) * 10_000)
+    useFocusReturn && focusPointsPerBatch > 0 && netAfterSellThrough != null
+      ? roundSilver((netAfterSellThrough / focusPointsPerBatch) * 10_000)
       : null;
 
   return {
@@ -204,13 +198,13 @@ function computeBatch(
     netMaterialCost,
     materialReturnRate,
     craftSilverCost,
+    stationFeePerBatch,
+    focusPointsPerBatch,
     listingTax,
     grossOutput,
     sellThroughHaircut,
     netBeforeFocus,
     netAfterSellThrough,
-    focusCost,
-    netAfterFocus,
     profitPerTenThousandFocus,
   };
 }
@@ -227,17 +221,17 @@ export function computePotionEconomics(
   const batch = computeBatch(
     prices,
     recipe,
+    inputs.extractLevel,
     inputs.defaults,
     useFocusReturn,
-    inputs.valueFocus,
     sellThrough.outputDiscount,
     listingTaxRate,
     inputs.priceMapKind ?? "snapshot",
   );
 
   const batchesPerTenThousandFocus =
-    useFocusReturn && recipe.focusCost > 0
-      ? Math.round((10_000 / recipe.focusCost) * 100) / 100
+    useFocusReturn && batch.focusPointsPerBatch > 0
+      ? Math.round((10_000 / batch.focusPointsPerBatch) * 100) / 100
       : null;
 
   const scalePer10k = (batchValue: number | null) =>
@@ -248,29 +242,11 @@ export function computePotionEconomics(
   const perTenThousandGrossOutput = scalePer10k(batch.grossOutput);
   const perTenThousandMaterialCost = scalePer10k(batch.netMaterialCost);
   const perTenThousandCraftSilver = scalePer10k(batch.craftSilverCost);
+  const perTenThousandStationFee = scalePer10k(
+    batch.stationFeePerBatch > 0 ? batch.stationFeePerBatch : null,
+  );
   const perTenThousandListingTax = scalePer10k(batch.listingTax);
   const perTenThousandSellThroughHaircut = scalePer10k(batch.sellThroughHaircut);
-
-  const perTenThousandNetBeforeFocus =
-    perTenThousandGrossOutput != null
-      ? roundSilver(
-          perTenThousandGrossOutput -
-            (perTenThousandMaterialCost ?? 0) -
-            (perTenThousandCraftSilver ?? 0) -
-            (perTenThousandListingTax ?? 0) -
-            (perTenThousandSellThroughHaircut ?? 0),
-        )
-      : null;
-
-  const perTenThousandFocusOpportunityCost =
-    useFocusReturn && inputs.valueFocus
-      ? roundSilver(10_000 * inputs.defaults.focusSilverPerPoint)
-      : 0;
-
-  const perTenThousandNetAfterFocus =
-    perTenThousandNetBeforeFocus != null
-      ? roundSilver(perTenThousandNetBeforeFocus - perTenThousandFocusOpportunityCost)
-      : null;
 
   const totalPotsPerTenThousandFocus =
     batchesPerTenThousandFocus != null
@@ -287,8 +263,8 @@ export function computePotionEconomics(
     sellThroughId: inputs.sellThroughId,
     sellThroughLabel: sellThrough.label,
     sellThroughNote: sellThrough.note,
-    valueFocus: inputs.valueFocus,
     focusMode: inputs.focusMode,
+    extractLevel: inputs.extractLevel,
     recipe,
     batch,
     batchesPerTenThousandFocus,
@@ -296,11 +272,9 @@ export function computePotionEconomics(
     perTenThousandGrossOutput,
     perTenThousandMaterialCost,
     perTenThousandCraftSilver,
+    perTenThousandStationFee,
     perTenThousandListingTax,
     perTenThousandSellThroughHaircut,
-    perTenThousandNetBeforeFocus,
-    perTenThousandFocusOpportunityCost,
-    perTenThousandNetAfterFocus,
     profitPerTenThousandFocus: batch.profitPerTenThousandFocus,
     hasEstimatedPrices,
   };
@@ -313,22 +287,22 @@ export function computePotionProfitRange(prices: PriceMap): PotionProfitRange {
   const conservative = computePotionEconomics(prices, {
     recipeId: "heal",
     tierId: "t6",
-    sellThroughId: "slow",
+    sellThroughId: "normal",
     focusMode: "with-focus",
-    valueFocus: false,
+    extractLevel: 0,
     defaults: DEFAULT_POTION_DEFAULTS,
   });
-  const typical = computePotionEconomics(prices, {
+  const eventHold = computePotionEconomics(prices, {
     recipeId: "heal",
     tierId: "t6",
-    sellThroughId: "typical",
+    sellThroughId: "event",
     focusMode: "with-focus",
-    valueFocus: false,
+    extractLevel: 0,
     defaults: DEFAULT_POTION_DEFAULTS,
   });
 
   return {
     min: conservative.profitPerTenThousandFocus ?? 0,
-    max: typical.profitPerTenThousandFocus ?? 150_000,
+    max: eventHold.profitPerTenThousandFocus ?? 150_000,
   };
 }

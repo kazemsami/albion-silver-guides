@@ -1,6 +1,52 @@
 /** Bulk potion crafting model for potions-crafting-bulk. */
 
-export type PotionSellThroughId = "instant" | "typical" | "slow";
+export type PotionSellThroughId = "normal" | "event";
+
+/** Potion output tier: 0 = normal (.0), 1–2 = basic / refined extract (.1–.2). */
+export type PotionExtractLevel = 0 | 1 | 2;
+
+export const POTION_EXTRACT_LEVELS: PotionExtractLevel[] = [0, 1, 2];
+
+export const POTION_EXTRACT_PER_BATCH = 45;
+
+export const POTION_EXTRACT_META: Record<
+  PotionExtractLevel,
+  {
+    label: string;
+    shortLabel: string;
+    usesExtract: boolean;
+    extractId?: string;
+    extractName?: string;
+    outputSuffix: "" | "@1" | "@2";
+    outputEnchantmentLabel: ".0" | ".1" | ".2";
+  }
+> = {
+  0: {
+    label: "Normal",
+    shortLabel: "Normal",
+    usesExtract: false,
+    outputSuffix: "",
+    outputEnchantmentLabel: ".0",
+  },
+  1: {
+    label: "Basic extract",
+    shortLabel: "Basic",
+    usesExtract: true,
+    extractId: "T1_ALCHEMY_EXTRACT_LEVEL1",
+    extractName: "Basic Arcane Extract",
+    outputSuffix: "@1",
+    outputEnchantmentLabel: ".1",
+  },
+  2: {
+    label: "Refined extract",
+    shortLabel: "Refined",
+    usesExtract: true,
+    extractId: "T1_ALCHEMY_EXTRACT_LEVEL2",
+    extractName: "Refined Arcane Extract",
+    outputSuffix: "@2",
+    outputEnchantmentLabel: ".2",
+  },
+};
 
 export type PotionRecipeId =
   | "heal"
@@ -37,9 +83,14 @@ export interface PotionRecipe {
   outputId: string;
   outputName: string;
   outputQuantity: number;
+  /** Focus per batch when extract is not used or as fallback. */
   focusCost: number;
+  /** Focus per batch by extract tier (.1 / .2). Falls back to focusCost. */
+  focusCostByExtract?: Partial<Record<PotionExtractLevel, number>>;
   /** Fixed silver charged by the lab per craft action (5 pots). */
   craftSilverCost?: number;
+  /** When false, recipe has no .1/.2 variants and ignores extract selection. */
+  supportsExtract?: boolean;
   materials: PotionRecipeMaterial[];
 }
 
@@ -51,7 +102,8 @@ export interface PotionSessionMix {
 export interface PotionEconomicsDefaults {
   focusMaterialReturnRate: number;
   noFocusMaterialReturnRate: number;
-  focusSilverPerPoint: number;
+  /** Alchemist station usage fee per batch (5 pots), set in calculator assumptions. */
+  stationFeePerBatch: number;
   minutesPerBatch: number;
   sellThroughPotsPerHour: number;
 }
@@ -68,6 +120,10 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Major Healing Potion",
     outputQuantity: 5,
     focusCost: 2746,
+    focusCostByExtract: {
+      1: 3461,
+      2: 4895,
+    },
     craftSilverCost: MAJOR_HEALING_CRAFT_SILVER,
     materials: [
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72 },
@@ -84,6 +140,10 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Major Energy Potion",
     outputQuantity: 5,
     focusCost: 3323,
+    focusCostByExtract: {
+      1: 4188,
+      2: 5923,
+    },
     materials: [
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72 },
       { id: "T6_MILK", name: "Sheep's Milk", quantity: 18 },
@@ -99,6 +159,7 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Poison Potion",
     outputQuantity: 5,
     focusCost: 1635,
+    supportsExtract: false,
     materials: [
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 24 },
       { id: "T5_TEASEL", name: "Dragon Teasel", quantity: 12 },
@@ -179,6 +240,10 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Major Gigantify Potion",
     outputQuantity: 5,
     focusCost: 4413,
+    focusCostByExtract: {
+      1: 5278,
+      2: 7009,
+    },
     materials: [
       { id: "T7_MULLEIN", name: "Firetouched Mullein", quantity: 72 },
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 36 },
@@ -195,6 +260,10 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Major Resistance Potion",
     outputQuantity: 5,
     focusCost: 5503,
+    focusCostByExtract: {
+      1: 6368,
+      2: 8103,
+    },
     materials: [
       { id: "T7_MULLEIN", name: "Firetouched Mullein", quantity: 72 },
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 36 },
@@ -212,6 +281,7 @@ export const POTION_RECIPES: PotionRecipe[] = [
     outputName: "Major Sticky Potion",
     outputQuantity: 5,
     focusCost: 5503,
+    supportsExtract: false,
     materials: [
       { id: "T7_MULLEIN", name: "Firetouched Mullein", quantity: 72 },
       { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 36 },
@@ -418,6 +488,91 @@ export function getPotionRecipe(recipeId: PotionRecipeId): PotionRecipe {
   return recipeById[recipeId];
 }
 
+export function potionRecipeSupportsExtract(recipe: PotionRecipe): boolean {
+  return recipe.supportsExtract !== false;
+}
+
+export function getPotionFocusCost(
+  recipe: PotionRecipe,
+  extractLevel: PotionExtractLevel,
+): number {
+  if (!potionRecipeSupportsExtract(recipe)) {
+    return recipe.focusCost;
+  }
+  return recipe.focusCostByExtract?.[extractLevel] ?? recipe.focusCost;
+}
+
+export interface ResolvedPotionBatch {
+  materials: PotionRecipeMaterial[];
+  outputId: string;
+  outputName: string;
+  extractLevel: PotionExtractLevel;
+  focusCost: number;
+}
+
+export function resolvePotionBatch(
+  recipe: PotionRecipe,
+  extractLevel: PotionExtractLevel,
+): ResolvedPotionBatch {
+  const focusCost = getPotionFocusCost(recipe, extractLevel);
+
+  if (!potionRecipeSupportsExtract(recipe) || extractLevel === 0) {
+    return {
+      materials: recipe.materials.map((material) => ({ ...material })),
+      outputId: recipe.outputId,
+      outputName: recipe.outputName,
+      extractLevel,
+      focusCost,
+    };
+  }
+
+  const meta = POTION_EXTRACT_META[extractLevel];
+  const materials = recipe.materials.map((material) => ({ ...material }));
+
+  materials.push({
+    id: meta.extractId!,
+    name: meta.extractName!,
+    quantity: POTION_EXTRACT_PER_BATCH,
+  });
+
+  const outputId = `${recipe.outputId}${meta.outputSuffix}`;
+  const outputName = `${recipe.outputName} ${meta.outputEnchantmentLabel}`;
+
+  return {
+    materials,
+    outputId,
+    outputName,
+    extractLevel,
+    focusCost,
+  };
+}
+
+/** Item IDs for live/snapshot pricing (bulk calculator recipes, all extract levels). */
+export function collectPotionPricingItemIds(): string[] {
+  const ids = new Set<string>();
+  for (const group of POTION_RECIPE_GROUPS) {
+    for (const recipeId of group.recipeIds) {
+      const recipe = getPotionRecipe(recipeId);
+      if (!potionRecipeSupportsExtract(recipe)) {
+        const batch = resolvePotionBatch(recipe, 0);
+        ids.add(batch.outputId);
+        for (const material of batch.materials) {
+          ids.add(material.id);
+        }
+        continue;
+      }
+      for (const level of POTION_EXTRACT_LEVELS) {
+        const batch = resolvePotionBatch(recipe, level);
+        ids.add(batch.outputId);
+        for (const material of batch.materials) {
+          ids.add(material.id);
+        }
+      }
+    }
+  }
+  return [...ids];
+}
+
 export const T6_POTION_SESSION: PotionSessionMix = {
   healBatchesPerHour: 20,
   energyBatchesPerHour: 35,
@@ -429,7 +584,7 @@ export const DEFAULT_FOCUS_SESSION_HOURS = 2;
 export const DEFAULT_POTION_DEFAULTS: PotionEconomicsDefaults = {
   focusMaterialReturnRate: 0.45,
   noFocusMaterialReturnRate: 0.15,
-  focusSilverPerPoint: 100,
+  stationFeePerBatch: 0,
   minutesPerBatch: 0.4,
   sellThroughPotsPerHour: 350,
 };
@@ -438,20 +593,15 @@ export const POTION_SELL_THROUGH_META: Record<
   PotionSellThroughId,
   { label: string; outputDiscount: number; note: string }
 > = {
-  instant: {
-    label: "Instant sell",
-    outputDiscount: 0,
-    note: "Best case: stacks move at list price during prime hours. Uncommon for full bulk sessions.",
-  },
-  typical: {
-    label: "Typical sell-through",
+  normal: {
+    label: "Sell normally",
     outputDiscount: 0.05,
-    note: "Relist once, minor undercutting, or partial stacks sit overnight. Default for planning.",
+    note: "List at current market prices. Assumes minor undercutting or one relist while stacks move on a normal week.",
   },
-  slow: {
-    label: "Slow market",
-    outputDiscount: 0.12,
-    note: "Off-peak listing, price war, or holding inventory between ZvZ cycles.",
+  event: {
+    label: "Hold for events",
+    outputDiscount: -0.2,
+    note: "Stock pots and sell into CTAs or ZvZ when war-pot demand pushes prices up. Uses a +20% sell uplift on top of snapshot prices.",
   },
 };
 

@@ -157,9 +157,9 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
   },
   "fiber-farming-solo": {
     hourlyOutput: [
-      { id: "T5_FIBER", name: "Skyflower", quantity: 423 },
-      { id: "T4_FIBER", name: "Hemp", quantity: 750 },
-      { id: "T3_FIBER", name: "Flax", quantity: 675 },
+      { id: "T5_FIBER", name: "Skyflower", quantity: 282 },
+      { id: "T4_FIBER", name: "Hemp", quantity: 500 },
+      { id: "T3_FIBER", name: "Flax", quantity: 450 },
       { id: "T5_JOURNAL_FIBER_FULL", name: "Expert Cropper's Journal (Full)", quantity: 2 },
     ],
     hourlyInputs: [
@@ -174,9 +174,9 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.gatheringLow,
         hourlyOutput: [
-          { id: "T5_FIBER", name: "Skyflower", quantity: 423 },
-          { id: "T4_FIBER", name: "Hemp", quantity: 750 },
-          { id: "T3_FIBER", name: "Flax", quantity: 675 },
+          { id: "T5_FIBER", name: "Skyflower", quantity: 155 },
+          { id: "T4_FIBER", name: "Hemp", quantity: 275 },
+          { id: "T3_FIBER", name: "Flax", quantity: 248 },
           { id: "T4_JOURNAL_FIBER_FULL", name: "Adept Cropper's Journal (Full)", quantity: 1.5 },
         ],
         hourlyInputs: [

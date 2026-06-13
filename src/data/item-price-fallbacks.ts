@@ -211,14 +211,26 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T4_POTION_HEAL: { sell: 320, buy: 420 },
   T4_POTION_ENERGY: { sell: 290, buy: 380 },
   T6_POTION_HEAL: { sell: 10_100, buy: 10_800 },
+  "T6_POTION_HEAL@1": { sell: 32_000, buy: 34_500 },
+  "T6_POTION_HEAL@2": { sell: 65_000, buy: 69_500 },
+  "T6_POTION_HEAL@3": { sell: 178_000, buy: 190_000 },
   T6_POTION_ENERGY: { sell: 9000, buy: 9900 },
+  "T6_POTION_ENERGY@1": { sell: 30_000, buy: 32_500 },
+  "T6_POTION_ENERGY@2": { sell: 80_000, buy: 85_500 },
+  "T6_POTION_ENERGY@3": { sell: 190_000, buy: 203_000 },
   T6_POTION_COOLDOWN: { sell: 6000, buy: 6600 },
   T6_POTION_BERSERK: { sell: 1500, buy: 1800 },
   T6_POTION_LAVA: { sell: 1400, buy: 1700 },
   T6_POTION_GATHER: { sell: 2000, buy: 2500 },
   T6_POTION_TORNADO: { sell: 1600, buy: 2000 },
   T7_POTION_REVIVE: { sell: 14_000, buy: 15_400 },
+  "T7_POTION_REVIVE@1": { sell: 32_000, buy: 34_500 },
+  "T7_POTION_REVIVE@2": { sell: 61_000, buy: 65_500 },
+  "T7_POTION_REVIVE@3": { sell: 160_000, buy: 171_000 },
   T7_POTION_STONESKIN: { sell: 14_500, buy: 15_950 },
+  "T7_POTION_STONESKIN@1": { sell: 33_000, buy: 35_500 },
+  "T7_POTION_STONESKIN@2": { sell: 58_000, buy: 62_000 },
+  "T7_POTION_STONESKIN@3": { sell: 145_000, buy: 155_000 },
   T7_POTION_SLOWFIELD: { sell: 14_000, buy: 15_400 },
   T7_POTION_MOB_RESET: { sell: 8000, buy: 12_000 },
   T7_POTION_CLEANSE2: { sell: 3500, buy: 5000 },
@@ -238,18 +250,51 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T4_HEAD_CLOTH_SET1: { sell: 15_000, buy: 18_000 },
   T4_CAPEITEM_FW_THETFORD: { sell: 37_600, buy: 42_000 },
   // Crafting inputs (potions guide)
+  T1_ALCHEMY_EXTRACT_LEVEL1: { sell: 2500, buy: 2800 },
+  T1_ALCHEMY_EXTRACT_LEVEL2: { sell: 8500, buy: 9500 },
+  T1_ALCHEMY_EXTRACT_LEVEL3: { sell: 36_000, buy: 40_000 },
   T2_AGARIC: { sell: 25, buy: 32 },
   T3_COMFREY: { sell: 480, buy: 526 },
+  "T3_COMFREY@1": { sell: 1250, buy: 1380 },
+  "T3_COMFREY@2": { sell: 3100, buy: 3450 },
+  "T3_COMFREY@3": { sell: 7700, buy: 8600 },
   T3_EGG: { sell: 38, buy: 45 },
+  "T3_EGG@1": { sell: 98, buy: 115 },
+  "T3_EGG@2": { sell: 240, buy: 280 },
+  "T3_EGG@3": { sell: 600, buy: 700 },
   T4_BURDOCK: { sell: 496, buy: 545 },
+  "T4_BURDOCK@1": { sell: 1280, buy: 1420 },
+  "T4_BURDOCK@2": { sell: 3200, buy: 3550 },
+  "T4_BURDOCK@3": { sell: 8000, buy: 8900 },
   T5_EGG: { sell: 430, buy: 470 },
+  "T5_EGG@1": { sell: 1100, buy: 1220 },
+  "T5_EGG@2": { sell: 2750, buy: 3050 },
+  "T5_EGG@3": { sell: 6900, buy: 7600 },
   T5_TEASEL: { sell: 482, buy: 530 },
+  "T5_TEASEL@1": { sell: 1250, buy: 1380 },
+  "T5_TEASEL@2": { sell: 3100, buy: 3450 },
+  "T5_TEASEL@3": { sell: 7700, buy: 8600 },
   T6_FOXGLOVE: { sell: 500, buy: 550 },
+  "T6_FOXGLOVE@1": { sell: 1300, buy: 1450 },
+  "T6_FOXGLOVE@2": { sell: 3200, buy: 3600 },
+  "T6_FOXGLOVE@3": { sell: 8000, buy: 9000 },
   T6_ALCOHOL: { sell: 410, buy: 450 },
+  "T6_ALCOHOL@1": { sell: 1050, buy: 1180 },
+  "T6_ALCOHOL@2": { sell: 2600, buy: 2900 },
+  "T6_ALCOHOL@3": { sell: 6500, buy: 7200 },
   T6_MILK: { sell: 410, buy: 450 },
+  "T6_MILK@1": { sell: 1050, buy: 1180 },
+  "T6_MILK@2": { sell: 2600, buy: 2900 },
+  "T6_MILK@3": { sell: 6500, buy: 7200 },
   T6_BUTTER: { sell: 180, buy: 220 },
   T7_MULLEIN: { sell: 528, buy: 580 },
+  "T7_MULLEIN@1": { sell: 1370, buy: 1510 },
+  "T7_MULLEIN@2": { sell: 3400, buy: 3780 },
+  "T7_MULLEIN@3": { sell: 8500, buy: 9450 },
   T7_ALCOHOL: { sell: 468, buy: 514 },
+  "T7_ALCOHOL@1": { sell: 1210, buy: 1340 },
+  "T7_ALCOHOL@2": { sell: 3000, buy: 3350 },
+  "T7_ALCOHOL@3": { sell: 7500, buy: 8400 },
   T8_YARROW: { sell: 4200, buy: 5000 },
   T8_MILK: { sell: 520, buy: 620 },
   T8_ALCOHOL: { sell: 2800, buy: 3400 },
@@ -373,5 +418,23 @@ export function getItemPriceFallback(
     }
     return entry.sell ?? entry.buy ?? null;
   }
+
+  const enchantMatch = itemId.match(/^(.+)@(\d+)$/);
+  if (enchantMatch) {
+    const baseId = enchantMatch[1]!;
+    const level = Number.parseInt(enchantMatch[2]!, 10);
+    const basePrice = getItemPriceFallback(baseId, side);
+    if (basePrice != null && level >= 1) {
+      const multipliers: Record<number, { buy: number; sell: number }> = {
+        1: { buy: 2.6, sell: 2.6 },
+        2: { buy: 6.5, sell: 6.5 },
+        3: { buy: 16, sell: 16 },
+      };
+      const mult = multipliers[level] ?? { buy: 1, sell: 1 };
+      const multiplier = side === "buy" ? mult.buy : mult.sell;
+      return Math.round(basePrice * multiplier);
+    }
+  }
+
   return inferFallbackPrice(itemId, side);
 }

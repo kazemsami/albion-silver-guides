@@ -8,6 +8,7 @@ import {
 import { T8_HOUSE_BUILD_ITEM_IDS } from "@/data/t8-house-cost";
 import { getAllTierLoadouts, loadoutVariantForTier } from "@/data/guide-loadouts";
 import { computeTrackingProfitRange } from "@/lib/tracking-economics";
+import { collectPotionPricingItemIds } from "@/data/potion-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
 import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
@@ -410,6 +411,11 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarket
     for (const id of collectGuideItemIds(tierLoadouts, economics)) {
       allItemIds.add(id);
     }
+    if (slug === "potions-crafting-bulk") {
+      for (const id of collectPotionPricingItemIds()) {
+        allItemIds.add(id);
+      }
+    }
   }
 
   const itemIdList = [...allItemIds];
@@ -607,7 +613,7 @@ export function computeLoadoutPricing(
 export { PREMIUM_LISTING_TAX_RATE };
 
 export const ESTIMATED_PRICES_NOTE =
-  "Estimated snapshot prices. Station fees not included. Toggle Premium seller for listing tax rate.";
+  "Estimated snapshot prices. Set station fee in calculator assumptions. Toggle Premium seller for listing tax rate.";
 
 export function marketCityLocationNote(_city: MarketCityId): string {
   return ESTIMATED_PRICES_NOTE;
@@ -702,7 +708,10 @@ export async function fetchGuidePricing(
       )
     : [];
 
-  const itemIds = collectGuideItemIds(tierLoadouts, economics);
+  const itemIds = [
+    ...collectGuideItemIds(tierLoadouts, economics),
+    ...(slug === "potions-crafting-bulk" ? collectPotionPricingItemIds() : []),
+  ];
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIds);
   let livePriceMaps: PriceMapsByCity = estimatedPriceMaps;
   try {

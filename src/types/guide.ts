@@ -12,12 +12,8 @@ export type Difficulty = "beginner" | "intermediate" | "advanced";
 /** Where the activity primarily takes place, safe royal/yellow zones vs full-loot risk. */
 export type ZoneType = "safe" | "dangerous";
 
-/** How thoroughly the guide's numbers and steps have been verified. */
-export type GuideReviewStatus =
-  | "tested-by-me"
-  | "community-checked"
-  | "tested-and-community-checked"
-  | "needs-review";
+/** Whether the guide has been reviewed against sources or test logs. */
+export type GuideVerificationStatus = "reviewed" | "needs-review";
 
 /** Beginner-safe vs high variance / full-loot / RNG-heavy content. */
 export type GuideRiskProfile = "beginner-safe" | "rng-heavy";
@@ -39,7 +35,7 @@ export interface GuideReviewEvidence {
 }
 
 export interface GuideReliability {
-  status: GuideReviewStatus;
+  status: GuideVerificationStatus;
   /** ISO date (YYYY-MM-DD) when the guide content was last reviewed or updated. */
   lastUpdated: string;
   evidence?: GuideReviewEvidence;
@@ -258,11 +254,19 @@ export const zoneTypeLabels: Record<ZoneType, string> = {
   dangerous: "Dangerous Zones",
 };
 
-export const reviewStatusLabels: Record<GuideReviewStatus, string> = {
-  "tested-by-me": "Tested by me",
-  "community-checked": "Community checked",
-  "tested-and-community-checked": "Tested & community checked",
+export const verificationStatusLabels: Record<GuideVerificationStatus, string> = {
+  reviewed: "Reviewed",
   "needs-review": "Needs review",
+};
+
+export const verificationStatusDescriptions: Record<
+  GuideVerificationStatus,
+  string
+> = {
+  reviewed:
+    "Mechanics and calculator inputs checked against wiki, official sources, or logged test data.",
+  "needs-review":
+    "Not reviewed enough yet. Treat profit numbers as estimates.",
 };
 
 export const riskProfileLabels: Record<GuideRiskProfile, string> = {

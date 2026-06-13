@@ -10,9 +10,15 @@ import {
 import {
   DEFAULT_POTION_DEFAULTS,
   MAJOR_HEALING_CRAFT_SILVER,
+  POTION_EXTRACT_META,
+  POTION_EXTRACT_LEVELS,
+  POTION_EXTRACT_PER_BATCH,
   POTION_RECIPE_GROUPS,
   POTION_SELL_THROUGH_META,
   getPotionRecipe,
+  potionRecipeSupportsExtract,
+  resolvePotionBatch,
+  type PotionExtractLevel,
   type PotionRecipeId,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
@@ -65,12 +71,18 @@ export function PotionProfitCalculator({
   const { priceMap, mapKind } = useGuidePriceMap(guidePrices, defaultMarketCity);
   const [recipeId, setRecipeId] = useState<PotionRecipeId>("heal");
   const [sellThroughId, setSellThroughId] =
-    useState<PotionSellThroughId>("instant");
+    useState<PotionSellThroughId>("normal");
   const [focusMode, setFocusMode] = useState<PotionFocusMode>("with-focus");
-  const [valueFocus, setValueFocus] = useState(false);
+  const [extractLevel, setExtractLevel] = useState<PotionExtractLevel>(0);
   const [defaults, setDefaults] = useState(DEFAULT_POTION_DEFAULTS);
 
   const recipe = getPotionRecipe(recipeId);
+  const supportsExtract = potionRecipeSupportsExtract(recipe);
+  const resolvedBatch = useMemo(
+    () => resolvePotionBatch(recipe, extractLevel),
+    [recipe, extractLevel],
+  );
+  const extractMeta = POTION_EXTRACT_META[extractLevel];
 
   const result = useMemo(
     () =>
@@ -81,7 +93,7 @@ export function PotionProfitCalculator({
           tierId: "t6",
           sellThroughId,
           focusMode,
-          valueFocus,
+          extractLevel,
           defaults,
           priceMapKind: mapKind,
         },
@@ -92,7 +104,7 @@ export function PotionProfitCalculator({
       recipeId,
       sellThroughId,
       focusMode,
-      valueFocus,
+      extractLevel,
       defaults,
       listingTaxRate,
       mapKind,
@@ -112,7 +124,7 @@ export function PotionProfitCalculator({
   const focusMeta = FOCUS_MODE_META[focusMode];
   const batch = result.batch;
   const usesFocusMetric =
-    focusMode === "with-focus" && recipe.focusCost > 0;
+    focusMode === "with-focus" && resolvedBatch.focusCost > 0;
   const heroProfit = usesFocusMetric
     ? result.profitPerTenThousandFocus
     : batch.netAfterSellThrough;
@@ -166,15 +178,53 @@ export function PotionProfitCalculator({
             ))}
           </div>
           <p className="mt-2 text-sm text-parchment/55">
-            {recipe.outputName}: {recipe.materials.length} inputs,{" "}
-            {recipe.focusCost > 0
-              ? `${formatSilverExact(recipe.focusCost)} focus per batch`
+            {resolvedBatch.outputName}: {recipe.materials.length} farm inputs
+            {supportsExtract && extractMeta.usesExtract ? (
+              <>
+                {" "}
+                + {POTION_EXTRACT_PER_BATCH} {extractMeta.extractName!.toLowerCase()} per batch
+              </>
+            ) : supportsExtract ? (
+              " (normal .0, no extract)"
+            ) : (
+              " (no enchantment tiers)"
+            )}
+            ,{" "}
+            {resolvedBatch.focusCost > 0
+              ? `${formatSilverExact(resolvedBatch.focusCost)} focus per batch`
               : "no focus"}
             {recipe.craftSilverCost != null && recipe.craftSilverCost > 0
               ? `, ${formatSilverExact(recipe.craftSilverCost)} lab silver`
               : ""}
           </p>
         </div>
+
+        {supportsExtract && (
+        <div className="mt-5">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
+            Potion tier
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
+            {POTION_EXTRACT_LEVELS.map((level) => (
+              <FilterChip
+                key={level}
+                label={
+                  level === 0
+                    ? `Normal (${POTION_EXTRACT_META[level].outputEnchantmentLabel})`
+                    : `${level} · ${POTION_EXTRACT_META[level].label} (${POTION_EXTRACT_META[level].outputEnchantmentLabel})`
+                }
+                selected={extractLevel === level}
+                onSelect={() => setExtractLevel(level)}
+              />
+            ))}
+          </div>
+          <p className="mt-2 text-sm text-parchment/55">
+            {extractMeta.usesExtract
+              ? `Crafts ${extractMeta.outputEnchantmentLabel} potions with the same farm goods as normal plus ${POTION_EXTRACT_PER_BATCH} ${extractMeta.extractName!.toLowerCase()} per batch of ${recipe.outputQuantity} pots.`
+              : `Crafts normal ${extractMeta.outputEnchantmentLabel} potions with flat farm goods and no arcane extract.`}
+          </p>
+        </div>
+        )}
 
         <div className="mt-5">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
@@ -199,7 +249,6 @@ export function PotionProfitCalculator({
               {usesFocusMetric
                 ? "Profit / 10,000 focus"
                 : `Batch profit (${recipe.outputQuantity} pots)`}
-              {valueFocus && usesFocusMetric ? " (focus valued)" : ""}
             </p>
             <p className="mt-1 text-3xl font-bold text-gold tabular-nums">
               {heroProfit != null ? formatSilverPrice(heroProfit) : "N/A"}
@@ -220,22 +269,10 @@ export function PotionProfitCalculator({
               </p>
             )}
             {usesFocusMetric &&
-              result.perTenThousandNetBeforeFocus != null &&
-              valueFocus &&
-              result.perTenThousandFocusOpportunityCost != null &&
-              result.perTenThousandFocusOpportunityCost > 0 && (
-                <p className="mt-1 text-xs text-parchment/45">
-                  Before focus opportunity cost:{" "}
-                  {formatSilverPrice(result.perTenThousandNetBeforeFocus)}
-                  /10k focus at{" "}
-                  {formatSilverExact(defaults.focusSilverPerPoint)}/pt
-                </p>
-              )}
-            {usesFocusMetric &&
               profitRange.min != null &&
               profitRange.max != null && (
                 <p className="mt-1 text-xs text-parchment/45">
-                  Major Healing slow to typical:{" "}
+                  Major Healing normal vs event hold:{" "}
                   {formatSilverRange(profitRange.min, profitRange.max)}/10k
                   focus
                 </p>
@@ -267,7 +304,7 @@ export function PotionProfitCalculator({
 
         <div className="mt-5">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-            Sell-through assumption
+            Sell strategy
           </p>
           <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
             {(Object.keys(POTION_SELL_THROUGH_META) as PotionSellThroughId[]).map(
@@ -286,20 +323,6 @@ export function PotionProfitCalculator({
           </p>
         </div>
 
-        {focusMode === "with-focus" && recipe.focusCost > 0 && (
-          <div className="mt-5 flex flex-wrap items-center gap-4">
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-parchment/70">
-              <input
-                type="checkbox"
-                checked={valueFocus}
-                onChange={(e) => setValueFocus(e.target.checked)}
-                className="accent-gold"
-              />
-              Value focus at {formatSilverExact(defaults.focusSilverPerPoint)}{" "}
-              silver/point (optional opportunity cost on 10,000 focus)
-            </label>
-          </div>
-        )}
       </div>
 
       <section className="theme-surface mt-10 rounded-xl border border-gold/20 bg-obsidian-light p-6">
@@ -319,7 +342,13 @@ export function PotionProfitCalculator({
               per 10,000 focus.
             </>
           )}{" "}
-          {focusMeta.label}. Lab craft silver: {craftSilverLabel}.{" "}
+          {focusMeta.label}.
+          {supportsExtract
+            ? extractMeta.usesExtract
+              ? ` ${extractMeta.label} (${extractMeta.outputEnchantmentLabel} output).`
+              : ` Normal ${extractMeta.outputEnchantmentLabel} (no extract).`
+            : " Flat output (no enchantment tiers)."}{" "}
+          Lab craft silver: {craftSilverLabel}.{" "}
           {useLivePrices
             ? "Live royal market prices (Albion Online Data)."
             : "Site snapshot averages."}{" "}
@@ -356,6 +385,13 @@ export function PotionProfitCalculator({
                   value={-result.perTenThousandCraftSilver}
                 />
               )}
+            {result.perTenThousandStationFee != null &&
+              result.perTenThousandStationFee > 0 && (
+                <EconomicsSummaryRow
+                  label={`Minus station fee (${formatSilverExact(batch.stationFeePerBatch)} × batches)`}
+                  value={-result.perTenThousandStationFee}
+                />
+              )}
             <EconomicsSummaryRow
               label={listingTaxRowLabel(premiumSeller)}
               value={
@@ -365,25 +401,19 @@ export function PotionProfitCalculator({
               }
             />
             {result.perTenThousandSellThroughHaircut != null &&
-              result.perTenThousandSellThroughHaircut > 0 && (
+              result.perTenThousandSellThroughHaircut !== 0 && (
                 <EconomicsSummaryRow
-                  label={`Minus sell-through haircut (${result.sellThroughLabel})`}
+                  label={
+                    result.perTenThousandSellThroughHaircut > 0
+                      ? `Minus sell friction (${result.sellThroughLabel})`
+                      : `Plus event price uplift (${result.sellThroughLabel})`
+                  }
                   value={-result.perTenThousandSellThroughHaircut}
                 />
               )}
             <EconomicsSummaryRow
-              label="Net / 10,000 focus before focus cost"
-              value={result.perTenThousandNetBeforeFocus}
-            />
-            {valueFocus && result.perTenThousandFocusOpportunityCost != null && (
-              <EconomicsSummaryRow
-                label={`Minus focus opportunity cost (10,000 pts)`}
-                value={-result.perTenThousandFocusOpportunityCost}
-              />
-            )}
-            <EconomicsSummaryRow
               label="Profit / 10,000 focus"
-              value={result.perTenThousandNetAfterFocus}
+              value={result.profitPerTenThousandFocus}
               emphasis
             />
           </div>
@@ -400,10 +430,8 @@ export function PotionProfitCalculator({
         <AssumptionSliders defaults={defaults} onChange={setDefaults} />
 
         <p className="mt-3 text-xs text-parchment/40">
-          Listing tax and sell-through haircut are included above. Focus defaults
-          to free daily regen unless you opt into focus valuation at{" "}
-          {formatSilverExact(defaults.focusSilverPerPoint)}/point for each 10,000
-          focus block.
+          Listing tax and sell strategy adjustment are included above. Set station fee
+          per batch under Model assumptions (0 if you craft on your own island).
         </p>
       </section>
     </>
@@ -459,8 +487,8 @@ function BatchBreakdown({
 }) {
   const returnPct = Math.round(batch.materialReturnRate * 100);
   const focusNote =
-    focusMode === "with-focus" && batch.recipe.focusCost > 0
-      ? `, ${formatSilverExact(batch.recipe.focusCost)} focus`
+    focusMode === "with-focus" && batch.focusPointsPerBatch > 0
+      ? `, ${formatSilverExact(batch.focusPointsPerBatch)} focus`
       : "";
 
   const scaledOutputLine =
@@ -545,12 +573,22 @@ function BatchBreakdown({
             value={-batch.craftSilverCost}
           />
         )}
+        {batch.stationFeePerBatch > 0 && (
+          <EconomicsSummaryRow
+            label="Minus station fee"
+            value={-batch.stationFeePerBatch}
+          />
+        )}
         {batch.listingTax != null && (
           <EconomicsSummaryRow label="Minus listing tax" value={-batch.listingTax} />
         )}
-        {batch.sellThroughHaircut != null && batch.sellThroughHaircut > 0 && (
+        {batch.sellThroughHaircut != null && batch.sellThroughHaircut !== 0 && (
           <EconomicsSummaryRow
-            label="Minus sell-through haircut"
+            label={
+              batch.sellThroughHaircut > 0
+                ? "Minus sell friction"
+                : "Plus event price uplift"
+            }
             value={-batch.sellThroughHaircut}
           />
         )}
@@ -645,14 +683,14 @@ function AssumptionSliders({
       </p>
       <div className="mt-4 grid gap-4 sm:grid-cols-1">
         <SliderField
-          id="focus-value"
-          label="Focus silver/point"
-          value={defaults.focusSilverPerPoint}
+          id="station-fee"
+          label="Station fee per batch"
+          value={defaults.stationFeePerBatch}
           min={0}
-          max={200}
-          step={5}
+          max={5000}
+          step={50}
           format={(v) => `${formatSilverExact(v)} silver`}
-          onChange={(v) => onChange({ ...defaults, focusSilverPerPoint: v })}
+          onChange={(v) => onChange({ ...defaults, stationFeePerBatch: v })}
         />
       </div>
     </div>

@@ -1,14 +1,12 @@
 import type { GuideReliability } from "@/types/guide";
-import { reviewStatusLabels } from "@/types/guide";
+import {
+  verificationStatusDescriptions,
+  verificationStatusLabels,
+} from "@/types/guide";
 import { formatGuideLastUpdated } from "@/lib/guide-display";
 
-const reviewStatusColors = {
-  "tested-by-me":
-    "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-  "community-checked":
-    "text-violet-400 bg-violet-400/10 border-violet-400/30",
-  "tested-and-community-checked":
-    "text-gold bg-gold/10 border-gold/40",
+const verificationStatusColors = {
+  reviewed: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
   "needs-review": "text-amber-400 bg-amber-400/10 border-amber-400/30",
 } as const;
 
@@ -27,9 +25,10 @@ export function GuideReliabilityBadges({
   return (
     <>
       <span
-        className={`${badgeClass} ${reviewStatusColors[reliability.status]}`}
+        className={`${badgeClass} ${verificationStatusColors[reliability.status]}`}
+        title={verificationStatusDescriptions[reliability.status]}
       >
-        {reviewStatusLabels[reliability.status]}
+        {verificationStatusLabels[reliability.status]}
       </span>
       <span
         className={`${badgeClass} border-parchment/15 bg-parchment/5 text-parchment/55`}

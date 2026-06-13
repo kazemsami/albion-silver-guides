@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import type { GuideReliability } from "@/types/guide";
-import { reviewStatusLabels } from "@/types/guide";
+import {
+  verificationStatusDescriptions,
+  verificationStatusLabels,
+} from "@/types/guide";
 import { formatGuideLastUpdated } from "@/lib/guide-display";
 import { formatSilverExact } from "@/lib/format";
 
@@ -14,11 +17,14 @@ export function GuideEvidencePanel({
   const [open, setOpen] = useState(false);
   const evidence = reliability.evidence;
 
-  if (
-    reliability.status === "needs-review" ||
-    !evidence
-  ) {
-    return null;
+  if (!evidence) {
+    return (
+      <p className="mt-3 text-xs text-parchment/45">
+        {verificationStatusLabels[reliability.status]}:{" "}
+        {verificationStatusDescriptions[reliability.status]}. No test logs
+        attached yet.
+      </p>
+    );
   }
 
   return (
@@ -28,7 +34,8 @@ export function GuideEvidencePanel({
         onClick={() => setOpen((v) => !v)}
         className="text-xs text-gold/90 underline decoration-gold/30 underline-offset-2 hover:text-gold"
       >
-        {open ? "Hide" : "View"} verification evidence ({reviewStatusLabels[reliability.status]})
+        {open ? "Hide" : "View"} test logs and sources (
+        {verificationStatusLabels[reliability.status]})
       </button>
       {open && (
         <dl className="mt-3 grid gap-2 rounded-lg border border-gold/15 bg-obsidian/40 p-4 text-sm sm:grid-cols-2">
