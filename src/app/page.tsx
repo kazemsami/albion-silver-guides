@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { getFeaturedGuides } from "@/data/guides";
 import type { GuideCategory } from "@/types/guide";
 import { guides } from "@/data/guides";
-import { fetchAllGuidesProfitRangesByCity } from "@/lib/guide-economics";
+import { fetchAllGuidesMarketDataByCity } from "@/lib/guide-economics";
 import { createPageMetadata } from "@/lib/site";
 import { websiteJsonLd } from "@/lib/structured-data";
 
@@ -30,7 +30,8 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const featured = getFeaturedGuides();
-  const profitRangesByCity = await fetchAllGuidesProfitRangesByCity();
+  const { ranges: profitRangesByCity, outcomes: profitOutcomesByCity } =
+    await fetchAllGuidesMarketDataByCity();
 
   return (
     <>
@@ -112,6 +113,7 @@ export default async function Home() {
         <FeaturedGuidesGrid
           guides={featured}
           profitRangesByCity={profitRangesByCity}
+          profitOutcomesByCity={profitOutcomesByCity}
         />
       </section>
 

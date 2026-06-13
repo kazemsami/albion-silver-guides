@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
   EconomicsTable,
@@ -19,6 +20,7 @@ import {
   type AbyssalTeamSizeId,
 } from "@/data/abyssal-economics";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
+import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeAbyssalEconomics,
   computeAbyssalProfitRange,
@@ -46,6 +48,7 @@ interface AbyssalProfitCalculatorProps {
   pricesByCity: SerializedPricesByCity;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
+  defaultMarketCity?: MarketCityId;
 }
 
 export function AbyssalProfitCalculator({
@@ -53,9 +56,11 @@ export function AbyssalProfitCalculator({
   pricesByCity,
   pricedAt,
   tierLoadouts,
+  defaultMarketCity,
 }: AbyssalProfitCalculatorProps) {
-  const { marketCity } = useMarketCity();
-  const prices = pickSerializedPrices(pricesByCity, marketCity);
+  const { listingTaxRate, premiumSeller } = useMarketCity();
+  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
+  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
   const [scenarioId, setScenarioId] = useState<AbyssalScenarioId>("floor2");
   const [teamSizeId, setTeamSizeId] = useState<AbyssalTeamSizeId>("duo");
   const [runDurationMinutes, setRunDurationMinutes] =
@@ -83,7 +88,7 @@ export function AbyssalProfitCalculator({
         runDurationMinutes,
         includePvpLoot,
         includeMercJournal,
-      }),
+      }, listingTaxRate),
     [
       priceMap,
       scenarioId,
@@ -92,6 +97,7 @@ export function AbyssalProfitCalculator({
       runDurationMinutes,
       includePvpLoot,
       includeMercJournal,
+      listingTaxRate,
     ],
   );
 
@@ -455,7 +461,7 @@ export function AbyssalProfitCalculator({
             }
           />
           <EconomicsSummaryRow
-            label="Minus Premium listing tax (~6.5%)"
+            label={listingTaxRowLabel(premiumSeller)}
             value={
               result.marketTaxTotal != null ? -result.marketTaxTotal : null
             }

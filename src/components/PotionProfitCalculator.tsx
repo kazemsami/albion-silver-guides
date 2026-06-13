@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
   EconomicsTable,
@@ -21,6 +22,7 @@ import {
   enrichLoadoutWithQuantities,
   pickSerializedPrices,
 } from "@/lib/guide-economics";
+import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computePotionEconomics,
   computePotionProfitRange,
@@ -42,6 +44,7 @@ interface PotionProfitCalculatorProps {
   pricesByCity: SerializedPricesByCity;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
+  defaultMarketCity?: MarketCityId;
 }
 
 export function PotionProfitCalculator({
@@ -49,9 +52,11 @@ export function PotionProfitCalculator({
   pricesByCity,
   pricedAt,
   tierLoadouts,
+  defaultMarketCity,
 }: PotionProfitCalculatorProps) {
-  const { marketCity } = useMarketCity();
-  const prices = pickSerializedPrices(pricesByCity, marketCity);
+  const { listingTaxRate, premiumSeller } = useMarketCity();
+  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
+  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [sellThroughId, setSellThroughId] =
     useState<PotionSellThroughId>("typical");
@@ -69,8 +74,8 @@ export function PotionProfitCalculator({
         sellThroughId,
         valueFocus,
         defaults,
-      }),
-    [priceMap, tierId, sellThroughId, valueFocus, defaults],
+      }, listingTaxRate),
+    [priceMap, tierId, sellThroughId, valueFocus, defaults, listingTaxRate],
   );
 
   const profitRange = useMemo(
@@ -280,7 +285,7 @@ export function PotionProfitCalculator({
             }
           />
           <EconomicsSummaryRow
-            label="Minus Premium listing tax (~6.5%)"
+            label={listingTaxRowLabel(premiumSeller)}
             value={
               result.hourlyListingTax != null ? -result.hourlyListingTax : null
             }

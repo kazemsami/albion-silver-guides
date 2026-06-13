@@ -1,14 +1,20 @@
 import type { EquipmentLoadout, HourlyItem, SkillTier } from "@/types/guide";
 
-/** T8 house + T7 journal at 150% happiness, ~58 unrefined resources per job. */
+/** T8 laborer + T7 journal at 150% (38.4 base × 1.5). Grind / forum model. */
 const GATHERING_RETURN = 58;
-/** T8 house + T7 crafting journal at 150%, ~14 refined materials per job. */
-const CRAFTING_RETURN = 14;
+/** T8 laborer + T7 crafting journal at 150% (4.4 base × 1.5). Was wrongly 14. */
+const CRAFTING_RETURN = 6.6;
 /** T8 house + T7 mercenary journal at 150%, fixed silver loot per job. */
 const MERCENARY_SILVER = 6303;
 
 const BASE_LABORERS = 10;
 const HOURS_PER_JOB = 22;
+
+export interface LaborerOutputMixItem {
+  id: string;
+  name: string;
+  weight: number;
+}
 
 export interface LaborerSpecialty {
   id: string;
@@ -19,10 +25,13 @@ export interface LaborerSpecialty {
   journalFullId: string;
   journalEmptyName: string;
   journalFullName: string;
+  /** Primary output label in the specialty picker (largest crafting share when mixed). */
   outputId: string;
   outputName: string;
-  /** Resources returned per completed journal at 150% yield. */
+  /** Total resources returned per completed journal at 150% yield. */
   returnPerJournal: number;
+  /** Crafting laborers split returnPerJournal across these weights (Grind calc model). */
+  outputMix?: LaborerOutputMixItem[];
   /** When set, output is fixed silver per journal instead of a market item. */
   silverPerJournal?: number;
   trophyId?: string;
@@ -55,10 +64,10 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalEmptyName: "Grandmaster Lumberjack's Journal (Empty)",
     journalFullName: "Grandmaster Lumberjack's Journal (Full)",
     outputId: "T7_WOOD",
-    outputName: "Cedar Logs",
+    outputName: "Ashenbark Logs",
     returnPerJournal: GATHERING_RETURN,
     trophyId: "T8_FURNITUREITEM_TROPHY_WOOD",
-    trophyName: "Cedar Logs Trophy",
+    trophyName: "Whitewood Bonsai",
   },
   {
     id: "cropper",
@@ -85,10 +94,10 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalEmptyName: "Grandmaster Gamekeeper's Journal (Empty)",
     journalFullName: "Grandmaster Gamekeeper's Journal (Full)",
     outputId: "T7_HIDE",
-    outputName: "Redleaf Cotton",
+    outputName: "Thick Hide",
     returnPerJournal: GATHERING_RETURN,
     trophyId: "T8_FURNITUREITEM_TROPHY_HIDE",
-    trophyName: "Redleaf Cotton Trophy",
+    trophyName: "Stuffed Direbear Head",
   },
   {
     id: "stonecutter",
@@ -100,10 +109,10 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalEmptyName: "Grandmaster Stonecutter's Journal (Empty)",
     journalFullName: "Grandmaster Stonecutter's Journal (Full)",
     outputId: "T7_ROCK",
-    outputName: "Gneiss",
+    outputName: "Basalt",
     returnPerJournal: GATHERING_RETURN,
     trophyId: "T8_FURNITUREITEM_TROPHY_ROCK",
-    trophyName: "Gneiss Trophy",
+    trophyName: "Marble Fragment",
   },
   {
     id: "fisherman",
@@ -148,6 +157,11 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     outputId: "T7_METALBAR",
     outputName: "Meteorite Steel Bar",
     returnPerJournal: CRAFTING_RETURN,
+    outputMix: [
+      { id: "T7_METALBAR", name: "Meteorite Steel Bar", weight: 7 },
+      { id: "T7_PLANKS", name: "Ashenbark Planks", weight: 2 },
+      { id: "T7_CLOTH", name: "Opulent Cloth", weight: 1 },
+    ],
   },
   {
     id: "fletcher",
@@ -158,9 +172,14 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalFullId: "T7_JOURNAL_HUNTER_FULL",
     journalEmptyName: "Grandmaster Fletcher's Journal (Empty)",
     journalFullName: "Grandmaster Fletcher's Journal (Full)",
-    outputId: "T7_PLANKS",
-    outputName: "Cedar Planks",
+    outputId: "T7_LEATHER",
+    outputName: "Reinforced Leather",
     returnPerJournal: CRAFTING_RETURN,
+    outputMix: [
+      { id: "T7_LEATHER", name: "Reinforced Leather", weight: 5 },
+      { id: "T7_PLANKS", name: "Ashenbark Planks", weight: 3 },
+      { id: "T7_METALBAR", name: "Meteorite Steel Bar", weight: 3 },
+    ],
   },
   {
     id: "imbuer",
@@ -172,8 +191,13 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalEmptyName: "Grandmaster Imbuer's Journal (Empty)",
     journalFullName: "Grandmaster Imbuer's Journal (Full)",
     outputId: "T7_CLOTH",
-    outputName: "Sunflax Cloth",
+    outputName: "Opulent Cloth",
     returnPerJournal: CRAFTING_RETURN,
+    outputMix: [
+      { id: "T7_CLOTH", name: "Opulent Cloth", weight: 5 },
+      { id: "T7_PLANKS", name: "Ashenbark Planks", weight: 4 },
+      { id: "T7_METALBAR", name: "Meteorite Steel Bar", weight: 1 },
+    ],
   },
   {
     id: "tinker",
@@ -184,9 +208,15 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     journalFullId: "T7_JOURNAL_TOOLMAKER_FULL",
     journalEmptyName: "Grandmaster Tinker's Journal (Empty)",
     journalFullName: "Grandmaster Tinker's Journal (Full)",
-    outputId: "T7_LEATHER",
-    outputName: "Redleaf Leather",
+    outputId: "T7_PLANKS",
+    outputName: "Ashenbark Planks",
     returnPerJournal: CRAFTING_RETURN,
+    outputMix: [
+      { id: "T7_PLANKS", name: "Ashenbark Planks", weight: 4 },
+      { id: "T7_METALBAR", name: "Meteorite Steel Bar", weight: 2 },
+      { id: "T7_CLOTH", name: "Opulent Cloth", weight: 2 },
+      { id: "T7_LEATHER", name: "Reinforced Leather", weight: 1 },
+    ],
   },
 ];
 
@@ -214,6 +244,31 @@ export function laborerCountForTier(tier: SkillTier): number {
 function jobsPerHourForTier(tier: SkillTier): number {
   const laborers = scaleLaborerCount(BASE_LABORERS, tier.outputMultiplier);
   return Math.round((laborers / HOURS_PER_JOB) * 100) / 100;
+}
+
+function materialOutputsForJob(
+  specialty: LaborerSpecialty,
+  jobsPerHour: number,
+): HourlyItem[] {
+  if (specialty.outputMix) {
+    const totalWeight = specialty.outputMix.reduce((sum, item) => sum + item.weight, 0);
+    return specialty.outputMix.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity:
+        Math.round(
+          ((specialty.returnPerJournal * item.weight) / totalWeight) * jobsPerHour * 100,
+        ) / 100,
+    }));
+  }
+
+  return [
+    {
+      id: specialty.outputId,
+      name: specialty.outputName,
+      quantity: Math.round(specialty.returnPerJournal * jobsPerHour * 100) / 100,
+    },
+  ];
 }
 
 export function buildLaborerHourlyEconomics(
@@ -247,11 +302,7 @@ export function buildLaborerHourlyEconomics(
       fixedSilverPerUnit: specialty.silverPerJournal,
     });
   } else {
-    hourlyOutput.unshift({
-      id: specialty.outputId,
-      name: specialty.outputName,
-      quantity: Math.round(specialty.returnPerJournal * jobsPerHour * 100) / 100,
-    });
+    hourlyOutput.unshift(...materialOutputsForJob(specialty, jobsPerHour));
   }
 
   return { hourlyOutput, hourlyInputs };
@@ -281,7 +332,7 @@ export function buildLaborerLoadout(
       id: "T8_FURNITUREITEM_TROPHY_GENERAL",
       name: "Ledger of Truths",
       quantity: laborers,
-      hint: "T8 generalist trophy, one per house for 150%",
+      hint: "T8 generalist trophy, optional on T7 journals",
     },
     ...(specialty.trophyId && specialty.trophyName
       ? [
@@ -289,7 +340,7 @@ export function buildLaborerLoadout(
             id: specialty.trophyId,
             name: specialty.trophyName,
             quantity: laborers,
-            hint: `T8 ${specialty.laborerName} trophy, one per house`,
+            hint: `Optional T8 ${specialty.laborerName} trophy`,
           },
         ]
       : []),
@@ -320,7 +371,11 @@ export function collectLaborerSpecialtyItemIds(): string[] {
     ids.add(specialty.journalEmptyId);
     ids.add(specialty.journalFullId);
     if (!specialty.silverPerJournal) {
-      ids.add(specialty.outputId);
+      if (specialty.outputMix) {
+        for (const item of specialty.outputMix) ids.add(item.id);
+      } else {
+        ids.add(specialty.outputId);
+      }
     }
     if (specialty.trophyId) ids.add(specialty.trophyId);
   }

@@ -6,7 +6,7 @@ import {
   type AvaRoadsPresetId,
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
-import { PREMIUM_LISTING_TAX_RATE } from "@/lib/guide-economics";
+import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
@@ -144,12 +144,16 @@ function fishOutputLines(
 export function computeAvaRoadsEconomics(
   prices: PriceMap,
   inputs: AvaRoadsComputeInputs,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  gatheringYieldMultiplier: number = 1,
 ): AvaRoadsEconomicsResult {
   const preset = getAvaRoadsPreset(inputs.presetId);
   const snapperMeta = AVA_ROADS_SNAPPER_META[inputs.snapperViewId];
 
   const uptimeFactor = 1 - preset.portalSearchDowntime;
-  const effectiveFishPerHour = roundSilver(preset.fishPerHour * uptimeFactor);
+  const effectiveFishPerHour = roundSilver(
+    preset.fishPerHour * uptimeFactor * gatheringYieldMultiplier,
+  );
 
   const baseOutputLines = fishOutputLines(
     prices,
@@ -158,9 +162,9 @@ export function computeAvaRoadsEconomics(
   );
 
   const snapperCatches =
-    inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
+    (inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
       ? preset.snapperLuckyCount
-      : preset.snapperExpectedPerHour * uptimeFactor;
+      : preset.snapperExpectedPerHour * uptimeFactor) * gatheringYieldMultiplier;
   const snapperQty = snapperCatches * PUREMIST_SNAPPER_PER_CATCH;
 
   const snapperLine =
@@ -187,7 +191,7 @@ export function computeAvaRoadsEconomics(
     prices,
     "T7_JOURNAL_FISHING_FULL",
     "Grandmaster Fisherman's Journal (Full)",
-    1,
+    gatheringYieldMultiplier,
     "sell",
   );
   const journalNet =
@@ -234,7 +238,7 @@ export function computeAvaRoadsEconomics(
   const consumableTotal = sumLines(consumableLines);
   const marketTaxTotal =
     grossOutput != null
-      ? roundSilver(grossOutput * PREMIUM_LISTING_TAX_RATE)
+      ? roundSilver(grossOutput * listingTaxRate)
       : null;
 
   const baseFishGross = sumLines(baseOutputLines);

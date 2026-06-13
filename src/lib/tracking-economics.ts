@@ -10,7 +10,7 @@ import {
   type TrackingRiskDefaults,
   type TrackingScenarioId,
 } from "@/data/tracking-economics";
-import { PREMIUM_LISTING_TAX_RATE } from "@/lib/guide-economics";
+import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
@@ -163,6 +163,7 @@ export function trackingReferenceLootScale(
 export function computeTrackingEconomics(
   prices: PriceMap,
   inputs: TrackingComputeInputs,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): TrackingEconomicsResult {
   const tier = getTrackingTierConfig(inputs.tierId);
   const scenario = TRACKING_SCENARIO_META[inputs.scenarioId];
@@ -182,7 +183,7 @@ export function computeTrackingEconomics(
   const grossGroupLoot = sumLines(outputLines);
   const marketTaxTotal =
     grossGroupLoot != null
-      ? roundSilver(grossGroupLoot * PREMIUM_LISTING_TAX_RATE)
+      ? roundSilver(grossGroupLoot * listingTaxRate)
       : null;
 
   const consumableLines: PricedLine[] = TRACKING_CONSUMABLES_PER_PLAYER_HOUR.map(

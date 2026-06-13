@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MarketCitySelect } from "@/components/MarketCitySelect";
+import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { useFeedback } from "@/components/FeedbackDialog";
 import { paypalDonateUrl } from "@/lib/site";
 
@@ -80,8 +81,9 @@ export function MobileNav() {
             aria-label="Mobile"
             className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gold/20 bg-obsidian-light p-2 shadow-xl"
           >
-            <div className="border-b border-gold/10 px-2 py-2.5">
+            <div className="space-y-2.5 border-b border-gold/10 px-2 py-2.5">
               <MarketCitySelect />
+              <PremiumTaxToggle />
             </div>
             {navLinks.map((link) => (
               <Link

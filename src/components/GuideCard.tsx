@@ -6,11 +6,14 @@ import {
   zoneTypeLabels,
 } from "@/types/guide";
 import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
+import { GuideRiskBadge } from "@/components/GuideRiskBadge";
+import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import {
   getGuideSilverDisplay,
   hasLiveProfitRange,
 } from "@/lib/guide-display";
 import type { GuideProfitRange } from "@/lib/guide-economics";
+import type { GuideProfitOutcomes } from "@/types/guide";
 
 const difficultyColors = {
   beginner: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
@@ -26,9 +29,11 @@ const zoneTypeColors = {
 export function GuideCard({
   guide,
   profitRange,
+  profitOutcomes,
 }: {
   guide: Guide;
   profitRange?: GuideProfitRange | null;
+  profitOutcomes?: GuideProfitOutcomes | null;
 }) {
   const liveProfit = hasLiveProfitRange(profitRange);
   return (
@@ -50,6 +55,9 @@ export function GuideCard({
         >
           {zoneTypeLabels[guide.zoneType]}
         </span>
+        {guide.riskProfile && (
+          <GuideRiskBadge riskProfile={guide.riskProfile} />
+        )}
         <GuideReliabilityBadges reliability={guide.reliability} />
       </div>
 
@@ -61,22 +69,28 @@ export function GuideCard({
         {guide.description}
       </p>
 
-      <div className="mt-4 flex items-center justify-between border-t border-gold/10 pt-4">
-        <div>
-          <span className="text-[10px] uppercase tracking-widest text-parchment/35">
-            Profit / hr
-          </span>
-          <p className="text-sm font-semibold text-gold">
+      <div className="mt-4 border-t border-gold/10 pt-4">
+        <span className="text-[10px] uppercase tracking-widest text-parchment/35">
+          Profit range / hr
+        </span>
+        {profitOutcomes ? (
+          <div className="mt-1">
+            <ProfitOutcomesTable outcomes={profitOutcomes} compact />
+          </div>
+        ) : (
+          <p className="mt-1 text-sm font-semibold text-gold">
             {getGuideSilverDisplay(guide, profitRange)}
             <span className="font-normal text-parchment/40">
               {" "}
               · {liveProfit ? "est." : "estimate"}
             </span>
           </p>
+        )}
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-xs text-parchment/40">
+            {guide.readTime} min read →
+          </span>
         </div>
-        <span className="text-xs text-parchment/40">
-          {guide.readTime} min read →
-        </span>
       </div>
     </Link>
   );

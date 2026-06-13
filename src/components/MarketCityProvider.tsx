@@ -14,11 +14,21 @@ import {
   MARKET_CITY_STORAGE_KEY,
   type MarketCityId,
 } from "@/lib/market-cities";
-import type { GuideProfitRangesByCity } from "@/lib/guide-economics";
+import {
+  getGatheringYieldMultiplier,
+  getListingTaxRate,
+  PREMIUM_SELLER_STORAGE_KEY,
+} from "@/lib/listing-tax";
+import type { GuideProfitRangesByCity, GuideProfitOutcomesByCity } from "@/lib/guide-economics";
+import { effectiveMarketCity } from "@/lib/guide-market-city";
 
 interface MarketCityContextValue {
   marketCity: MarketCityId;
   setMarketCity: (city: MarketCityId) => void;
+  premiumSeller: boolean;
+  setPremiumSeller: (premium: boolean) => void;
+  listingTaxRate: number;
+  gatheringYieldMultiplier: number;
 }
 
 const MarketCityContext = createContext<MarketCityContextValue | null>(null);
@@ -33,14 +43,27 @@ function readStoredMarketCity(): MarketCityId {
   return DEFAULT_MARKET_CITY_ID;
 }
 
+function readStoredPremiumSeller(): boolean {
+  try {
+    const stored = localStorage.getItem(PREMIUM_SELLER_STORAGE_KEY);
+    if (stored === "false") return false;
+    if (stored === "true") return true;
+  } catch {
+    // ignore
+  }
+  return true;
+}
+
 export function MarketCityProvider({ children }: { children: React.ReactNode }) {
   const [marketCity, setMarketCityState] = useState<MarketCityId>(
     DEFAULT_MARKET_CITY_ID,
   );
+  const [premiumSeller, setPremiumSellerState] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMarketCityState(readStoredMarketCity());
+    setPremiumSellerState(readStoredPremiumSeller());
     setMounted(true);
   }, []);
 
@@ -53,9 +76,28 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
+  const setPremiumSeller = useCallback((premium: boolean) => {
+    setPremiumSellerState(premium);
+    try {
+      localStorage.setItem(PREMIUM_SELLER_STORAGE_KEY, String(premium));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const resolvedCity = mounted ? marketCity : DEFAULT_MARKET_CITY_ID;
+  const resolvedPremium = mounted ? premiumSeller : true;
+
   return (
     <MarketCityContext.Provider
-      value={{ marketCity: mounted ? marketCity : DEFAULT_MARKET_CITY_ID, setMarketCity }}
+      value={{
+        marketCity: resolvedCity,
+        setMarketCity,
+        premiumSeller: resolvedPremium,
+        setPremiumSeller,
+        listingTaxRate: getListingTaxRate(resolvedPremium),
+        gatheringYieldMultiplier: getGatheringYieldMultiplier(resolvedPremium),
+      }}
     >
       {children}
     </MarketCityContext.Provider>
@@ -72,11 +114,31 @@ export function useMarketCity(): MarketCityContextValue {
 
 export function useProfitRangesForCity(
   profitRangesByCity: GuideProfitRangesByCity,
+  guideDefaultCity?: MarketCityId,
 ) {
   const { marketCity } = useMarketCity();
+  const city = effectiveMarketCity(marketCity, guideDefaultCity);
   return (
-    profitRangesByCity[marketCity] ??
+    profitRangesByCity[city] ??
     profitRangesByCity[AVERAGE_MARKET_CITY_ID] ??
     {}
   );
+}
+
+export function useProfitOutcomesForCity(
+  profitOutcomesByCity: GuideProfitOutcomesByCity,
+  guideDefaultCity?: MarketCityId,
+) {
+  const { marketCity } = useMarketCity();
+  const city = effectiveMarketCity(marketCity, guideDefaultCity);
+  return (
+    profitOutcomesByCity[city] ??
+    profitOutcomesByCity[AVERAGE_MARKET_CITY_ID] ??
+    {}
+  );
+}
+
+export function useEffectiveMarketCity(guideDefaultCity?: MarketCityId) {
+  const { marketCity } = useMarketCity();
+  return effectiveMarketCity(marketCity, guideDefaultCity);
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MarketCitySelect } from "@/components/MarketCitySelect";
+import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FeedbackButton } from "@/components/FeedbackDialog";
@@ -55,8 +56,9 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 lg:ml-0">
-          <div className="hidden lg:block">
+          <div className="hidden items-center gap-2 lg:flex">
             <MarketCitySelect compact />
+            <PremiumTaxToggle />
           </div>
           <ThemeToggle />
           <FeedbackButton className="btn-secondary hidden px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold lg:inline-flex" />

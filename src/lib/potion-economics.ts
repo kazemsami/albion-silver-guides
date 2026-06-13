@@ -10,7 +10,7 @@ import {
   type PotionRecipe,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
-import { PREMIUM_LISTING_TAX_RATE } from "@/lib/guide-economics";
+import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
@@ -99,6 +99,7 @@ function computeBatch(
   recipe: PotionRecipe,
   defaults: PotionEconomicsDefaults,
   valueFocus: boolean,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): PotionBatchResult {
   const materialLines = recipe.materials.map((m) =>
     priceLine(prices, m.id, m.name, m.quantity, "buy"),
@@ -121,7 +122,7 @@ function computeBatch(
 
   const listingTax =
     grossOutput != null
-      ? roundSilver(grossOutput * PREMIUM_LISTING_TAX_RATE)
+      ? roundSilver(grossOutput * listingTaxRate)
       : null;
 
   const netBeforeFocus =
@@ -161,6 +162,7 @@ function computeBatch(
 export function computePotionEconomics(
   prices: PriceMap,
   inputs: PotionComputeInputs,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): PotionEconomicsResult {
   const tierMultiplier = getPotionTierMultiplier(inputs.tierId);
   const sellThrough = POTION_SELL_THROUGH_META[inputs.sellThroughId];
@@ -180,12 +182,14 @@ export function computePotionEconomics(
     healRecipe,
     inputs.defaults,
     inputs.valueFocus,
+    listingTaxRate,
   );
   const energyBatch = computeBatch(
     prices,
     energyRecipe,
     inputs.defaults,
     inputs.valueFocus,
+    listingTaxRate,
   );
 
   const scale = (batchValue: number | null, batches: number) =>

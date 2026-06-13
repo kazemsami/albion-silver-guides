@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
   EconomicsTable,
@@ -14,6 +15,7 @@ import {
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
+import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeAvaRoadsEconomics,
   computeAvaRoadsProfitRange,
@@ -41,6 +43,7 @@ interface AvaRoadsFishingCalculatorProps {
   pricesByCity: SerializedPricesByCity;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
+  defaultMarketCity?: MarketCityId;
 }
 
 export function AvaRoadsFishingCalculator({
@@ -48,9 +51,12 @@ export function AvaRoadsFishingCalculator({
   pricesByCity,
   pricedAt,
   tierLoadouts,
+  defaultMarketCity,
 }: AvaRoadsFishingCalculatorProps) {
-  const { marketCity } = useMarketCity();
-  const prices = pickSerializedPrices(pricesByCity, marketCity);
+  const { listingTaxRate, premiumSeller, gatheringYieldMultiplier } =
+    useMarketCity();
+  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
+  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
   const [presetId, setPresetId] = useState<AvaRoadsPresetId>("normal");
   const [snapperViewId, setSnapperViewId] =
     useState<AvaRoadsSnapperViewId>("expected");
@@ -67,8 +73,8 @@ export function AvaRoadsFishingCalculator({
       computeAvaRoadsEconomics(priceMap, {
         presetId,
         snapperViewId,
-      }),
-    [priceMap, presetId, snapperViewId],
+      }, listingTaxRate, gatheringYieldMultiplier),
+    [priceMap, presetId, snapperViewId, listingTaxRate, gatheringYieldMultiplier],
   );
 
   const profitRange = useMemo(
@@ -336,7 +342,7 @@ export function AvaRoadsFishingCalculator({
             }
           />
           <EconomicsSummaryRow
-            label="Minus Premium listing tax (~6.5%)"
+            label={listingTaxRowLabel(premiumSeller)}
             value={
               result.marketTaxTotal != null ? -result.marketTaxTotal : null
             }

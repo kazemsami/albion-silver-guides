@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { GuidesGrid } from "@/components/GuidesGrid";
 import { GuideFilters } from "@/components/GuideFilters";
 import { guides } from "@/data/guides";
-import { fetchAllGuidesProfitRangesByCity } from "@/lib/guide-economics";
+import { fetchAllGuidesMarketDataByCity } from "@/lib/guide-economics";
 import {
   buildGuidesFilterUrl,
   hasInvalidFilterParams,
@@ -65,7 +65,8 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
 
   const { category, difficulty, zone, sort } = parseGuideFilters(params);
   const hasFilters = hasActiveListFilters(params);
-  const profitRangesByCity = await fetchAllGuidesProfitRangesByCity();
+  const { ranges: profitRangesByCity, outcomes: profitOutcomesByCity } =
+    await fetchAllGuidesMarketDataByCity();
 
   const filtered = guides.filter((g) => {
     if (category && g.category !== category) return false;
@@ -115,6 +116,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
             <GuidesGrid
               guides={filtered}
               profitRangesByCity={profitRangesByCity}
+              profitOutcomesByCity={profitOutcomesByCity}
               sort={sort}
             />
           ) : (

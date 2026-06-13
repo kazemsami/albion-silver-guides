@@ -1,3 +1,5 @@
+import type { MarketCityId } from "@/lib/market-cities";
+
 export type GuideCategory =
   | "gathering"
   | "crafting"
@@ -14,13 +16,49 @@ export type ZoneType = "safe" | "dangerous";
 export type GuideReviewStatus =
   | "tested-by-me"
   | "community-checked"
+  | "tested-and-community-checked"
   | "needs-review";
+
+/** Beginner-safe vs high variance / full-loot / RNG-heavy content. */
+export type GuideRiskProfile = "beginner-safe" | "rng-heavy";
+
+export interface GuideReviewEvidence {
+  runs?: number;
+  date: string;
+  server?: string;
+  gear?: string;
+  market?: string;
+  rawLootSilver?: number;
+  deathsOrKnockdowns?: number;
+  netSilver?: number;
+  sourceTitle?: string;
+  sourceUrl?: string;
+  /** When set, shown instead of a single source link. */
+  sources?: { title: string; url: string }[];
+  notes?: string;
+}
 
 export interface GuideReliability {
   status: GuideReviewStatus;
   /** ISO date (YYYY-MM-DD) when the guide content was last reviewed or updated. */
   lastUpdated: string;
+  evidence?: GuideReviewEvidence;
 }
+
+/** Four-band profit estimate shown on cards and calculators. */
+export interface GuideProfitOutcomes {
+  conservative: number | null;
+  median: number | null;
+  expected: number | null;
+  highRoll: number | null;
+}
+
+export const profitOutcomeLabels: Record<keyof GuideProfitOutcomes, string> = {
+  conservative: "Conservative",
+  median: "Median",
+  expected: "Expected value",
+  highRoll: "High-roll",
+};
 
 export interface GuideReference {
   title: string;
@@ -182,6 +220,9 @@ export interface Guide {
   featured: boolean;
   readTime: number;
   reliability: GuideReliability;
+  /** Preferred market city for price estimates on this guide. */
+  defaultMarketCity?: MarketCityId;
+  riskProfile?: GuideRiskProfile;
 }
 
 export const categoryLabels: Record<GuideCategory, string> = {
@@ -214,5 +255,11 @@ export const zoneTypeLabels: Record<ZoneType, string> = {
 export const reviewStatusLabels: Record<GuideReviewStatus, string> = {
   "tested-by-me": "Tested by me",
   "community-checked": "Community checked",
+  "tested-and-community-checked": "Tested & community checked",
   "needs-review": "Needs review",
+};
+
+export const riskProfileLabels: Record<GuideRiskProfile, string> = {
+  "beginner-safe": "Beginner friendly",
+  "rng-heavy": "Risk / RNG heavy",
 };

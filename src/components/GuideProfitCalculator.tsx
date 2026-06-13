@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import type { MarketCityId } from "@/lib/market-cities";
 import type {
   GuideEconomics,
   SerializedPricesByCity,
@@ -20,6 +21,7 @@ import {
   getLaborerSpecialty,
 } from "@/data/laborer-specialties";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
+import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeHourlyEconomics,
   computeLoadoutPricing,
@@ -40,6 +42,7 @@ interface GuideProfitCalculatorProps {
   pricesByCity: SerializedPricesByCity;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
+  defaultMarketCity?: MarketCityId;
 }
 
 export function GuideProfitCalculator({
@@ -47,9 +50,12 @@ export function GuideProfitCalculator({
   pricesByCity,
   pricedAt,
   tierLoadouts,
+  defaultMarketCity,
 }: GuideProfitCalculatorProps) {
-  const { marketCity } = useMarketCity();
-  const prices = pickSerializedPrices(pricesByCity, marketCity);
+  const { marketCity, listingTaxRate, premiumSeller, gatheringYieldMultiplier } =
+    useMarketCity();
+  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
+  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [specialtyId, setSpecialtyId] = useState(
     economics.defaultLaborerSpecialtyId ?? LABORER_SPECIALTIES[0].id,
@@ -79,6 +85,7 @@ export function GuideProfitCalculator({
       bundle.loadout,
       economics,
       tier,
+      gatheringYieldMultiplier,
     );
 
     return {
@@ -94,24 +101,42 @@ export function GuideProfitCalculator({
     tierId,
     tierLoadouts,
     prices,
+    gatheringYieldMultiplier,
   ]);
+
+  const yieldOptions = { gatheringYieldMultiplier };
 
   const result = useMemo(() => {
     const priceMap = deserializePriceMap(prices);
     const scaled = hasLaborerSpecialtyPicker
       ? buildLaborerHourlyEconomics(specialty, tier)
-      : scaleGuideEconomics(economics, tier);
+      : scaleGuideEconomics(economics, tier, yieldOptions);
     return computeHourlyEconomics(
       { ...economics, ...scaled },
       priceMap,
       marketCity,
+      listingTaxRate,
     );
-  }, [economics, hasLaborerSpecialtyPicker, marketCity, prices, specialty, tier]);
+  }, [
+    economics,
+    gatheringYieldMultiplier,
+    hasLaborerSpecialtyPicker,
+    listingTaxRate,
+    marketCity,
+    prices,
+    specialty,
+    tier,
+  ]);
 
   const profitRange = useMemo(() => {
     const priceMap = deserializePriceMap(prices);
-    return computeProfitRange(economics, priceMap);
-  }, [economics, prices]);
+    return computeProfitRange(
+      economics,
+      priceMap,
+      listingTaxRate,
+      gatheringYieldMultiplier,
+    );
+  }, [economics, gatheringYieldMultiplier, listingTaxRate, prices]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -290,7 +315,7 @@ export function GuideProfitCalculator({
           />
           {result.marketTaxTotal != null && (
             <EconomicsSummaryRow
-              label="Minus Premium listing tax (~6.5%)"
+              label={listingTaxRowLabel(premiumSeller)}
               value={-result.marketTaxTotal}
             />
           )}

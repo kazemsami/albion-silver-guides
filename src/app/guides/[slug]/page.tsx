@@ -8,9 +8,12 @@ import {
   difficultyLabels,
 } from "@/types/guide";
 import {
-  fetchAllGuidesProfitRangesByCity,
+  fetchAllGuidesMarketDataByCity,
   fetchGuidePricing,
 } from "@/lib/guide-economics";
+import { GuideCalculatorOutcomes } from "@/components/GuideCalculatorOutcomes";
+import { GuideEvidencePanel } from "@/components/GuideEvidencePanel";
+import { GuideRiskBadge } from "@/components/GuideRiskBadge";
 import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import { GuideComments } from "@/components/GuideComments";
 import { RelatedGuides } from "@/components/RelatedGuides";
@@ -64,10 +67,12 @@ export default async function GuidePage({ params }: GuidePageProps) {
   if (!guide) notFound();
 
   const economicsConfig = getGuideEconomics(slug);
-  const [marketPricing, profitRangesByCity] = await Promise.all([
+  const [marketPricing, marketData] = await Promise.all([
     fetchGuidePricing(slug, economicsConfig),
-    fetchAllGuidesProfitRangesByCity(),
+    fetchAllGuidesMarketDataByCity(),
   ]);
+  const { ranges: profitRangesByCity, outcomes: profitOutcomesByCity } =
+    marketData;
 
   const related = guides
     .filter((g) => g.category === guide.category && g.slug !== guide.slug)
@@ -118,10 +123,15 @@ export default async function GuidePage({ params }: GuidePageProps) {
             {difficultyLabels[guide.difficulty]}
           </span>
           <GuideReliabilityBadges reliability={guide.reliability} size="md" />
+          {guide.riskProfile && (
+            <GuideRiskBadge riskProfile={guide.riskProfile} size="md" />
+          )}
           <span className="text-xs text-parchment/40">
             {guide.readTime} min read
           </span>
         </div>
+
+        <GuideEvidencePanel reliability={guide.reliability} />
 
         <h1 className="font-display mt-4 text-3xl font-bold leading-tight text-parchment sm:text-4xl">
           {guide.title}
@@ -133,7 +143,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
       </div>
 
       {economicsConfig && marketPricing.serializedPricesByCity && (
-        slug === "high-tier-group-tracking" ? (
+        <>
+          <GuideCalculatorOutcomes
+            guideSlug={slug}
+            defaultMarketCity={guide.defaultMarketCity}
+            pricesByCity={marketPricing.serializedPricesByCity}
+          />
+          {slug === "high-tier-group-tracking" ? (
           <TrackingProfitCalculator
             economics={economicsConfig}
             pricesByCity={marketPricing.serializedPricesByCity}
@@ -141,6 +157,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
           />
         ) : slug === "potions-crafting-bulk" ? (
           <PotionProfitCalculator
@@ -150,6 +167,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
           />
         ) : slug === "ava-roads-fishing" ? (
           <AvaRoadsFishingCalculator
@@ -159,6 +177,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
           />
         ) : slug === "abyssal-depths-farming" ? (
           <AbyssalProfitCalculator
@@ -168,6 +187,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
           />
         ) : (
           <GuideProfitCalculator
@@ -177,8 +197,10 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
           />
-        )
+        )}
+        </>
       )}
 
       <section className="mt-10">
@@ -256,7 +278,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
       )}
 
       {related.length > 0 && (
-        <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} />
+        <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} profitOutcomesByCity={profitOutcomesByCity} />
       )}
 
       <GuideComments slug={guide.slug} />

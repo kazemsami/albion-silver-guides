@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
   EconomicsTable,
@@ -23,6 +24,7 @@ import {
   enrichLoadoutWithQuantities,
   pickSerializedPrices,
 } from "@/lib/guide-economics";
+import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeTrackingEconomics,
   computeTrackingProfitRange,
@@ -45,6 +47,7 @@ interface TrackingProfitCalculatorProps {
   pricesByCity: SerializedPricesByCity;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
+  defaultMarketCity?: MarketCityId;
 }
 
 export function TrackingProfitCalculator({
@@ -52,9 +55,11 @@ export function TrackingProfitCalculator({
   pricesByCity,
   pricedAt,
   tierLoadouts,
+  defaultMarketCity,
 }: TrackingProfitCalculatorProps) {
-  const { marketCity } = useMarketCity();
-  const prices = pickSerializedPrices(pricesByCity, marketCity);
+  const { listingTaxRate, premiumSeller } = useMarketCity();
+  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
+  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [scenarioId, setScenarioId] = useState<TrackingScenarioId>("expected");
   const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE);
@@ -75,8 +80,8 @@ export function TrackingProfitCalculator({
         scenarioId,
         groupSize,
         risk,
-      }),
-    [priceMap, tierId, scenarioId, groupSize, risk],
+      }, listingTaxRate),
+    [priceMap, tierId, scenarioId, groupSize, risk, listingTaxRate],
   );
 
   const profitRange = useMemo(
@@ -366,7 +371,7 @@ export function TrackingProfitCalculator({
           )}
           {result.marketTaxTotal != null && (
             <EconomicsSummaryRow
-              label="Minus Premium listing tax (~6.5%)"
+              label={listingTaxRowLabel(premiumSeller)}
               value={-result.marketTaxTotal}
             />
           )}

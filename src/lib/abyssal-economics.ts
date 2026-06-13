@@ -8,7 +8,7 @@ import {
   type AbyssalTeamSizeId,
   type AbyssalLootLine,
 } from "@/data/abyssal-economics";
-import { PREMIUM_LISTING_TAX_RATE } from "@/lib/guide-economics";
+import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
@@ -125,6 +125,7 @@ function scaleLootLines(
 export function computeAbyssalEconomics(
   prices: PriceMap,
   inputs: AbyssalComputeInputs,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): AbyssalEconomicsResult {
   const scenario = getAbyssalScenario(inputs.scenarioId);
   const team = ABYSSAL_TEAM_META[inputs.teamSizeId];
@@ -194,7 +195,7 @@ export function computeAbyssalEconomics(
 
   const marketTaxTotal =
     expectedGrossPerHour != null
-      ? roundSilver(expectedGrossPerHour * PREMIUM_LISTING_TAX_RATE)
+      ? roundSilver(expectedGrossPerHour * listingTaxRate)
       : null;
 
   const deathsPerRun =

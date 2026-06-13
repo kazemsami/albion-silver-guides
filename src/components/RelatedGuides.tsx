@@ -2,19 +2,27 @@
 
 import { GuideCard } from "@/components/GuideCard";
 import {
+  useMarketCity,
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuideProfitRangesByCity } from "@/lib/guide-economics";
+import type {
+  GuideProfitOutcomesByCity,
+  GuideProfitRangesByCity,
+} from "@/lib/guide-economics";
+import { effectiveMarketCity } from "@/lib/guide-market-city";
 
 export function RelatedGuides({
   guides,
   profitRangesByCity,
+  profitOutcomesByCity,
 }: {
   guides: Guide[];
   profitRangesByCity: GuideProfitRangesByCity;
+  profitOutcomesByCity: GuideProfitOutcomesByCity;
 }) {
   const profitRanges = useProfitRangesForCity(profitRangesByCity);
+  const { marketCity } = useMarketCity();
 
   return (
     <section className="mt-16 border-t border-gold/10 pt-10">
@@ -22,13 +30,20 @@ export function RelatedGuides({
         Related Guides
       </h2>
       <div className="mt-6 grid gap-5">
-        {guides.map((guide) => (
+        {guides.map((guide) => {
+          const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
+          const outcomes =
+            profitOutcomesByCity[city]?.[guide.slug] ??
+            profitOutcomesByCity.average?.[guide.slug];
+          return (
           <GuideCard
             key={guide.slug}
             guide={guide}
             profitRange={profitRanges[guide.slug]}
+            profitOutcomes={outcomes}
           />
-        ))}
+          );
+        })}
       </div>
     </section>
   );

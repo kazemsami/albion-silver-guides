@@ -1,7 +1,11 @@
 import type { Guide } from "@/types/guide";
 import { attachGuideReliability } from "@/data/guide-reliability";
+import {
+  guideDefaultMarketCityBySlug,
+  guideRiskProfileBySlug,
+} from "@/data/guide-meta";
 
-const rawGuides: Omit<Guide, "reliability">[] = [
+const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile">[] = [
   {
     slug: "t4-ore-mining-yellow-zone",
     title: "T4 Ore Mining in Yellow Zones",
@@ -88,13 +92,13 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     silverPerHour: { min: 200_000, max: 500_000 },
     requirements: [
       "T5 sickle + T5 harvester gear (cap, garb, workboots)",
-      "Pork Pie (+15% yield, +30% carry weight) (~1 per hour",
+      "Pork Pie (+15% yield, +30% carry weight), budget ~1 per hour",
       "Two empty Adept Cropper's Journals in inventory",
     ],
     steps: [
       "Base out of Thetford. Run Willowsigh Marsh → Dewleaf Fen → Meltwater Bog as a clockwise circle, swamp biomes respawn fiber fastest in this cluster.",
       "Harvest every T5 Skyflower node first, then T4 Hemp on the return leg. Skip lower tiers unless they sit directly on your path.",
-      "Eat Pork Pie before starting; with cape + pie you should bank ~1,300 fiber per hour split between T4/T5.",
+      "Eat Pork Pie before starting; you should bank ~1,300 fiber per hour split between T4/T5.",
       "Fill two cropper journals per hour while gathering, sell full journals on the Thetford market alongside your fiber.",
       "Sell raw Skyflower and Hemp in Thetford (do not weave to cloth unless Sunflax Cloth sells for 15%+ more than raw fiber after tax and focus cost).",
       "Relist every 30 minutes during peak hours or undercut by 1 silver to move stacks before the next loop.",
@@ -164,7 +168,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     silverPerHour: { min: 150_000, max: 800_000 },
     requirements: [
       "T6 Bloodletter + Scholar Cowl clear build (see gear below)",
-      "Mutton Stew + healing/energy potions, budget 2 stew and 3 pots per hour",
+      "Mutton Stew + Major Healing Potions: budget 2 stew and 3 healing pots per hour (the calculator prices these). Carry a Major Energy Potion as optional backup",
       "Red-zone access near Martlock (e.g. Redtree Enclave, T6 red)",
       "No keys, solo entrances are free hidden world spawns",
     ],
@@ -266,7 +270,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Healing is reduced 40% in Corrupted Dungeons, burst and shard-banish plays often beat trying to out-heal a geared invader.",
       "Slayer is for high-infamy veterans; higher IP cap and T8 mobs, but death risk dwarfs the extra loot for most farmers.",
       "Never chain runs with a full inventory. One death loses the chest and your kit on Stalker/Slayer.",
-      "The profit calculator excludes listing tax (~6.5% with Premium). Undercutting sell orders makes that bite harder.",
+      "The profit calculator already subtracts ~6.5% Premium listing tax from sell value. Undercutting sell orders eats into the margin on top of that.",
       "Stalker gear losses dominate bad sessions. At ~290k kit value, even ~0.8 deaths/hour can erase ~230k before you count lost chest loot.",
       "Bank after each chest when possible. Real hourly profit swings with invasion frequency, win rate, loot RNG, and infamy tier.",
     ],
@@ -879,31 +883,32 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     ],
     requirements: [
       "Level 6 personal island with T8 laborer houses (one laborer per house)",
-      "T8 beds and tables, one bed per laborer, one table per four laborers",
-      "T8 trophies to reach 150% happiness on T7 journals",
+      "T8 bed per laborer and T8 table per four laborers (same tier as the laborer fills minimum happiness)",
       "T7 full journals, fill while gathering T7/T8 or buy filled journals on the market",
+      "Optional: T8 general + specialty trophies if you later run T8 journals or trophy journals",
     ],
     steps: [
-      "Upgrade island houses to T8 and hire T8 laborers of the matching specialty (prospector, lumberjack, cropper, etc.).",
-      "Furnish each T8 house: T8 bed per laborer. T8 table per four laborers, plus T8 trophies for 150% happiness on T7 journals. Happiness takes up to 10 hours to max after placing furniture.",
-      "Wait 30 minutes after hiring a new laborer before they can accept their first journal.",
-      "Carry empty journals while you gather, craft, or kill mobs, only base fame counts (premium fame bonus does not fill journals).",
-      "Hand a full T7 journal to a T8 laborer of the same type. T8 houses hit 150% yield on T7 journals. Each job takes 22 hours.",
-      "Collect unrefined resources and the empty journal when the job finishes. Sell resources and re-use or sell the empty journal.",
-      "Repeat, specialize laborers to match whatever activity you already do so journal filling costs nothing extra.",
+      "Upgrade island houses to T8 and hire T8 laborers of the matching specialty (prospector, lumberjack, cropper, etc.). Guild halls only sell T2 laborers; buy higher tiers on the market or level them with jobs.",
+      "Furnish each T8 house: one T8 bed per laborer and one T8 table per four laborers. Matching-tier furniture already returns 150% yield on T7 journals. Happiness rises over time once furniture is placed.",
+      "Wait 30 minutes after hiring a new laborer before they can accept their first journal job (you can still buy empty journals from them immediately).",
+      "Carry empty journals while you gather, craft, or kill mobs. Only base fame counts (premium fame bonus does not fill journals).",
+      "Hand a full T7 journal to a T8 laborer of the same type. Each job takes 22 hours. A T8 laborer cannot take a journal above its own tier.",
+      "Collect resources and the empty journal when the job finishes. Uncollected returns are deleted after 7 days.",
+      "Repeat. Match laborer specialty to whatever activity you already do so journal filling costs nothing extra.",
     ],
     tips: [
-      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - ~6.5% listing tax on sells. Filling journals yourself removes the buy cost and is the most profitable approach.",
-      "Breakeven island spend: compare total T8 house + furniture + trophy cost to (profit per journal × journals per day × 30). At ~150-500k per 22h batch, a full island often pays back over weeks, not hours.",
-      "This guide assumes a full T8 setup: T8 laborer houses with T8 furniture processing T7 journals at the 150% happiness cap (~58 T7 resources per journal).",
-      "Laborers process journals at or below their tier: a T8 laborer handles T7 journals at 150% return rate.",
-      "Check market prices before buying filled journals, margins vary by city and journal tier. Caerleon and Brecilien often have the best journal spreads.",
-      "Other ways to profit: flip empty/full journals on the market, use returned resources for crafting, or sell leveled laborer contracts.",
+      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - listing tax on sells. Filling journals yourself removes the buy cost and is the most profitable approach.",
+      "Breakeven island spend: compare total T8 house + furniture cost to (profit per journal × journals per 22h cycle × 30). A full island often pays back over weeks, not hours.",
+      "T8 bed + T8 table on a T8 laborer already hits 150% yield on T7 journals (wiki cap: min(150%, happiness ÷ 2)). Extra trophies mainly help T8 journals or trophy journal jobs.",
+      "Gathering laborers return ~58 unrefined T7 resources per journal at 150%. Crafting laborers return ~6.6 refined mats total, split across bars/planks/cloth/leather by specialty (matches Albion Online Grind weights).",
+      "Tinker is mostly planks (~44% of crafting return), plus smaller shares of bars, cloth, and leather. There is no item called Redleaf Leather; T7 leather is Reinforced Leather.",
+      "Check market prices before buying filled journals; margins vary by city and journal tier.",
+      "Other ways to profit: flip empty/full journals, craft with returned resources, pick up laborers as contracts to move or sell them, or level contracts for market resale.",
     ],
     profitBuild: {
       title: "Island Setup",
       description:
-        "Full T8 island setup: T8 furniture and trophies in every house, processing T7 journals at 150% yield.",
+        "T8 bed and table in every house (trophies optional), processing T7 journals at 150% yield.",
       slots: {},
       inventory: [
         {
@@ -919,17 +924,17 @@ const rawGuides: Omit<Guide, "reliability">[] = [
         {
           id: "T8_FURNITUREITEM_TROPHY_GENERAL",
           name: "Ledger of Truths",
-          hint: "T8 generalist trophy",
+          hint: "Optional T8 general trophy (+5 happiness each)",
         },
         {
           id: "T8_FURNITUREITEM_TROPHY_ORE",
           name: "Adamantium Ore Sample",
-          hint: "T8 prospector trophy",
+          hint: "Optional T8 prospector trophy (+10 happiness on prospectors)",
         },
         {
           id: "T7_JOURNAL_TROPHY_GENERAL_FULL",
           name: "Grandmaster's Generalist Trophy Journal (Full)",
-          hint: "Hand to laborer: fills on any fame alongside a profession journal",
+          hint: "Optional job: fill on any fame, hand in for general trophy returns",
         },
         {
           id: "T7_JOURNAL_ORE_FULL",
@@ -950,6 +955,20 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     },
     featured: true,
     readTime: 8,
+    references: [
+      {
+        title: "Albion Online Wiki: Laborer",
+        url: "https://wiki.albiononline.com/wiki/Laborer",
+      },
+      {
+        title: "Albion Online Wiki: Journal",
+        url: "https://wiki.albiononline.com/wiki/Journal",
+      },
+      {
+        title: "Albion Online Grind: Laborers Profit Calculator",
+        url: "https://albiononlinegrind.com/laborers-profit-calculator",
+      },
+    ],
   },
   {
     slug: "potions-crafting-bulk",
@@ -1042,7 +1061,11 @@ const rawGuides: Omit<Guide, "reliability">[] = [
   },
 ];
 
-export const guides: Guide[] = attachGuideReliability(rawGuides);
+export const guides: Guide[] = attachGuideReliability(rawGuides).map((guide) => ({
+  ...guide,
+  defaultMarketCity: guideDefaultMarketCityBySlug[guide.slug],
+  riskProfile: guideRiskProfileBySlug[guide.slug],
+}));
 
 export function getGuideBySlug(slug: string): Guide | undefined {
   return guides.find((g) => g.slug === slug);

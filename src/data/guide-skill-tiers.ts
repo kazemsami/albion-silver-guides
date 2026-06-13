@@ -174,19 +174,19 @@ export const SKILL_TIERS = {
   laborerSmall: {
     id: "small",
     label: "4-6 laborers",
-    description: "T8 houses, T7 journals (~5 jobs per 22h cycle",
+    description: "T8 houses, T7 journals (~5 jobs per 22h cycle)",
     outputMultiplier: 0.5,
   },
   laborerMid: {
     id: "medium",
     label: "8-12 laborers",
-    description: "T8 houses, T7 journals (~10 jobs per 22h at 150% yield",
+    description: "T8 houses, T7 journals (~10 jobs per 22h at 150% yield)",
     outputMultiplier: 1,
   },
   laborerLarge: {
     id: "large",
     label: "16 laborers",
-    description: "Full T8 island (16 T7 journals per 22h at 150% yield",
+    description: "Full T8 island (16 T7 journals per 22h at 150% yield)",
     outputMultiplier: 1.6,
   },
   craftingT5: {

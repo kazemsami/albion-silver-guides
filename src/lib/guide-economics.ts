@@ -11,6 +11,7 @@ import { computeTrackingProfitRange } from "@/lib/tracking-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
 import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
+import { PREMIUM_LISTING_TAX_RATE, isPremiumYieldItem } from "@/lib/listing-tax";
 import type {
   AlbionItem,
   EquipmentLoadout,
@@ -34,6 +35,8 @@ import {
   type PriceMapsByCity,
 } from "@/lib/albion-prices";
 import { getItemPriceFallback } from "@/data/item-price-fallbacks";
+import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
+import type { GuideProfitOutcomesMap } from "@/lib/guide-profit-outcomes";
 import { roundSilver } from "@/lib/format";
 
 function scaleQuantity(quantity: number, multiplier: number): number {
@@ -61,8 +64,11 @@ export function enrichLoadoutWithQuantities(
   loadout: EquipmentLoadout,
   economics: GuideEconomics,
   tier: SkillTier,
+  gatheringYieldMultiplier: number = 1,
 ): EquipmentLoadout {
-  const scaled = scaleGuideEconomics(economics, tier);
+  const scaled = scaleGuideEconomics(economics, tier, {
+    gatheringYieldMultiplier,
+  });
   const quantityById = new Map<string, number>();
 
   for (const item of scaled.hourlyConsumables ?? []) {
@@ -97,20 +103,29 @@ export function enrichLoadoutWithQuantities(
 export function scaleGuideEconomics(
   economics: GuideEconomics,
   tier: SkillTier,
+  options?: { gatheringYieldMultiplier?: number },
 ): Pick<GuideEconomics, "hourlyOutput" | "hourlyInputs" | "hourlyConsumables"> {
   const outM = tier.outputMultiplier;
   const inM = tier.inputMultiplier ?? tier.outputMultiplier;
   const conM = tier.consumableMultiplier ?? tier.outputMultiplier;
+  const yieldMul = options?.gatheringYieldMultiplier ?? 1;
 
   const outputSource = tier.hourlyOutput ?? economics.hourlyOutput;
+  const scaleOutputQty = (item: HourlyItem, tierMul: number) => {
+    const premiumMul = isPremiumYieldItem(item.id) ? yieldMul : 1;
+    return scaleQuantity(item.quantity, tierMul * premiumMul);
+  };
 
   return {
     hourlyOutput: [
       ...outputSource.map((item) => ({
         ...item,
-        quantity: scaleQuantity(item.quantity, outM),
+        quantity: scaleOutputQty(item, outM),
       })),
-      ...(tier.bonusOutput ?? []),
+      ...(tier.bonusOutput ?? []).map((item) => ({
+        ...item,
+        quantity: scaleOutputQty(item, 1),
+      })),
     ],
     hourlyInputs: (tier.hourlyInputs ?? economics.hourlyInputs)?.map((item) => ({
       ...item,
@@ -163,10 +178,27 @@ export type GuideProfitRange = { min: number; max: number };
 export type GuideProfitRangeMap = Record<string, GuideProfitRange>;
 export type GuideProfitRangesByCity = Record<string, GuideProfitRangeMap>;
 
+function guideUsesGatheringYield(economics: GuideEconomics): boolean {
+  const items = [
+    ...economics.hourlyOutput,
+    ...economics.skillTiers.flatMap((tier) => [
+      ...(tier.hourlyOutput ?? []),
+      ...(tier.bonusOutput ?? []),
+    ]),
+  ];
+  return items.some((item) => isPremiumYieldItem(item.id));
+}
+
 function netTotalsForEconomics(
   economics: GuideEconomics,
   prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  gatheringYieldMultiplier: number = 1,
 ): (number | null)[] {
+  const yieldOptions = guideUsesGatheringYield(economics)
+    ? { gatheringYieldMultiplier }
+    : undefined;
+
   if (economics.defaultLaborerSpecialtyId) {
     return LABORER_SPECIALTIES.flatMap((specialty) =>
       economics.skillTiers.map((tier) => {
@@ -174,16 +206,20 @@ function netTotalsForEconomics(
         return computeHourlyEconomics(
           { ...economics, ...scaled },
           prices,
+          AVERAGE_MARKET_CITY_ID,
+          listingTaxRate,
         ).netAfterTax;
       }),
     );
   }
 
   return economics.skillTiers.map((tier) => {
-    const scaled = scaleGuideEconomics(economics, tier);
+    const scaled = scaleGuideEconomics(economics, tier, yieldOptions);
     return computeHourlyEconomics(
       { ...economics, ...scaled },
       prices,
+      AVERAGE_MARKET_CITY_ID,
+      listingTaxRate,
     ).netAfterTax;
   });
 }
@@ -191,8 +227,15 @@ function netTotalsForEconomics(
 export function computeProfitRange(
   economics: GuideEconomics,
   prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  gatheringYieldMultiplier: number = 1,
 ): { min: number | null; max: number | null } {
-  const valid = netTotalsForEconomics(economics, prices).filter(
+  const valid = netTotalsForEconomics(
+    economics,
+    prices,
+    listingTaxRate,
+    gatheringYieldMultiplier,
+  ).filter(
     (n): n is number => n != null,
   );
   if (valid.length === 0) return { min: null, max: null };
@@ -251,10 +294,36 @@ export async function fetchAllGuidesProfitRanges(): Promise<
   return byCity[AVERAGE_MARKET_CITY_ID] ?? {};
 }
 
+export type GuideProfitOutcomesByCity = Record<string, GuideProfitOutcomesMap>;
+
+function computeAllGuideProfitOutcomes(
+  slugs: string[],
+  priceMaps: PriceMapsByCity,
+): GuideProfitOutcomesByCity {
+  const result: GuideProfitOutcomesByCity = {};
+  for (const city of Object.keys(priceMaps)) {
+    const prices = priceMaps[city as MarketCityId];
+    const cityOutcomes: GuideProfitOutcomesMap = {};
+    for (const slug of slugs) {
+      cityOutcomes[slug] = computeGuideProfitOutcomes(slug, prices);
+    }
+    result[city] = cityOutcomes;
+  }
+  return result;
+}
+
 /** Profit ranges per market city for list pages and the city selector. */
 export async function fetchAllGuidesProfitRangesByCity(): Promise<
   GuideProfitRangesByCity
 > {
+  const { ranges } = await fetchAllGuidesMarketDataByCity();
+  return ranges;
+}
+
+export async function fetchAllGuidesMarketDataByCity(): Promise<{
+  ranges: GuideProfitRangesByCity;
+  outcomes: GuideProfitOutcomesByCity;
+}> {
   const slugs = Object.keys(guideEconomicsBySlug);
   const allItemIds = new Set<string>();
 
@@ -270,7 +339,10 @@ export async function fetchAllGuidesProfitRangesByCity(): Promise<
   }
 
   const priceMaps = buildEstimatedPriceMapsByCity([...allItemIds]);
-  return computeAllGuideProfitRanges(slugs, priceMaps);
+  return {
+    ranges: computeAllGuideProfitRanges(slugs, priceMaps),
+    outcomes: computeAllGuideProfitOutcomes(slugs, priceMaps),
+  };
 }
 
 const CONSUMABLE_IDS = new Set([
@@ -428,10 +500,10 @@ export function computeLoadoutPricing(
   return { lines, gearTotal, consumableTotal, total };
 }
 
-export const PREMIUM_LISTING_TAX_RATE = 0.065;
+export { PREMIUM_LISTING_TAX_RATE };
 
 export const ESTIMATED_PRICES_NOTE =
-  "Estimated snapshot prices. Station fees not included. After-tax line uses ~6.5% Premium listing tax.";
+  "Estimated snapshot prices. Station fees not included. Toggle Premium seller for listing tax rate.";
 
 export function marketCityLocationNote(_city: MarketCityId): string {
   return ESTIMATED_PRICES_NOTE;
@@ -441,6 +513,7 @@ export function computeHourlyEconomics(
   economics: GuideEconomics,
   prices: PriceMap,
   marketCity: MarketCityId = AVERAGE_MARKET_CITY_ID,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): HourlyEconomicsResult {
   const output = economics.hourlyOutput.map((item) =>
     priceLine(item, item.quantity, prices, item.side ?? "sell"),
@@ -465,7 +538,7 @@ export function computeHourlyEconomics(
 
   const marketTaxTotal =
     outputTotal != null
-      ? roundSilver(outputTotal * PREMIUM_LISTING_TAX_RATE)
+      ? roundSilver(outputTotal * listingTaxRate)
       : null;
   const netAfterTax =
     netTotal != null && marketTaxTotal != null
