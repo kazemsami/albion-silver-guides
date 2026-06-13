@@ -42,13 +42,6 @@ export function absoluteUrl(path: string): string {
   return `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export const defaultOgImage = {
-  url: "/icon.png",
-  width: 512,
-  height: 512,
-  alt: `${siteName}, Albion Online money making guides`,
-};
-
 export function createPageMetadata({
   title,
   description,
@@ -79,13 +72,11 @@ export function createPageMetadata({
       title: pageTitle,
       description: pageDescription,
       url,
-      images: [defaultOgImage],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: pageTitle,
       description: pageDescription,
-      images: [defaultOgImage.url],
     },
     ...(noIndex
       ? {

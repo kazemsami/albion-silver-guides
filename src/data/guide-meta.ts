@@ -24,6 +24,6 @@ export const guideRiskProfileBySlug: Record<string, GuideRiskProfile> = {
   "abyssal-depths-farming": "rng-heavy",
   "high-tier-group-tracking": "rng-heavy",
   "ava-roads-fishing": "rng-heavy",
-  "laborer-passive-income": "beginner-safe",
+  "laborer-passive-income": "safe-passive",
   "potions-crafting-bulk": "rng-heavy",
 };

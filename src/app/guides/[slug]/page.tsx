@@ -24,7 +24,7 @@ import { AvaRoadsFishingCalculator } from "@/components/AvaRoadsFishingCalculato
 import { AbyssalProfitCalculator } from "@/components/AbyssalProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
-import { guideHowToJsonLd } from "@/lib/structured-data";
+import { breadcrumbJsonLd, guideArticleJsonLd } from "@/lib/structured-data";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -78,7 +78,20 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <JsonLd data={guideHowToJsonLd(guide)} />
+      <JsonLd
+        data={[
+          guideArticleJsonLd(guide),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Guides", path: "/guides" },
+            {
+              name: categoryLabels[guide.category],
+              path: `/guides?category=${guide.category}`,
+            },
+            { name: guide.title, path: `/guides/${guide.slug}` },
+          ]),
+        ]}
+      />
       <nav aria-label="Breadcrumb" className="text-sm text-parchment/45">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>

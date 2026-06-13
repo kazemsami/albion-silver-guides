@@ -7,7 +7,6 @@ import { FeedbackProvider } from "@/components/FeedbackDialog";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { ThemeScript } from "@/components/ThemeScript";
 import {
-  defaultOgImage,
   siteDescription,
   siteKeywords,
   siteName,
@@ -46,13 +45,11 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     url: siteUrl,
-    images: [defaultOgImage],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: [defaultOgImage.url],
   },
   robots: {
     index: true,

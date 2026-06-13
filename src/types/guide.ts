@@ -15,8 +15,8 @@ export type ZoneType = "safe" | "dangerous";
 /** Whether the guide has been reviewed against sources or test logs. */
 export type GuideVerificationStatus = "reviewed" | "needs-review";
 
-/** Beginner-safe vs high variance / full-loot / RNG-heavy content. */
-export type GuideRiskProfile = "beginner-safe" | "rng-heavy";
+/** Beginner-safe vs passive income vs high variance / full-loot / RNG-heavy content. */
+export type GuideRiskProfile = "beginner-safe" | "safe-passive" | "rng-heavy";
 
 export interface GuideReviewEvidence {
   runs?: number;
@@ -271,5 +271,6 @@ export const verificationStatusDescriptions: Record<
 
 export const riskProfileLabels: Record<GuideRiskProfile, string> = {
   "beginner-safe": "Beginner friendly",
+  "safe-passive": "Safe / Passive",
   "rng-heavy": "Risk / RNG heavy",
 };

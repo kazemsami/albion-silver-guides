@@ -4,6 +4,7 @@ import { riskProfileLabels } from "@/types/guide";
 const riskProfileColors: Record<GuideRiskProfile, string> = {
   "beginner-safe":
     "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
+  "safe-passive": "text-sky-400 bg-sky-400/10 border-sky-400/30",
   "rng-heavy": "text-orange-400 bg-orange-400/10 border-orange-400/30",
 };
 

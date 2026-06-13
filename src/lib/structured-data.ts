@@ -28,18 +28,43 @@ export function guideListJsonLd(guides: Guide[]) {
   };
 }
 
-export function guideHowToJsonLd(guide: Guide) {
+export function guideArticleJsonLd(guide: Guide) {
+  const url = absoluteUrl(`/guides/${guide.slug}`);
+  const published = guide.reliability.lastUpdated;
+
   return {
     "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: guide.title,
+    "@type": "Article",
+    headline: guide.title,
     description: guide.description,
-    url: absoluteUrl(`/guides/${guide.slug}`),
+    url,
+    mainEntityOfPage: url,
     inLanguage: "en-US",
-    step: guide.steps.map((text, index) => ({
-      "@type": "HowToStep",
+    datePublished: published,
+    dateModified: published,
+    image: absoluteUrl("/opengraph-image"),
+    author: {
+      "@type": "Organization",
+      name: siteName,
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteName,
+      url: siteUrl,
+    },
+  };
+}
+
+export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
       position: index + 1,
-      text,
+      name: item.name,
+      item: absoluteUrl(item.path),
     })),
   };
 }
