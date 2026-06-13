@@ -7,7 +7,9 @@ const CRAFTING_RETURN = 6.6;
 /** T8 house + T7 mercenary journal at 150%, fixed silver loot per job. */
 const MERCENARY_SILVER = 6303;
 
-const BASE_LABORERS = 10;
+const BASE_HOUSES = 10;
+/** Each T8 laborer house holds three laborers. */
+export const LABORERS_PER_HOUSE = 3;
 const HOURS_PER_JOB = 22;
 
 export interface LaborerOutputMixItem {
@@ -229,7 +231,7 @@ export function getLaborerSpecialty(id: string): LaborerSpecialty {
   );
 }
 
-function scaleLaborerCount(quantity: number, multiplier: number): number {
+function scaleHouseCount(quantity: number, multiplier: number): number {
   const scaled = quantity * multiplier;
   if (scaled < 1) {
     return Math.round(scaled * 100) / 100;
@@ -237,12 +239,16 @@ function scaleLaborerCount(quantity: number, multiplier: number): number {
   return Math.max(1, Math.round(scaled));
 }
 
+export function houseCountForTier(tier: SkillTier): number {
+  return scaleHouseCount(BASE_HOUSES, tier.outputMultiplier);
+}
+
 export function laborerCountForTier(tier: SkillTier): number {
-  return scaleLaborerCount(BASE_LABORERS, tier.outputMultiplier);
+  return houseCountForTier(tier) * LABORERS_PER_HOUSE;
 }
 
 function jobsPerHourForTier(tier: SkillTier): number {
-  const laborers = scaleLaborerCount(BASE_LABORERS, tier.outputMultiplier);
+  const laborers = laborerCountForTier(tier);
   return Math.round((laborers / HOURS_PER_JOB) * 100) / 100;
 }
 
@@ -312,6 +318,7 @@ export function buildLaborerLoadout(
   specialty: LaborerSpecialty,
   tier: SkillTier,
 ): EquipmentLoadout {
+  const houses = houseCountForTier(tier);
   const laborers = laborerCountForTier(tier);
   const tables = Math.ceil(laborers / 4);
 
@@ -320,7 +327,7 @@ export function buildLaborerLoadout(
       id: "T8_FURNITUREITEM_BED",
       name: "Elder's Bed",
       quantity: laborers,
-      hint: "One T8 bed per laborer (one per house)",
+      hint: "One T8 bed per laborer (3 per house)",
     },
     {
       id: "T8_FURNITUREITEM_TABLE",
@@ -354,10 +361,10 @@ export function buildLaborerLoadout(
 
   return {
     title: `All ${specialty.label}, ${tier.label}`,
-    description: `Every T8 laborer is a ${specialty.laborerName} on T7 journals at 150% yield. ${laborers} T8 houses on the island.`,
+    description: `Every T8 laborer is a ${specialty.laborerName} on T7 journals at 150% yield. ${houses} T8 houses (${laborers} laborers, ${LABORERS_PER_HOUSE} per house).`,
     slots: {},
     inventory,
-    houseCount: laborers,
+    houseCount: houses,
   };
 }
 

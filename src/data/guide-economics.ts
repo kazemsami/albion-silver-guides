@@ -495,7 +495,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "grandmaster",
   },
   "laborer-passive-income": {
-    /** T8 houses, T7 journals, 150% yield, all laborers same specialty; baseline 10 laborers, 22h per job. */
+    /** T8 houses, T7 journals, 150% yield, all laborers same specialty; baseline 10 houses (30 laborers), 22h per job. */
     ...buildLaborerHourlyEconomics(
       getLaborerSpecialty(DEFAULT_LABORER_SPECIALTY_ID),
       SKILL_TIERS.laborerMid,

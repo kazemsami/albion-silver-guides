@@ -553,8 +553,8 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
   },
   "laborer-passive-income": {
     small: {
-      title: "T8 Island (4-6 laborers)",
-      description: "T8 houses with T8 furniture processing T7 journals at 150% yield (~5 jobs per 22h cycle).",
+      title: "T8 Island (4-6 houses)",
+      description: "12-18 laborers (3 per house), T7 journals at 150% yield (~15 jobs per 22h cycle).",
       slots: {},
       inventory: [
         { id: "T8_FURNITUREITEM_BED", name: "Elder's Bed", hint: "One T8 bed per laborer" },
@@ -567,8 +567,8 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       ],
     },
     medium: {
-      title: "T8 Island (8-12 laborers)",
-      description: "Full T8 setup on T7 journals (~10 jobs per 22h at 150% yield, ~58 T7 resources each).",
+      title: "T8 Island (8-12 houses)",
+      description: "24-36 laborers (3 per house) on T7 journals (~30 jobs per 22h at 150% yield, ~58 T7 resources each).",
       slots: {},
       inventory: [
         { id: "T8_FURNITUREITEM_BED", name: "Elder's Bed", hint: "One T8 bed per laborer" },
@@ -582,8 +582,8 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       ],
     },
     large: {
-      title: "T8 Island (16 laborers)",
-      description: "Maxed level-6 island: 16 T8 laborers on T7 journals, 150% yield, 16 jobs per 22h cycle.",
+      title: "T8 Island (16 houses)",
+      description: "Maxed level-6 island: 48 laborers (3 per house) on T7 journals, 150% yield, 48 jobs per 22h cycle.",
       slots: {},
       inventory: [
         { id: "T8_FURNITUREITEM_BED", name: "Elder's Bed", hint: "One T8 bed per laborer" },

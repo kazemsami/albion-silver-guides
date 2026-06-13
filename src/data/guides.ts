@@ -874,19 +874,19 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     zoneType: "safe",
     silverPerHour: { min: 5_000, max: 35_000 },
     silverByLevel: [
-      { label: "4-6 T8 laborers (per 22h)", min: 40_000, max: 150_000 },
-      { label: "8-12 T8 laborers (per 22h)", min: 80_000, max: 300_000 },
-      { label: "16 T8 laborers, T7 journals (per 22h)", min: 150_000, max: 500_000 },
+      { label: "4-6 T8 houses (per 22h)", min: 120_000, max: 450_000 },
+      { label: "8-12 T8 houses (per 22h)", min: 240_000, max: 900_000 },
+      { label: "16 T8 houses, T7 journals (per 22h)", min: 450_000, max: 1_500_000 },
     ],
     requirements: [
-      "Level 6 personal island with T8 laborer houses (one laborer per house)",
+      "Level 6 personal island with T8 laborer houses (three laborers per house, up to 16 houses)",
       "T8 bed per laborer and T8 table per four laborers (same tier as the laborer fills minimum happiness)",
       "T7 full journals, fill while gathering T7/T8 or buy filled journals on the market",
       "Optional: T8 general + specialty trophies if you later run T8 journals or trophy journals",
     ],
     steps: [
-      "Upgrade island houses to T8 and hire T8 laborers of the matching specialty (prospector, lumberjack, cropper, etc.). Guild halls only sell T2 laborers; buy higher tiers on the market or level them with jobs.",
-      "Furnish each T8 house: one T8 bed per laborer and one T8 table per four laborers. Matching-tier furniture already returns 150% yield on T7 journals. Happiness rises over time once furniture is placed.",
+      "Upgrade island houses to T8 and hire T8 laborers of the matching specialty (prospector, lumberjack, cropper, etc.). Each house holds three laborers. Guild halls only sell T2 laborers; buy higher tiers on the market or level them with jobs.",
+      "Furnish each T8 house: one T8 bed per laborer and one T8 table per four laborers across the island. Matching-tier furniture already returns 150% yield on T7 journals. Happiness rises over time once furniture is placed.",
       "Wait 30 minutes after hiring a new laborer before they can accept their first journal job (you can still buy empty journals from them immediately).",
       "Carry empty journals while you gather, craft, or kill mobs. Only base fame counts (premium fame bonus does not fill journals).",
       "Hand a full T7 journal to a T8 laborer of the same type. Each job takes 22 hours. A T8 laborer cannot take a journal above its own tier.",
@@ -895,6 +895,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     ],
     tips: [
       "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - listing tax on sells. Filling journals yourself removes the buy cost and is the most profitable approach.",
+      "Each T8 laborer house holds three laborers. Island tiers in the calculator count houses, not individual laborers.",
       "Breakeven island spend: compare total T8 house + furniture cost to (profit per journal × journals per 22h cycle × 30). A full island often pays back over weeks, not hours.",
       "T8 bed + T8 table on a T8 laborer already hits 150% yield on T7 journals (wiki cap: min(150%, happiness ÷ 2)). Extra trophies mainly help T8 journals or trophy journal jobs.",
       "Gathering laborers return ~58 unrefined T7 resources per journal at 150%. Crafting laborers return ~6.6 refined mats total, split across bars/planks/cloth/leather by specialty (matches Albion Online Grind weights).",
