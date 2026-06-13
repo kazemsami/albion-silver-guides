@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useGuidePriceMap } from "@/components/MarketCityProvider";
 import type { MarketCityId } from "@/lib/market-cities";
 import type {
   GuideEconomics,
-  SerializedPricesByCity,
+  GuideMarketPrices,
   SkillTier,
   TierLoadoutBundle,
 } from "@/types/guide";
@@ -26,9 +26,7 @@ import {
   computeHourlyEconomics,
   computeLoadoutPricing,
   computeProfitRange,
-  deserializePriceMap,
   enrichLoadoutWithQuantities,
-  pickSerializedPrices,
   scaleGuideEconomics,
 } from "@/lib/guide-economics";
 import {
@@ -39,7 +37,7 @@ import {
 
 interface GuideProfitCalculatorProps {
   economics: GuideEconomics;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
   defaultMarketCity?: MarketCityId;
@@ -47,15 +45,17 @@ interface GuideProfitCalculatorProps {
 
 export function GuideProfitCalculator({
   economics,
-  pricesByCity,
+  guidePrices,
   pricedAt,
   tierLoadouts,
   defaultMarketCity,
 }: GuideProfitCalculatorProps) {
   const { marketCity, listingTaxRate, premiumSeller, gatheringYieldMultiplier } =
     useMarketCity();
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { priceMap, mapKind, useLivePrices, serializedPrices } = useGuidePriceMap(
+    guidePrices,
+    defaultMarketCity,
+  );
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [specialtyId, setSpecialtyId] = useState(
     economics.defaultLaborerSpecialtyId ?? LABORER_SPECIALTIES[0].id,
@@ -66,8 +66,6 @@ export function GuideProfitCalculator({
   const specialty = getLaborerSpecialty(specialtyId);
 
   const activeLoadout = useMemo(() => {
-    const priceMap = deserializePriceMap(prices);
-
     if (hasLaborerSpecialtyPicker) {
       const loadout = buildLaborerLoadout(specialty, tier);
       return {
@@ -100,14 +98,13 @@ export function GuideProfitCalculator({
     tier,
     tierId,
     tierLoadouts,
-    prices,
+    priceMap,
     gatheringYieldMultiplier,
   ]);
 
   const yieldOptions = { gatheringYieldMultiplier };
 
   const result = useMemo(() => {
-    const priceMap = deserializePriceMap(prices);
     const scaled = hasLaborerSpecialtyPicker
       ? buildLaborerHourlyEconomics(specialty, tier)
       : scaleGuideEconomics(economics, tier, yieldOptions);
@@ -116,27 +113,28 @@ export function GuideProfitCalculator({
       priceMap,
       marketCity,
       listingTaxRate,
+      mapKind,
     );
   }, [
     economics,
     gatheringYieldMultiplier,
     hasLaborerSpecialtyPicker,
     listingTaxRate,
+    mapKind,
     marketCity,
-    prices,
+    priceMap,
     specialty,
     tier,
   ]);
 
   const profitRange = useMemo(() => {
-    const priceMap = deserializePriceMap(prices);
     return computeProfitRange(
       economics,
       priceMap,
       listingTaxRate,
       gatheringYieldMultiplier,
     );
-  }, [economics, gatheringYieldMultiplier, listingTaxRate, prices]);
+  }, [economics, gatheringYieldMultiplier, listingTaxRate, priceMap]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -245,7 +243,7 @@ export function GuideProfitCalculator({
               loadout={activeLoadout.loadout}
               variant={activeLoadout.variant}
               pricing={activeLoadout.pricing}
-              prices={prices}
+              prices={serializedPrices}
             />
           </div>
         </section>
@@ -261,7 +259,11 @@ export function GuideProfitCalculator({
             {hasLaborerSpecialtyPicker ? `${specialty.label}, ` : ""}
             {tier.label}
           </span>{" "}
-          yield. Estimated snapshot prices. Updated {formattedAt}.
+          yield.{" "}
+          {useLivePrices
+            ? "Live royal market prices (Albion Online Data)."
+            : "Site snapshot averages."}{" "}
+          Updated {formattedAt}.
         </p>
 
         <EconomicsTable

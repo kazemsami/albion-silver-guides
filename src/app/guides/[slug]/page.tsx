@@ -71,8 +71,6 @@ export default async function GuidePage({ params }: GuidePageProps) {
     fetchGuidePricing(slug, economicsConfig),
     fetchAllGuidesMarketDataByCity(),
   ]);
-  const { ranges: profitRangesByCity, outcomes: profitOutcomesByPremium } =
-    marketData;
 
   const related = guides
     .filter((g) => g.category === guide.category && g.slug !== guide.slug)
@@ -142,17 +140,17 @@ export default async function GuidePage({ params }: GuidePageProps) {
         </p>
       </div>
 
-      {economicsConfig && marketPricing.serializedPricesByCity && (
+      {economicsConfig && marketPricing.guidePrices && (
         <>
           <GuideCalculatorOutcomes
             guideSlug={slug}
             defaultMarketCity={guide.defaultMarketCity}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
           />
           {slug === "high-tier-group-tracking" ? (
           <TrackingProfitCalculator
             economics={economicsConfig}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
             pricedAt={
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
@@ -162,7 +160,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         ) : slug === "potions-crafting-bulk" ? (
           <PotionProfitCalculator
             economics={economicsConfig}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
             pricedAt={
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
@@ -172,7 +170,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         ) : slug === "ava-roads-fishing" ? (
           <AvaRoadsFishingCalculator
             economics={economicsConfig}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
             pricedAt={
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
@@ -182,7 +180,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         ) : slug === "abyssal-depths-farming" ? (
           <AbyssalProfitCalculator
             economics={economicsConfig}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
             pricedAt={
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
@@ -192,7 +190,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         ) : (
           <GuideProfitCalculator
             economics={economicsConfig}
-            pricesByCity={marketPricing.serializedPricesByCity}
+            guidePrices={marketPricing.guidePrices}
             pricedAt={
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
@@ -278,7 +276,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
       )}
 
       {related.length > 0 && (
-        <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} profitOutcomesByPremium={profitOutcomesByPremium} />
+        <RelatedGuides guides={related} marketData={marketData} />
       )}
 
       <GuideComments slug={guide.slug} />

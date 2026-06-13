@@ -4,11 +4,19 @@ import { MARKET_CITY_OPTIONS } from "@/lib/market-cities";
 import { useMarketCity } from "@/components/MarketCityProvider";
 
 export function MarketCitySelect({ compact = false }: { compact?: boolean }) {
-  const { marketCity, setMarketCity } = useMarketCity();
+  const { marketCity, setMarketCity, useLivePrices } = useMarketCity();
+  const cityPickerEnabled = useLivePrices;
 
   return (
     <label
-      className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"}`}
+      className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"} ${
+        cityPickerEnabled ? "" : "cursor-not-allowed opacity-50"
+      }`}
+      title={
+        cityPickerEnabled
+          ? "Royal city for live market prices"
+          : "Enable live prices to pick a market city"
+      }
     >
       <span className="sr-only">Market city for prices</span>
       {!compact && (
@@ -19,11 +27,13 @@ export function MarketCitySelect({ compact = false }: { compact?: boolean }) {
       <span className="ui-select-wrap">
         <select
           value={marketCity}
+          disabled={!cityPickerEnabled}
           onChange={(event) =>
             setMarketCity(event.target.value as typeof marketCity)
           }
           aria-label="Market city for prices"
-          className={`ui-control ui-select w-full ${
+          aria-disabled={!cityPickerEnabled}
+          className={`ui-control ui-select w-full disabled:cursor-not-allowed disabled:opacity-70 ${
             compact
               ? "min-w-[8.25rem] max-w-[9.5rem] xl:min-w-[10.5rem] xl:max-w-none"
               : "max-w-[11rem] sm:max-w-none sm:min-w-[10.5rem]"

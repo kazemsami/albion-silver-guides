@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useGuidePriceMap } from "@/components/MarketCityProvider";
 import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
@@ -25,15 +25,10 @@ import {
   computeAbyssalEconomics,
   computeAbyssalProfitRange,
 } from "@/lib/abyssal-economics";
-import {
-  computeLoadoutPricing,
-  deserializePriceMap,
-  enrichLoadoutWithQuantities,
-  pickSerializedPrices,
-} from "@/lib/guide-economics";
+import { computeLoadoutPricing, enrichLoadoutWithQuantities } from "@/lib/guide-economics";
 import type {
   GuideEconomics,
-  SerializedPricesByCity,
+  GuideMarketPrices,
   TierLoadoutBundle,
 } from "@/types/guide";
 import {
@@ -45,7 +40,7 @@ import {
 
 interface AbyssalProfitCalculatorProps {
   economics: GuideEconomics;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
   defaultMarketCity?: MarketCityId;
@@ -53,14 +48,16 @@ interface AbyssalProfitCalculatorProps {
 
 export function AbyssalProfitCalculator({
   economics,
-  pricesByCity,
+  guidePrices,
   pricedAt,
   tierLoadouts,
   defaultMarketCity,
 }: AbyssalProfitCalculatorProps) {
-  const { listingTaxRate, premiumSeller } = useMarketCity();
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { listingTaxRate, premiumSeller, useLivePrices } = useMarketCity();
+  const { priceMap, mapKind, serializedPrices } = useGuidePriceMap(
+    guidePrices,
+    defaultMarketCity,
+  );
   const [scenarioId, setScenarioId] = useState<AbyssalScenarioId>("floor2");
   const [teamSizeId, setTeamSizeId] = useState<AbyssalTeamSizeId>("duo");
   const [runDurationMinutes, setRunDurationMinutes] =
@@ -72,7 +69,6 @@ export function AbyssalProfitCalculator({
   const [includeMercJournal, setIncludeMercJournal] = useState(false);
 
   const scenario = getAbyssalScenario(scenarioId);
-  const priceMap = useMemo(() => deserializePriceMap(prices), [prices]);
 
   useEffect(() => {
     setWinRate(scenario.defaultWinRate);
@@ -88,6 +84,7 @@ export function AbyssalProfitCalculator({
         runDurationMinutes,
         includePvpLoot,
         includeMercJournal,
+        priceMapKind: mapKind,
       }, listingTaxRate),
     [
       priceMap,
@@ -98,6 +95,7 @@ export function AbyssalProfitCalculator({
       includePvpLoot,
       includeMercJournal,
       listingTaxRate,
+      mapKind,
     ],
   );
 
@@ -368,7 +366,7 @@ export function AbyssalProfitCalculator({
               loadout={activeLoadout.loadout}
               variant={loadoutVariantForTier(scenario.tierId)}
               pricing={activeLoadout.pricing}
-              prices={prices}
+              prices={serializedPrices}
             />
           </div>
         </section>
@@ -380,7 +378,11 @@ export function AbyssalProfitCalculator({
         </h2>
         <p className="mt-2 text-sm text-parchment/50">
           {result.scenarioLabel}, {result.teamLabel}, {runDurationMinutes} min
-          run, estimated snapshot prices. Updated {formattedAt}.
+          run,{" "}
+          {useLivePrices
+            ? "live royal market prices (Albion Online Data)."
+            : "site snapshot averages."}{" "}
+          Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">

@@ -2,45 +2,55 @@
 
 import { GuideCard } from "@/components/GuideCard";
 import {
-  useMarketCity,
+  useGuideProfitOutcomes,
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuideProfitOutcomesByPremium, GuideProfitRangesByCity } from "@/lib/guide-economics";
-import { pickGuideProfitOutcomes } from "@/lib/guide-economics";
-import { effectiveMarketCity } from "@/lib/guide-market-city";
+import type { GuideProfitRange, GuidesListMarketData } from "@/lib/guide-economics";
+
+function FeaturedGuideCard({
+  guide,
+  marketData,
+  profitRange,
+}: {
+  guide: Guide;
+  marketData: GuidesListMarketData;
+  profitRange?: GuideProfitRange | null;
+}) {
+  const outcomes = useGuideProfitOutcomes(
+    marketData,
+    guide.slug,
+    guide.defaultMarketCity,
+  );
+
+  return (
+    <GuideCard
+      guide={guide}
+      profitRange={profitRange}
+      profitOutcomes={outcomes}
+    />
+  );
+}
 
 export function FeaturedGuidesGrid({
   guides,
-  profitRangesByCity,
-  profitOutcomesByPremium,
+  marketData,
 }: {
   guides: Guide[];
-  profitRangesByCity: GuideProfitRangesByCity;
-  profitOutcomesByPremium: GuideProfitOutcomesByPremium;
+  marketData: GuidesListMarketData;
 }) {
-  const profitRanges = useProfitRangesForCity(profitRangesByCity);
-  const { marketCity, premiumSeller } = useMarketCity();
+  const profitRanges = useProfitRangesForCity(marketData);
 
   return (
     <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {guides.map((guide) => {
-        const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
-        const outcomes = pickGuideProfitOutcomes(
-          profitOutcomesByPremium,
-          premiumSeller,
-          city,
-          guide.slug,
-        );
-        return (
-        <GuideCard
+      {guides.map((guide) => (
+        <FeaturedGuideCard
           key={guide.slug}
           guide={guide}
+          marketData={marketData}
           profitRange={profitRanges[guide.slug]}
-          profitOutcomes={outcomes}
         />
-        );
-      })}
+      ))}
     </div>
   );
 }

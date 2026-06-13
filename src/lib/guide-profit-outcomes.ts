@@ -11,7 +11,7 @@ import {
 import { DEFAULT_ABYSSAL_RUN_DURATION } from "@/data/abyssal-economics";
 import { DEFAULT_POTION_DEFAULTS } from "@/data/potion-economics";
 import type { GuideEconomics, GuideProfitOutcomes } from "@/types/guide";
-import type { PriceMap } from "@/lib/albion-prices";
+import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import {
   computeHourlyEconomics,
   scaleGuideEconomics,
@@ -64,6 +64,7 @@ function computeGenericOutcomes(
   prices: PriceMap,
   listingTaxRate: number,
   gatheringYieldMultiplier: number,
+  mapKind: PriceMapKind = "snapshot",
 ): GuideProfitOutcomes {
   if (economics.defaultLaborerSpecialtyId) {
     const specialty = getLaborerSpecialty(economics.defaultLaborerSpecialtyId);
@@ -76,6 +77,7 @@ function computeGenericOutcomes(
           prices,
           undefined,
           listingTaxRate,
+          mapKind,
         ).netAfterTax,
       };
     });
@@ -90,6 +92,7 @@ function computeGenericOutcomes(
       prices,
       undefined,
       listingTaxRate,
+      mapKind,
     ).netAfterTax,
   }));
   return outcomesFromTierNets(nets, economics.defaultSkillTierId);
@@ -101,9 +104,11 @@ export function computeGuideProfitOutcomes(
   options?: {
     listingTaxRate?: number;
     premiumSeller?: boolean;
+    priceMapKind?: PriceMapKind;
   },
 ): GuideProfitOutcomes {
   const listingTaxRate = options?.listingTaxRate ?? PREMIUM_LISTING_TAX_RATE;
+  const priceMapKind = options?.priceMapKind ?? "snapshot";
   const gatheringYieldMultiplier = getGatheringYieldMultiplier(
     options?.premiumSeller ?? true,
   );
@@ -117,6 +122,7 @@ export function computeGuideProfitOutcomes(
         scenarioId: "expected",
         groupSize: DEFAULT_GROUP_SIZE,
         risk: DEFAULT_TRACKING_RISK,
+        priceMapKind,
       },
       listingTaxRate,
     ).netPerPlayer;
@@ -127,6 +133,7 @@ export function computeGuideProfitOutcomes(
         scenarioId: "expected",
         groupSize: DEFAULT_GROUP_SIZE,
         risk: DEFAULT_TRACKING_RISK,
+        priceMapKind,
       },
       listingTaxRate,
     ).netPerPlayer;
@@ -137,6 +144,7 @@ export function computeGuideProfitOutcomes(
         scenarioId: "good",
         groupSize: DEFAULT_GROUP_SIZE,
         risk: DEFAULT_TRACKING_RISK,
+        priceMapKind,
       },
       listingTaxRate,
     ).netPerPlayer;
@@ -147,6 +155,7 @@ export function computeGuideProfitOutcomes(
         scenarioId: "lucky",
         groupSize: DEFAULT_GROUP_SIZE,
         risk: DEFAULT_TRACKING_RISK,
+        priceMapKind,
       },
       listingTaxRate,
     ).netPerPlayer;
@@ -162,20 +171,20 @@ export function computeGuideProfitOutcomes(
   if (slug === "ava-roads-fishing") {
     const conservative = computeAvaRoadsEconomics(
       prices,
-      { presetId: "safe", snapperViewId: "expected" },
+      { presetId: "safe", snapperViewId: "expected", priceMapKind },
       listingTaxRate,
       gatheringYieldMultiplier,
     ).netAfterTaxAndDeath;
     const median = computeAvaRoadsEconomics(
       prices,
-      { presetId: "normal", snapperViewId: "expected" },
+      { presetId: "normal", snapperViewId: "expected", priceMapKind },
       listingTaxRate,
       gatheringYieldMultiplier,
     ).netAfterTaxAndDeath;
     const expected = median;
     const highRoll = computeAvaRoadsEconomics(
       prices,
-      { presetId: "greedy", snapperViewId: "lucky" },
+      { presetId: "greedy", snapperViewId: "lucky", priceMapKind },
       listingTaxRate,
       gatheringYieldMultiplier,
     ).netAfterTaxAndDeath;
@@ -198,6 +207,7 @@ export function computeGuideProfitOutcomes(
         runDurationMinutes: 20,
         includePvpLoot: false,
         includeMercJournal: false,
+        priceMapKind,
       },
       listingTaxRate,
     ).netAfterTaxAndDeath;
@@ -210,6 +220,7 @@ export function computeGuideProfitOutcomes(
         runDurationMinutes: DEFAULT_ABYSSAL_RUN_DURATION,
         includePvpLoot: false,
         includeMercJournal: false,
+        priceMapKind,
       },
       listingTaxRate,
     ).netAfterTaxAndDeath;
@@ -223,6 +234,7 @@ export function computeGuideProfitOutcomes(
         runDurationMinutes: 45,
         includePvpLoot: true,
         includeMercJournal: false,
+        priceMapKind,
       },
       listingTaxRate,
     ).netAfterTaxAndDeath;
@@ -245,6 +257,7 @@ export function computeGuideProfitOutcomes(
         focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
+        priceMapKind,
       },
       listingTaxRate,
     ).profitPerTenThousandFocus;
@@ -257,6 +270,7 @@ export function computeGuideProfitOutcomes(
         focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
+        priceMapKind,
       },
       listingTaxRate,
     ).profitPerTenThousandFocus;
@@ -270,6 +284,7 @@ export function computeGuideProfitOutcomes(
         focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
+        priceMapKind,
       },
       listingTaxRate,
     ).profitPerTenThousandFocus;
@@ -292,5 +307,6 @@ export function computeGuideProfitOutcomes(
     prices,
     listingTaxRate,
     gatheringYieldMultiplier,
+    priceMapKind,
   );
 }

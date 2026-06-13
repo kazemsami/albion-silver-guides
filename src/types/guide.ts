@@ -148,6 +148,12 @@ export type SerializedPriceMap = Record<
 /** Per-city price maps keyed by market city id (includes "average"). */
 export type SerializedPricesByCity = Record<string, SerializedPriceMap>;
 
+/** Estimated snapshot prices plus optional live API prices per city. */
+export interface GuideMarketPrices {
+  estimatedByCity: SerializedPricesByCity;
+  liveByCity: SerializedPricesByCity;
+}
+
 export interface PricedLine {
   id: string;
   name: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useGuidePriceMap } from "@/components/MarketCityProvider";
 import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
@@ -16,10 +16,6 @@ import {
   type PotionRecipeId,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
-import {
-  deserializePriceMap,
-  pickSerializedPrices,
-} from "@/lib/guide-economics";
 import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computePotionEconomics,
@@ -28,8 +24,8 @@ import {
 } from "@/lib/potion-economics";
 import type {
   GuideEconomics,
+  GuideMarketPrices,
   PricedLine,
-  SerializedPricesByCity,
   TierLoadoutBundle,
 } from "@/types/guide";
 import {
@@ -42,7 +38,7 @@ import {
 
 interface PotionProfitCalculatorProps {
   economics: GuideEconomics;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
   defaultMarketCity?: MarketCityId;
@@ -61,13 +57,12 @@ const FOCUS_MODE_META: Record<PotionFocusMode, { label: string; note: string }> 
   };
 
 export function PotionProfitCalculator({
-  pricesByCity,
+  guidePrices,
   pricedAt,
   defaultMarketCity,
 }: PotionProfitCalculatorProps) {
-  const { listingTaxRate, premiumSeller } = useMarketCity();
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { listingTaxRate, premiumSeller, useLivePrices } = useMarketCity();
+  const { priceMap, mapKind } = useGuidePriceMap(guidePrices, defaultMarketCity);
   const [recipeId, setRecipeId] = useState<PotionRecipeId>("heal");
   const [sellThroughId, setSellThroughId] =
     useState<PotionSellThroughId>("instant");
@@ -76,8 +71,6 @@ export function PotionProfitCalculator({
   const [defaults, setDefaults] = useState(DEFAULT_POTION_DEFAULTS);
 
   const recipe = getPotionRecipe(recipeId);
-
-  const priceMap = useMemo(() => deserializePriceMap(prices), [prices]);
 
   const result = useMemo(
     () =>
@@ -90,6 +83,7 @@ export function PotionProfitCalculator({
           focusMode,
           valueFocus,
           defaults,
+          priceMapKind: mapKind,
         },
         listingTaxRate,
       ),
@@ -101,6 +95,7 @@ export function PotionProfitCalculator({
       valueFocus,
       defaults,
       listingTaxRate,
+      mapKind,
     ],
   );
 
@@ -324,8 +319,11 @@ export function PotionProfitCalculator({
               per 10,000 focus.
             </>
           )}{" "}
-          {focusMeta.label}. Lab craft silver: {craftSilverLabel}. Estimated
-          snapshot prices. Updated {formattedAt}.
+          {focusMeta.label}. Lab craft silver: {craftSilverLabel}.{" "}
+          {useLivePrices
+            ? "Live royal market prices (Albion Online Data)."
+            : "Site snapshot averages."}{" "}
+          Updated {formattedAt}.
         </p>
 
         <BatchBreakdown

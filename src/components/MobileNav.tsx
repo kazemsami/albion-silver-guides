@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MarketCitySelect } from "@/components/MarketCitySelect";
+import { LivePricesToggle } from "@/components/LivePricesToggle";
 import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { useFeedback } from "@/components/FeedbackDialog";
 import { paypalDonateUrl } from "@/lib/site";
@@ -73,6 +74,7 @@ export function MobileNav() {
             className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gold/20 bg-obsidian-light p-2 shadow-xl"
           >
             <div className="space-y-2.5 border-b border-gold/10 px-2 py-2.5">
+              <LivePricesToggle />
               <MarketCitySelect />
               <PremiumTaxToggle />
             </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MarketCitySelect } from "@/components/MarketCitySelect";
+import { LivePricesToggle } from "@/components/LivePricesToggle";
 import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -45,6 +46,11 @@ export function Header() {
 
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-2.5">
           <div className="hidden items-center gap-2.5 rounded-lg border border-gold/15 bg-obsidian-light/40 px-2.5 py-1.5 lg:flex">
+            <LivePricesToggle />
+            <span
+              className="hidden h-4 w-px shrink-0 bg-gold/20 xl:block"
+              aria-hidden
+            />
             <MarketCitySelect compact />
             <span
               className="hidden h-4 w-px shrink-0 bg-gold/20 xl:block"

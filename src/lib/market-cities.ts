@@ -14,6 +14,7 @@ export const AVERAGE_MARKET_CITY_ID = "average" as const;
 export type MarketCityId = typeof AVERAGE_MARKET_CITY_ID | RoyalMarketCity;
 
 export const MARKET_CITY_STORAGE_KEY = "albion-silver-market-city";
+export const LIVE_PRICES_STORAGE_KEY = "albion-silver-live-prices";
 
 export const DEFAULT_MARKET_CITY_ID: MarketCityId = AVERAGE_MARKET_CITY_ID;
 

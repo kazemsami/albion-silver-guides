@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useMarketCity } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
 import {
   categoryLabels,
@@ -10,7 +13,7 @@ import { GuideRiskBadge } from "@/components/GuideRiskBadge";
 import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import {
   getGuideSilverDisplay,
-  hasLiveProfitRange,
+  getCardPriceSourceLabel,
 } from "@/lib/guide-display";
 import type { GuideProfitRange } from "@/lib/guide-economics";
 import type { GuideProfitOutcomes } from "@/types/guide";
@@ -35,7 +38,8 @@ export function GuideCard({
   profitRange?: GuideProfitRange | null;
   profitOutcomes?: GuideProfitOutcomes | null;
 }) {
-  const liveProfit = hasLiveProfitRange(profitRange);
+  const { useLivePrices } = useMarketCity();
+  const priceSourceLabel = getCardPriceSourceLabel(useLivePrices);
   const profitUnit =
     guide.slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
   const profitRangeLabel =
@@ -85,6 +89,7 @@ export function GuideCard({
               outcomes={profitOutcomes}
               compact
               unitLabel={profitUnit}
+              priceSourceLabel={priceSourceLabel}
             />
           </div>
         ) : (
@@ -92,7 +97,7 @@ export function GuideCard({
             {getGuideSilverDisplay(guide, profitRange)}
             <span className="font-normal text-parchment/40">
               {" "}
-              · {liveProfit ? "est." : "estimate"}
+              · {priceSourceLabel}
             </span>
           </p>
         )}

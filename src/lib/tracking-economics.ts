@@ -11,7 +11,7 @@ import {
   type TrackingScenarioId,
 } from "@/data/tracking-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
-import type { PriceMap } from "@/lib/albion-prices";
+import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
@@ -23,6 +23,7 @@ export interface TrackingComputeInputs {
   scenarioId: TrackingScenarioId;
   groupSize: number;
   risk: TrackingRiskInputs;
+  priceMapKind?: PriceMapKind;
 }
 
 export interface TrackingRemnantAssumptions {
@@ -64,8 +65,9 @@ function priceOutputLine(
   id: string,
   name: string,
   quantity: number,
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
-  const { unitPrice, priceSource } = resolveSellPrice(prices, id);
+  const { unitPrice, priceSource } = resolveSellPrice(prices, id, mapKind);
   return {
     id,
     name,
@@ -82,8 +84,9 @@ function priceInputLine(
   id: string,
   name: string,
   quantity: number,
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
-  const { unitPrice, priceSource } = resolveBuyPrice(prices, id);
+  const { unitPrice, priceSource } = resolveBuyPrice(prices, id, mapKind);
   return {
     id,
     name,
@@ -141,10 +144,11 @@ function scenarioQuantities(
 export function trackingReferenceLootScale(
   prices: PriceMap,
   tier: ReturnType<typeof getTrackingTierConfig>,
+  mapKind: PriceMapKind = "snapshot",
 ): number {
   let silverPerKill = 0;
   for (const loot of tier.averageLoot) {
-    const { unitPrice } = resolveSellPrice(prices, loot.id);
+    const { unitPrice } = resolveSellPrice(prices, loot.id, mapKind);
     if (unitPrice == null) continue;
     silverPerKill += loot.perKill * unitPrice;
   }
@@ -165,11 +169,12 @@ export function computeTrackingEconomics(
   inputs: TrackingComputeInputs,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): TrackingEconomicsResult {
+  const mapKind = inputs.priceMapKind ?? "snapshot";
   const tier = getTrackingTierConfig(inputs.tierId);
   const scenario = TRACKING_SCENARIO_META[inputs.scenarioId];
   const qty = scenarioQuantities(tier, inputs.scenarioId);
   const groupSize = Math.max(4, Math.min(8, inputs.groupSize));
-  const lootScale = trackingReferenceLootScale(prices, tier);
+  const lootScale = trackingReferenceLootScale(prices, tier, mapKind);
 
   const outputLines: PricedLine[] = tier.averageLoot.map((loot) =>
     priceOutputLine(
@@ -177,6 +182,7 @@ export function computeTrackingEconomics(
       loot.id,
       `${loot.name} (group)`,
       qty.killsPerHour * loot.perKill * qty.lootMultiplier * lootScale,
+      mapKind,
     ),
   );
 
@@ -193,6 +199,7 @@ export function computeTrackingEconomics(
         item.id,
         `${item.name} (×${groupSize} players)`,
         item.quantity * groupSize,
+        mapKind,
       ),
   );
 
@@ -201,6 +208,7 @@ export function computeTrackingEconomics(
     "T7_2H_TOOL_TRACKING",
     "Tracking toolkit wear (group)",
     TRACKING_TOOLKIT_WEAR_PER_HOUR,
+    mapKind,
   );
   consumableLines.push(toolkitLine);
 

@@ -2,36 +2,34 @@
 
 import { useMemo } from "react";
 import {
-  useEffectiveMarketCity,
+  useGuidePriceMap,
   useMarketCity,
 } from "@/components/MarketCityProvider";
 import { GuideMarketNote } from "@/components/GuideMarketNote";
 import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
-import { deserializePriceMap, pickSerializedPrices } from "@/lib/guide-economics";
-import type { SerializedPricesByCity } from "@/types/guide";
+import type { GuideMarketPrices } from "@/types/guide";
 import type { MarketCityId } from "@/lib/market-cities";
 
 export function GuideCalculatorOutcomes({
   guideSlug,
   defaultMarketCity,
-  pricesByCity,
+  guidePrices,
 }: {
   guideSlug: string;
   defaultMarketCity?: MarketCityId;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
 }) {
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { priceMap, mapKind } = useGuidePriceMap(guidePrices, defaultMarketCity);
   const { listingTaxRate, premiumSeller } = useMarketCity();
 
   const outcomes = useMemo(() => {
-    const priceMap = deserializePriceMap(prices);
     return computeGuideProfitOutcomes(guideSlug, priceMap, {
       listingTaxRate,
       premiumSeller,
+      priceMapKind: mapKind,
     });
-  }, [guideSlug, listingTaxRate, premiumSeller, prices]);
+  }, [guideSlug, listingTaxRate, mapKind, premiumSeller, priceMap]);
 
   const outcomesLabel =
     guideSlug === "potions-crafting-bulk"

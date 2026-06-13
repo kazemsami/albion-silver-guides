@@ -7,7 +7,7 @@ import {
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
-import type { PriceMap } from "@/lib/albion-prices";
+import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
@@ -15,6 +15,7 @@ import { roundSilver } from "@/lib/format";
 export interface AvaRoadsComputeInputs {
   presetId: AvaRoadsPresetId;
   snapperViewId: AvaRoadsSnapperViewId;
+  priceMapKind?: PriceMapKind;
 }
 
 export interface AvaRoadsDeathBreakdown {
@@ -70,9 +71,12 @@ function priceLine(
   name: string,
   quantity: number,
   side: "buy" | "sell",
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
   const { unitPrice, priceSource } =
-    side === "buy" ? resolveBuyPrice(prices, id) : resolveSellPrice(prices, id);
+    side === "buy"
+      ? resolveBuyPrice(prices, id, mapKind)
+      : resolveSellPrice(prices, id, mapKind);
   return {
     id,
     name,
@@ -97,6 +101,7 @@ function sumLines(lines: PricedLine[]): number | null {
 function kitReplacementCost(
   prices: PriceMap,
   preset: ReturnType<typeof getAvaRoadsPreset>,
+  mapKind: PriceMapKind = "snapshot",
 ): number | null {
   const ids = preset.geared
     ? [
@@ -107,7 +112,7 @@ function kitReplacementCost(
   let total = 0;
   let hasPrice = false;
   for (const id of ids) {
-    const { unitPrice } = resolveBuyPrice(prices, id);
+    const { unitPrice } = resolveBuyPrice(prices, id, mapKind);
     if (unitPrice == null) continue;
     const qty = id.includes("_TOOL_FISHINGROD") ? 0.65 : 1;
     total += unitPrice * qty;
@@ -120,6 +125,7 @@ function fishOutputLines(
   prices: PriceMap,
   totalFish: number,
   sturgeonShare: number,
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine[] {
   const sturgeon = Math.round(totalFish * sturgeonShare);
   const butchered = totalFish - sturgeon;
@@ -130,6 +136,7 @@ function fishOutputLines(
       "River Sturgeon",
       sturgeon,
       "sell",
+      mapKind,
     ),
     priceLine(
       prices,
@@ -137,6 +144,7 @@ function fishOutputLines(
       "Chopped Fish (butchered bycatch)",
       butchered * AVA_CHOPS_PER_FISH,
       "sell",
+      mapKind,
     ),
   ];
 }
@@ -147,6 +155,7 @@ export function computeAvaRoadsEconomics(
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
   gatheringYieldMultiplier: number = 1,
 ): AvaRoadsEconomicsResult {
+  const mapKind = inputs.priceMapKind ?? "snapshot";
   const preset = getAvaRoadsPreset(inputs.presetId);
   const snapperMeta = AVA_ROADS_SNAPPER_META[inputs.snapperViewId];
 
@@ -159,6 +168,7 @@ export function computeAvaRoadsEconomics(
     prices,
     effectiveFishPerHour,
     preset.sturgeonShare,
+    mapKind,
   );
 
   const snapperCatches =
@@ -177,6 +187,7 @@ export function computeAvaRoadsEconomics(
             : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
           snapperQty,
           "sell",
+          mapKind,
         )
       : null;
 
@@ -186,6 +197,7 @@ export function computeAvaRoadsEconomics(
     "Grandmaster Fisherman's Journal (Empty)",
     1,
     "sell",
+    mapKind,
   );
   const journalFull = priceLine(
     prices,
@@ -193,6 +205,7 @@ export function computeAvaRoadsEconomics(
     "Grandmaster Fisherman's Journal (Full)",
     gatheringYieldMultiplier,
     "sell",
+    mapKind,
   );
   const journalNet =
     journalFull.lineTotal != null && journalEmpty.lineTotal != null
@@ -213,6 +226,7 @@ export function computeAvaRoadsEconomics(
       "Fancy Fish Bait",
       preset.consumables.baitPerHour * uptimeFactor,
       "buy",
+      mapKind,
     ),
     priceLine(
       prices,
@@ -220,6 +234,7 @@ export function computeAvaRoadsEconomics(
       "Pork Pie",
       preset.consumables.porkPiePerHour * uptimeFactor,
       "buy",
+      mapKind,
     ),
   ];
   if (preset.consumables.invisPerHour > 0) {
@@ -230,6 +245,7 @@ export function computeAvaRoadsEconomics(
         "Invisibility Potion",
         preset.consumables.invisPerHour * uptimeFactor,
         "buy",
+        mapKind,
       ),
     );
   }
@@ -248,7 +264,7 @@ export function computeAvaRoadsEconomics(
       ? roundSilver(baseFishGross * carriedLootFraction)
       : null;
 
-  const kitCost = kitReplacementCost(prices, preset);
+  const kitCost = kitReplacementCost(prices, preset, mapKind);
   const gearReplacementCost =
     kitCost != null
       ? roundSilver(kitCost * preset.deathsPerHour)

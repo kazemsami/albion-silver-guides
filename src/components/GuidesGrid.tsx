@@ -3,28 +3,47 @@
 import { useMemo } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import {
-  useMarketCity,
+  useGuideProfitOutcomes,
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuideProfitRangesByCity, GuideProfitOutcomesByPremium } from "@/lib/guide-economics";
-import { pickGuideProfitOutcomes } from "@/lib/guide-economics";
-import { effectiveMarketCity } from "@/lib/guide-market-city";
+import type { GuideProfitRange, GuidesListMarketData } from "@/lib/guide-economics";
 import { sortGuidesByProfit, type GuideSort } from "@/lib/guide-display";
+
+function GuideGridCard({
+  guide,
+  marketData,
+  profitRange,
+}: {
+  guide: Guide;
+  marketData: GuidesListMarketData;
+  profitRange?: GuideProfitRange | null;
+}) {
+  const outcomes = useGuideProfitOutcomes(
+    marketData,
+    guide.slug,
+    guide.defaultMarketCity,
+  );
+
+  return (
+    <GuideCard
+      guide={guide}
+      profitRange={profitRange}
+      profitOutcomes={outcomes}
+    />
+  );
+}
 
 export function GuidesGrid({
   guides,
-  profitRangesByCity,
-  profitOutcomesByPremium,
+  marketData,
   sort = "profit-desc",
 }: {
   guides: Guide[];
-  profitRangesByCity: GuideProfitRangesByCity;
-  profitOutcomesByPremium: GuideProfitOutcomesByPremium;
+  marketData: GuidesListMarketData;
   sort?: GuideSort;
 }) {
-  const profitRanges = useProfitRangesForCity(profitRangesByCity);
-  const { marketCity, premiumSeller } = useMarketCity();
+  const profitRanges = useProfitRangesForCity(marketData);
 
   const sorted = useMemo(
     () => sortGuidesByProfit(guides, profitRanges, sort),
@@ -33,23 +52,14 @@ export function GuidesGrid({
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {sorted.map((guide) => {
-        const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
-        const outcomes = pickGuideProfitOutcomes(
-          profitOutcomesByPremium,
-          premiumSeller,
-          city,
-          guide.slug,
-        );
-        return (
-        <GuideCard
+      {sorted.map((guide) => (
+        <GuideGridCard
           key={guide.slug}
           guide={guide}
+          marketData={marketData}
           profitRange={profitRanges[guide.slug]}
-          profitOutcomes={outcomes}
         />
-        );
-      })}
+      ))}
     </div>
   );
 }

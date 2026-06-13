@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useGuidePriceMap } from "@/components/MarketCityProvider";
 import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
@@ -20,15 +20,10 @@ import {
   computeAvaRoadsEconomics,
   computeAvaRoadsProfitRange,
 } from "@/lib/ava-roads-economics";
-import {
-  computeLoadoutPricing,
-  deserializePriceMap,
-  enrichLoadoutWithQuantities,
-  pickSerializedPrices,
-} from "@/lib/guide-economics";
+import { computeLoadoutPricing, enrichLoadoutWithQuantities } from "@/lib/guide-economics";
 import type {
   GuideEconomics,
-  SerializedPricesByCity,
+  GuideMarketPrices,
   TierLoadoutBundle,
 } from "@/types/guide";
 import {
@@ -40,7 +35,7 @@ import {
 
 interface AvaRoadsFishingCalculatorProps {
   economics: GuideEconomics;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
   defaultMarketCity?: MarketCityId;
@@ -48,15 +43,17 @@ interface AvaRoadsFishingCalculatorProps {
 
 export function AvaRoadsFishingCalculator({
   economics,
-  pricesByCity,
+  guidePrices,
   pricedAt,
   tierLoadouts,
   defaultMarketCity,
 }: AvaRoadsFishingCalculatorProps) {
-  const { listingTaxRate, premiumSeller, gatheringYieldMultiplier } =
+  const { listingTaxRate, premiumSeller, gatheringYieldMultiplier, useLivePrices } =
     useMarketCity();
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { priceMap, mapKind, serializedPrices } = useGuidePriceMap(
+    guidePrices,
+    defaultMarketCity,
+  );
   const [presetId, setPresetId] = useState<AvaRoadsPresetId>("normal");
   const [snapperViewId, setSnapperViewId] =
     useState<AvaRoadsSnapperViewId>("expected");
@@ -66,15 +63,14 @@ export function AvaRoadsFishingCalculator({
     economics.skillTiers.find((t) => t.id === preset.tierId) ??
     economics.skillTiers[0];
 
-  const priceMap = useMemo(() => deserializePriceMap(prices), [prices]);
-
   const result = useMemo(
     () =>
       computeAvaRoadsEconomics(priceMap, {
         presetId,
         snapperViewId,
+        priceMapKind: mapKind,
       }, listingTaxRate, gatheringYieldMultiplier),
-    [priceMap, presetId, snapperViewId, listingTaxRate, gatheringYieldMultiplier],
+    [priceMap, presetId, snapperViewId, listingTaxRate, gatheringYieldMultiplier, mapKind],
   );
 
   const profitRange = useMemo(
@@ -246,7 +242,7 @@ export function AvaRoadsFishingCalculator({
               loadout={activeLoadout.loadout}
               variant={loadoutVariantForTier(preset.tierId)}
               pricing={activeLoadout.pricing}
-              prices={prices}
+              prices={serializedPrices}
             />
           </div>
         </section>
@@ -258,7 +254,10 @@ export function AvaRoadsFishingCalculator({
         </h2>
         <p className="mt-2 text-sm text-parchment/50">
           {result.presetLabel} preset, {result.snapperViewId} Snapper view.
-          Estimated snapshot prices. Updated {formattedAt}.
+          {useLivePrices
+            ? "Live royal market prices (Albion Online Data)."
+            : "Site snapshot averages."}{" "}
+          Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">

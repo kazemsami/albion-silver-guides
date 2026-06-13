@@ -12,6 +12,10 @@ export function getGuideSilverDisplay(
   return formatSilverRange(guide.silverPerHour.min, guide.silverPerHour.max);
 }
 
+export function getCardPriceSourceLabel(useLivePrices: boolean): string {
+  return useLivePrices ? "live prices" : "saved prices";
+}
+
 export function hasLiveProfitRange(
   profitRange?: GuideProfitRange | null,
 ): profitRange is GuideProfitRange {

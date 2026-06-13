@@ -2,17 +2,17 @@
 
 import { useProfitRangesForCity } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuideProfitRangesByCity } from "@/lib/guide-economics";
+import type { GuidesListMarketData } from "@/lib/guide-economics";
 import { formatSilverRange } from "@/lib/format";
 
 export function HomeProfitRangeStat({
   guides,
-  profitRangesByCity,
+  marketData,
 }: {
   guides: Guide[];
-  profitRangesByCity: GuideProfitRangesByCity;
+  marketData: GuidesListMarketData;
 }) {
-  const profitRanges = useProfitRangesForCity(profitRangesByCity);
+  const profitRanges = useProfitRangesForCity(marketData);
 
   const liveMins = Object.values(profitRanges).map((r) => r.min);
   const liveMaxs = Object.values(profitRanges).map((r) => r.max);

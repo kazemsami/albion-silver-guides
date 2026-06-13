@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { EquipmentPanel } from "@/components/EquipmentPanel";
-import { useMarketCity, useEffectiveMarketCity } from "@/components/MarketCityProvider";
+import { useMarketCity, useGuidePriceMap } from "@/components/MarketCityProvider";
 import type { MarketCityId } from "@/lib/market-cities";
 import {
   EconomicsSummaryRow,
@@ -20,9 +20,7 @@ import {
 } from "@/data/tracking-economics";
 import {
   computeLoadoutPricing,
-  deserializePriceMap,
   enrichLoadoutWithQuantities,
-  pickSerializedPrices,
 } from "@/lib/guide-economics";
 import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
@@ -32,7 +30,7 @@ import {
 } from "@/lib/tracking-economics";
 import type {
   GuideEconomics,
-  SerializedPricesByCity,
+  GuideMarketPrices,
   TierLoadoutBundle,
 } from "@/types/guide";
 import {
@@ -44,7 +42,7 @@ import {
 
 interface TrackingProfitCalculatorProps {
   economics: GuideEconomics;
-  pricesByCity: SerializedPricesByCity;
+  guidePrices: GuideMarketPrices;
   pricedAt: string;
   tierLoadouts: TierLoadoutBundle[];
   defaultMarketCity?: MarketCityId;
@@ -52,14 +50,16 @@ interface TrackingProfitCalculatorProps {
 
 export function TrackingProfitCalculator({
   economics,
-  pricesByCity,
+  guidePrices,
   pricedAt,
   tierLoadouts,
   defaultMarketCity,
 }: TrackingProfitCalculatorProps) {
-  const { listingTaxRate, premiumSeller } = useMarketCity();
-  const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
-  const prices = pickSerializedPrices(pricesByCity, effectiveCity);
+  const { listingTaxRate, premiumSeller, useLivePrices } = useMarketCity();
+  const { priceMap, mapKind, serializedPrices } = useGuidePriceMap(
+    guidePrices,
+    defaultMarketCity,
+  );
   const [tierId, setTierId] = useState(economics.defaultSkillTierId);
   const [scenarioId, setScenarioId] = useState<TrackingScenarioId>("expected");
   const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE);
@@ -71,8 +71,6 @@ export function TrackingProfitCalculator({
     TRACKING_TIER_CONFIGS.find((t) => t.id === tierId) ??
     TRACKING_TIER_CONFIGS[1];
 
-  const priceMap = useMemo(() => deserializePriceMap(prices), [prices]);
-
   const result = useMemo(
     () =>
       computeTrackingEconomics(priceMap, {
@@ -80,8 +78,9 @@ export function TrackingProfitCalculator({
         scenarioId,
         groupSize,
         risk,
+        priceMapKind: mapKind,
       }, listingTaxRate),
-    [priceMap, tierId, scenarioId, groupSize, risk, listingTaxRate],
+    [priceMap, tierId, scenarioId, groupSize, risk, listingTaxRate, mapKind],
   );
 
   const profitRange = useMemo(
@@ -275,7 +274,7 @@ export function TrackingProfitCalculator({
               loadout={activeLoadout.loadout}
               variant={activeLoadout.variant}
               pricing={activeLoadout.pricing}
-              prices={prices}
+              prices={serializedPrices}
             />
           </div>
         </section>
@@ -290,8 +289,11 @@ export function TrackingProfitCalculator({
           <span className="text-parchment/70">{tierConfig.label}</span>,{" "}
           <span className="text-parchment/70">{result.scenarioLabel}</span>{" "}
           scenario. Average material loot is calibrated to a reference session
-          (~4.95M per player, ~19.8M group in 3.6 hours, ~22 kills). Estimated
-          snapshot prices. Updated {formattedAt}.
+          (~4.95M per player, ~19.8M group in 3.6 hours, ~22 kills).{" "}
+          {useLivePrices
+            ? "Live royal market prices (Albion Online Data)."
+            : "Site snapshot averages."}{" "}
+          Updated {formattedAt}.
         </p>
 
         <div className="wiki-table-wrap theme-surface mt-4 rounded-lg border border-parchment/10 bg-slot-bg p-4">

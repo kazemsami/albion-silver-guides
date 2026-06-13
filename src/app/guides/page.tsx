@@ -65,8 +65,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
 
   const { category, difficulty, zone, sort } = parseGuideFilters(params);
   const hasFilters = hasActiveListFilters(params);
-  const { ranges: profitRangesByCity, outcomes: profitOutcomesByPremium } =
-    await fetchAllGuidesMarketDataByCity();
+  const marketData = await fetchAllGuidesMarketDataByCity();
 
   const filtered = guides.filter((g) => {
     if (category && g.category !== category) return false;
@@ -115,8 +114,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
           {filtered.length > 0 ? (
             <GuidesGrid
               guides={filtered}
-              profitRangesByCity={profitRangesByCity}
-              profitOutcomesByPremium={profitOutcomesByPremium}
+              marketData={marketData}
               sort={sort}
             />
           ) : (

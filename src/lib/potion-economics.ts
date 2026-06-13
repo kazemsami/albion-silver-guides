@@ -8,7 +8,7 @@ import {
   type PotionSellThroughId,
 } from "@/data/potion-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
-import type { PriceMap } from "@/lib/albion-prices";
+import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
@@ -22,6 +22,7 @@ export interface PotionComputeInputs {
   focusMode: PotionFocusMode;
   valueFocus: boolean;
   defaults: PotionEconomicsDefaults;
+  priceMapKind?: PriceMapKind;
 }
 
 /** @deprecated Use PotionFocusMode */
@@ -77,9 +78,12 @@ function priceLine(
   name: string,
   quantity: number,
   side: "buy" | "sell",
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
   const { unitPrice, priceSource } =
-    side === "buy" ? resolveBuyPrice(prices, id) : resolveSellPrice(prices, id);
+    side === "buy"
+      ? resolveBuyPrice(prices, id, mapKind)
+      : resolveSellPrice(prices, id, mapKind);
   return {
     id,
     name,
@@ -109,9 +113,10 @@ function computeBatch(
   valueFocus: boolean,
   sellThroughDiscount: number,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  mapKind: PriceMapKind = "snapshot",
 ): PotionBatchResult {
   const materialLines = recipe.materials.map((m) =>
-    priceLine(prices, m.id, m.name, m.quantity, "buy"),
+    priceLine(prices, m.id, m.name, m.quantity, "buy", mapKind),
   );
   const materialCost = sumLines(materialLines);
   const materialReturnRate = useFocusReturn
@@ -143,6 +148,7 @@ function computeBatch(
     recipe.outputName,
     recipe.outputQuantity,
     "sell",
+    mapKind,
   );
   const grossOutput = outputLine.lineTotal;
 
@@ -226,6 +232,7 @@ export function computePotionEconomics(
     inputs.valueFocus,
     sellThrough.outputDiscount,
     listingTaxRate,
+    inputs.priceMapKind ?? "snapshot",
   );
 
   const batchesPerTenThousandFocus =

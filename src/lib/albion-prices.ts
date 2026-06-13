@@ -157,18 +157,36 @@ export function getLoadoutUnitPrice(
   return getItemPriceFallback(itemId, "sell");
 }
 
+export type PriceMapKind = "live" | "snapshot";
+
 export function resolveSellPrice(
-  _prices: PriceMap,
+  prices: PriceMap,
   itemId: string,
-): { unitPrice: number | null; priceSource: "estimated" } {
+  mapKind: PriceMapKind = "snapshot",
+): { unitPrice: number | null; priceSource: "market" | "estimated" } {
+  const fromMap = prices.get(itemId)?.sell;
+  if (fromMap != null && fromMap > 0) {
+    return {
+      unitPrice: fromMap,
+      priceSource: mapKind === "live" ? "market" : "estimated",
+    };
+  }
   const fallback = getItemPriceFallback(itemId, "sell");
   return { unitPrice: fallback, priceSource: "estimated" };
 }
 
 export function resolveBuyPrice(
-  _prices: PriceMap,
+  prices: PriceMap,
   itemId: string,
-): { unitPrice: number | null; priceSource: "estimated" } {
+  mapKind: PriceMapKind = "snapshot",
+): { unitPrice: number | null; priceSource: "market" | "estimated" } {
+  const fromMap = prices.get(itemId)?.buy;
+  if (fromMap != null && fromMap > 0) {
+    return {
+      unitPrice: fromMap,
+      priceSource: mapKind === "live" ? "market" : "estimated",
+    };
+  }
   const fallback = getItemPriceFallback(itemId, "buy");
   return { unitPrice: fallback, priceSource: "estimated" };
 }

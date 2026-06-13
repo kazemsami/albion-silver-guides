@@ -30,8 +30,7 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const featured = getFeaturedGuides();
-  const { ranges: profitRangesByCity, outcomes: profitOutcomesByPremium } =
-    await fetchAllGuidesMarketDataByCity();
+  const marketData = await fetchAllGuidesMarketDataByCity();
 
   return (
     <>
@@ -77,10 +76,7 @@ export default async function Home() {
               <p className="mt-1 text-xs text-parchment/50">Categories</p>
             </div>
             <div className="theme-surface rounded-xl border border-gold/15 bg-obsidian-light p-4">
-              <HomeProfitRangeStat
-                guides={guides}
-                profitRangesByCity={profitRangesByCity}
-              />
+              <HomeProfitRangeStat guides={guides} marketData={marketData} />
               <p className="mt-1 text-xs text-parchment/50">Silver/hr Range</p>
             </div>
             <div className="theme-surface rounded-xl border border-gold/15 bg-obsidian-light p-4">
@@ -110,11 +106,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <FeaturedGuidesGrid
-          guides={featured}
-          profitRangesByCity={profitRangesByCity}
-          profitOutcomesByPremium={profitOutcomesByPremium}
-        />
+        <FeaturedGuidesGrid guides={featured} marketData={marketData} />
       </section>
 
       {/* Categories */}

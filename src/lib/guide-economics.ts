@@ -28,6 +28,7 @@ import type {
   SerializedPricesByCity,
   SkillTier,
   TierLoadoutBundle,
+  GuideMarketPrices,
 } from "@/types/guide";
 import {
   AVERAGE_MARKET_CITY_ID,
@@ -35,10 +36,13 @@ import {
 } from "@/lib/market-cities";
 import {
   buildEstimatedPriceMapsByCity,
+  fetchAlbionPricesByCity,
+  resolveBuyPrice,
+  resolveSellPrice,
   type PriceMap,
+  type PriceMapKind,
   type PriceMapsByCity,
 } from "@/lib/albion-prices";
-import { getItemPriceFallback } from "@/data/item-price-fallbacks";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomesMap } from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomes } from "@/types/guide";
@@ -179,6 +183,27 @@ export function pickSerializedPrices(
   );
 }
 
+export function pickGuideMarketPrices(
+  guidePrices: GuideMarketPrices,
+  city: MarketCityId,
+  useLivePrices: boolean,
+): SerializedPriceMap {
+  const source = useLivePrices
+    ? guidePrices.liveByCity
+    : guidePrices.estimatedByCity;
+  return pickSerializedPrices(source, city);
+}
+
+export function toGuideMarketPrices(
+  estimatedByCity: SerializedPricesByCity,
+  liveByCity?: SerializedPricesByCity,
+): GuideMarketPrices {
+  return {
+    estimatedByCity,
+    liveByCity: liveByCity ?? estimatedByCity,
+  };
+}
+
 export type GuideProfitRange = { min: number; max: number };
 export type GuideProfitRangeMap = Record<string, GuideProfitRange>;
 export type GuideProfitRangesByCity = Record<string, GuideProfitRangeMap>;
@@ -306,6 +331,31 @@ export type GuideProfitOutcomesByPremium = {
   standard: GuideProfitOutcomesByCity;
 };
 
+/** Snapshot and live market data for guide list cards. */
+export type GuidesListMarketData = {
+  estimated: {
+    ranges: GuideProfitRangesByCity;
+    outcomes: GuideProfitOutcomesByPremium;
+  };
+  live: {
+    ranges: GuideProfitRangesByCity;
+    outcomes: GuideProfitOutcomesByPremium;
+  };
+};
+
+function buildGuidesListMarketSlice(
+  slugs: string[],
+  priceMaps: PriceMapsByCity,
+): GuidesListMarketData["estimated"] {
+  return {
+    ranges: computeAllGuideProfitRanges(slugs, priceMaps),
+    outcomes: {
+      premium: computeAllGuideProfitOutcomes(slugs, priceMaps, true),
+      standard: computeAllGuideProfitOutcomes(slugs, priceMaps, false),
+    },
+  };
+}
+
 function computeAllGuideProfitOutcomes(
   slugs: string[],
   priceMaps: PriceMapsByCity,
@@ -343,14 +393,11 @@ export function pickGuideProfitOutcomes(
 export async function fetchAllGuidesProfitRangesByCity(): Promise<
   GuideProfitRangesByCity
 > {
-  const { ranges } = await fetchAllGuidesMarketDataByCity();
-  return ranges;
+  const data = await fetchAllGuidesMarketDataByCity();
+  return data.estimated.ranges;
 }
 
-export async function fetchAllGuidesMarketDataByCity(): Promise<{
-  ranges: GuideProfitRangesByCity;
-  outcomes: GuideProfitOutcomesByPremium;
-}> {
+export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarketData> {
   const slugs = Object.keys(guideEconomicsBySlug);
   const allItemIds = new Set<string>();
 
@@ -365,13 +412,18 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<{
     }
   }
 
-  const priceMaps = buildEstimatedPriceMapsByCity([...allItemIds]);
+  const itemIdList = [...allItemIds];
+  const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIdList);
+  let livePriceMaps: PriceMapsByCity = estimatedPriceMaps;
+  try {
+    livePriceMaps = await fetchAlbionPricesByCity(itemIdList);
+  } catch {
+    // Live API unavailable; cards fall back to snapshot maps for live slice too.
+  }
+
   return {
-    ranges: computeAllGuideProfitRanges(slugs, priceMaps),
-    outcomes: {
-      premium: computeAllGuideProfitOutcomes(slugs, priceMaps, true),
-      standard: computeAllGuideProfitOutcomes(slugs, priceMaps, false),
-    },
+    estimated: buildGuidesListMarketSlice(slugs, estimatedPriceMaps),
+    live: buildGuidesListMarketSlice(slugs, livePriceMaps),
   };
 }
 
@@ -408,6 +460,7 @@ function resolveUnitPrice(
   item: HourlyItem | AlbionItem,
   prices: PriceMap,
   side: "buy" | "sell",
+  mapKind: PriceMapKind = "snapshot",
 ): { unitPrice: number | null; priceSource?: PricedLine["priceSource"] } {
   const fixedSilver =
     "fixedSilverPerUnit" in item ? item.fixedSilverPerUnit : undefined;
@@ -421,9 +474,12 @@ function resolveUnitPrice(
     return { unitPrice: itemEstimate, priceSource: "estimated" };
   }
 
-  const globalFallback = getItemPriceFallback(item.id, side);
-  if (globalFallback != null) {
-    return { unitPrice: globalFallback, priceSource: "estimated" };
+  const resolved =
+    side === "buy"
+      ? resolveBuyPrice(prices, item.id, mapKind)
+      : resolveSellPrice(prices, item.id, mapKind);
+  if (resolved.unitPrice != null) {
+    return { unitPrice: resolved.unitPrice, priceSource: resolved.priceSource };
   }
 
   return { unitPrice: null };
@@ -434,8 +490,14 @@ function priceLine(
   quantity: number,
   prices: PriceMap,
   side: "buy" | "sell" = "sell",
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
-  const { unitPrice, priceSource } = resolveUnitPrice(item, prices, side);
+  const { unitPrice, priceSource } = resolveUnitPrice(
+    item,
+    prices,
+    side,
+    mapKind,
+  );
 
   return {
     id: item.id,
@@ -556,15 +618,16 @@ export function computeHourlyEconomics(
   prices: PriceMap,
   marketCity: MarketCityId = AVERAGE_MARKET_CITY_ID,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  mapKind: PriceMapKind = "snapshot",
 ): HourlyEconomicsResult {
   const output = economics.hourlyOutput.map((item) =>
-    priceLine(item, item.quantity, prices, item.side ?? "sell"),
+    priceLine(item, item.quantity, prices, item.side ?? "sell", mapKind),
   );
   const input = (economics.hourlyInputs ?? []).map((item) =>
-    priceLine(item, item.quantity, prices, item.side ?? "buy"),
+    priceLine(item, item.quantity, prices, item.side ?? "buy", mapKind),
   );
   const consumables = (economics.hourlyConsumables ?? []).map((item) =>
-    priceLine(item, item.quantity, prices, "buy"),
+    priceLine(item, item.quantity, prices, "buy", mapKind),
   );
 
   const outputTotal = sumLines(output);
@@ -640,8 +703,14 @@ export async function fetchGuidePricing(
     : [];
 
   const itemIds = collectGuideItemIds(tierLoadouts, economics);
-  const priceMaps = buildEstimatedPriceMapsByCity(itemIds);
-  const prices = priceMaps[AVERAGE_MARKET_CITY_ID];
+  const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIds);
+  let livePriceMaps: PriceMapsByCity = estimatedPriceMaps;
+  try {
+    livePriceMaps = await fetchAlbionPricesByCity(itemIds);
+  } catch {
+    // Live API unavailable; fall back to snapshot maps.
+  }
+  const prices = estimatedPriceMaps[AVERAGE_MARKET_CITY_ID];
 
   const defaultTier = economics?.skillTiers.find(
     (t) => t.id === economics.defaultSkillTierId,
@@ -665,7 +734,11 @@ export async function fetchGuidePricing(
   return {
     prices,
     serializedPrices: serializePriceMap(prices),
-    serializedPricesByCity: serializePriceMapsByCity(priceMaps),
+    serializedPricesByCity: serializePriceMapsByCity(estimatedPriceMaps),
+    guidePrices: {
+      estimatedByCity: serializePriceMapsByCity(estimatedPriceMaps),
+      liveByCity: serializePriceMapsByCity(livePriceMaps),
+    },
     tierLoadoutBundles,
     hourlyEconomics: scaledEconomics
       ? computeHourlyEconomics(scaledEconomics, prices)

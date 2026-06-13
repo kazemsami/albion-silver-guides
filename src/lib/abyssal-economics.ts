@@ -9,7 +9,7 @@ import {
   type AbyssalLootLine,
 } from "@/data/abyssal-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
-import type { PriceMap } from "@/lib/albion-prices";
+import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
@@ -21,6 +21,7 @@ export interface AbyssalComputeInputs {
   runDurationMinutes: AbyssalRunDurationMinutes;
   includePvpLoot: boolean;
   includeMercJournal: boolean;
+  priceMapKind?: PriceMapKind;
 }
 
 export interface AbyssalDeathBreakdown {
@@ -61,13 +62,11 @@ export interface AbyssalEconomicsResult {
 function priceOutputLine(
   prices: PriceMap,
   line: AbyssalLootLine,
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
-  const unitPrice =
-    line.fixedSilverPerUnit ??
-    resolveSellPrice(prices, line.id).unitPrice;
-  const priceSource = line.fixedSilverPerUnit
-    ? ("estimated" as const)
-    : resolveSellPrice(prices, line.id).priceSource;
+  const resolved = resolveSellPrice(prices, line.id, mapKind);
+  const unitPrice = line.fixedSilverPerUnit ?? resolved.unitPrice;
+  const priceSource = line.fixedSilverPerUnit ? ("estimated" as const) : resolved.priceSource;
 
   return {
     id: line.id,
@@ -85,8 +84,9 @@ function priceInputLine(
   id: string,
   name: string,
   quantity: number,
+  mapKind: PriceMapKind = "snapshot",
 ): PricedLine {
-  const { unitPrice, priceSource } = resolveBuyPrice(prices, id);
+  const { unitPrice, priceSource } = resolveBuyPrice(prices, id, mapKind);
   return {
     id,
     name,
@@ -127,6 +127,7 @@ export function computeAbyssalEconomics(
   inputs: AbyssalComputeInputs,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): AbyssalEconomicsResult {
+  const mapKind = inputs.priceMapKind ?? "snapshot";
   const scenario = getAbyssalScenario(inputs.scenarioId);
   const team = ABYSSAL_TEAM_META[inputs.teamSizeId];
   const queueMinutes = ABYSSAL_QUEUE_MINUTES[inputs.teamSizeId];
@@ -155,8 +156,12 @@ export function computeAbyssalEconomics(
       )
     : [];
 
-  const pveOutputLines = scaledPve.map((line) => priceOutputLine(prices, line));
-  const pvpOutputLines = scaledPvp.map((line) => priceOutputLine(prices, line));
+  const pveOutputLines = scaledPve.map((line) =>
+    priceOutputLine(prices, line, mapKind),
+  );
+  const pvpOutputLines = scaledPvp.map((line) =>
+    priceOutputLine(prices, line, mapKind),
+  );
   const allOutputLines = [...pveOutputLines, ...pvpOutputLines];
 
   const grossPerSuccessfulRun = sumLines(allOutputLines);
@@ -173,6 +178,7 @@ export function computeAbyssalEconomics(
         item.id,
         item.name,
         item.quantity * consumableScale,
+        mapKind,
       ),
   );
 
@@ -183,6 +189,7 @@ export function computeAbyssalEconomics(
         "T8_JOURNAL_MERCENARY_EMPTY",
         "T8 mercenary journals (empty, inventory risk)",
         2 * consumableScale,
+        mapKind,
       ),
     );
   }
