@@ -25,7 +25,7 @@ export function MarketCitySelect({ compact = false }: { compact?: boolean }) {
           aria-label="Market city for prices"
           className={`ui-control ui-select w-full ${
             compact
-              ? "max-w-[7.25rem] lg:max-w-[8.5rem] xl:max-w-none xl:min-w-[10.5rem]"
+              ? "min-w-[8.25rem] max-w-[9.5rem] xl:min-w-[10.5rem] xl:max-w-none"
               : "max-w-[11rem] sm:max-w-none sm:min-w-[10.5rem]"
           }`}
         >

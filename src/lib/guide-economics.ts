@@ -11,7 +11,11 @@ import { computeTrackingProfitRange } from "@/lib/tracking-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
 import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
-import { PREMIUM_LISTING_TAX_RATE, isPremiumYieldItem } from "@/lib/listing-tax";
+import {
+  PREMIUM_LISTING_TAX_RATE,
+  getListingTaxRate,
+  isPremiumYieldItem,
+} from "@/lib/listing-tax";
 import type {
   AlbionItem,
   EquipmentLoadout,
@@ -37,6 +41,7 @@ import {
 import { getItemPriceFallback } from "@/data/item-price-fallbacks";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomesMap } from "@/lib/guide-profit-outcomes";
+import type { GuideProfitOutcomes } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
 function scaleQuantity(quantity: number, multiplier: number): number {
@@ -296,20 +301,42 @@ export async function fetchAllGuidesProfitRanges(): Promise<
 
 export type GuideProfitOutcomesByCity = Record<string, GuideProfitOutcomesMap>;
 
+export type GuideProfitOutcomesByPremium = {
+  premium: GuideProfitOutcomesByCity;
+  standard: GuideProfitOutcomesByCity;
+};
+
 function computeAllGuideProfitOutcomes(
   slugs: string[],
   priceMaps: PriceMapsByCity,
+  premiumSeller: boolean,
 ): GuideProfitOutcomesByCity {
+  const listingTaxRate = getListingTaxRate(premiumSeller);
   const result: GuideProfitOutcomesByCity = {};
   for (const city of Object.keys(priceMaps)) {
     const prices = priceMaps[city as MarketCityId];
     const cityOutcomes: GuideProfitOutcomesMap = {};
     for (const slug of slugs) {
-      cityOutcomes[slug] = computeGuideProfitOutcomes(slug, prices);
+      cityOutcomes[slug] = computeGuideProfitOutcomes(slug, prices, {
+        premiumSeller,
+        listingTaxRate,
+      });
     }
     result[city] = cityOutcomes;
   }
   return result;
+}
+
+export function pickGuideProfitOutcomes(
+  data: GuideProfitOutcomesByPremium,
+  premiumSeller: boolean,
+  city: MarketCityId,
+  slug: string,
+): GuideProfitOutcomes | undefined {
+  const byCity = premiumSeller ? data.premium : data.standard;
+  return (
+    byCity[city]?.[slug] ?? byCity[AVERAGE_MARKET_CITY_ID]?.[slug]
+  );
 }
 
 /** Profit ranges per market city for list pages and the city selector. */
@@ -322,7 +349,7 @@ export async function fetchAllGuidesProfitRangesByCity(): Promise<
 
 export async function fetchAllGuidesMarketDataByCity(): Promise<{
   ranges: GuideProfitRangesByCity;
-  outcomes: GuideProfitOutcomesByCity;
+  outcomes: GuideProfitOutcomesByPremium;
 }> {
   const slugs = Object.keys(guideEconomicsBySlug);
   const allItemIds = new Set<string>();
@@ -341,7 +368,10 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<{
   const priceMaps = buildEstimatedPriceMapsByCity([...allItemIds]);
   return {
     ranges: computeAllGuideProfitRanges(slugs, priceMaps),
-    outcomes: computeAllGuideProfitOutcomes(slugs, priceMaps),
+    outcomes: {
+      premium: computeAllGuideProfitOutcomes(slugs, priceMaps, true),
+      standard: computeAllGuideProfitOutcomes(slugs, priceMaps, false),
+    },
   };
 }
 

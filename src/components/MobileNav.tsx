@@ -7,15 +7,6 @@ import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { useFeedback } from "@/components/FeedbackDialog";
 import { paypalDonateUrl } from "@/lib/site";
 
-const navLinks = [
-  { href: "/guides", label: "All Guides" },
-  { href: "/guides?category=gathering", label: "Gathering" },
-  { href: "/guides?category=fishing", label: "Fishing" },
-  { href: "/guides?category=crafting", label: "Crafting" },
-  { href: "/guides?category=dungeons", label: "Dungeons" },
-  { href: "/guides?difficulty=beginner", label: "Beginner Friendly" },
-];
-
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const { openFeedback } = useFeedback();
@@ -73,7 +64,7 @@ export function MobileNav() {
           <button
             type="button"
             aria-label="Close menu overlay"
-            className="mobile-nav-overlay fixed inset-0 top-16 z-40 bg-black/50"
+            className="mobile-nav-overlay fixed inset-0 top-[4.5rem] z-40 bg-black/50"
             onClick={() => setOpen(false)}
           />
           <nav
@@ -85,16 +76,13 @@ export function MobileNav() {
               <MarketCitySelect />
               <PremiumTaxToggle />
             </div>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-sm text-parchment/80 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-              >
-                {link.label}
-              </Link>
-            ))}
+            <Link
+              href="/guides"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-2.5 text-sm text-parchment/80 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              All Guides
+            </Link>
             <button
               type="button"
               onClick={() => {

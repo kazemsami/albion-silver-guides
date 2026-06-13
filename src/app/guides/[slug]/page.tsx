@@ -71,7 +71,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
     fetchGuidePricing(slug, economicsConfig),
     fetchAllGuidesMarketDataByCity(),
   ]);
-  const { ranges: profitRangesByCity, outcomes: profitOutcomesByCity } =
+  const { ranges: profitRangesByCity, outcomes: profitOutcomesByPremium } =
     marketData;
 
   const related = guides
@@ -278,7 +278,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
       )}
 
       {related.length > 0 && (
-        <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} profitOutcomesByCity={profitOutcomesByCity} />
+        <RelatedGuides guides={related} profitRangesByCity={profitRangesByCity} profitOutcomesByPremium={profitOutcomesByPremium} />
       )}
 
       <GuideComments slug={guide.slug} />

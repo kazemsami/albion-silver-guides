@@ -352,6 +352,10 @@ body::before {
   border-bottom-color: var(--wiki-border) !important;
 }
 
+.site-header {
+  min-height: 4.5rem;
+}
+
 /* Article intro on guide pages, never inherit nav header chrome */
 .guide-intro {
   background: transparent;

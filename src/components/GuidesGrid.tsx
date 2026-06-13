@@ -7,26 +7,24 @@ import {
   useProfitRangesForCity,
 } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type {
-  GuideProfitOutcomesByCity,
-  GuideProfitRangesByCity,
-} from "@/lib/guide-economics";
+import type { GuideProfitRangesByCity, GuideProfitOutcomesByPremium } from "@/lib/guide-economics";
+import { pickGuideProfitOutcomes } from "@/lib/guide-economics";
 import { effectiveMarketCity } from "@/lib/guide-market-city";
 import { sortGuidesByProfit, type GuideSort } from "@/lib/guide-display";
 
 export function GuidesGrid({
   guides,
   profitRangesByCity,
-  profitOutcomesByCity,
+  profitOutcomesByPremium,
   sort = "profit-desc",
 }: {
   guides: Guide[];
   profitRangesByCity: GuideProfitRangesByCity;
-  profitOutcomesByCity: GuideProfitOutcomesByCity;
+  profitOutcomesByPremium: GuideProfitOutcomesByPremium;
   sort?: GuideSort;
 }) {
   const profitRanges = useProfitRangesForCity(profitRangesByCity);
-  const { marketCity } = useMarketCity();
+  const { marketCity, premiumSeller } = useMarketCity();
 
   const sorted = useMemo(
     () => sortGuidesByProfit(guides, profitRanges, sort),
@@ -37,9 +35,12 @@ export function GuidesGrid({
     <div className="grid gap-5 sm:grid-cols-2">
       {sorted.map((guide) => {
         const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
-        const outcomes =
-          profitOutcomesByCity[city]?.[guide.slug] ??
-          profitOutcomesByCity.average?.[guide.slug];
+        const outcomes = pickGuideProfitOutcomes(
+          profitOutcomesByPremium,
+          premiumSeller,
+          city,
+          guide.slug,
+        );
         return (
         <GuideCard
           key={guide.slug}

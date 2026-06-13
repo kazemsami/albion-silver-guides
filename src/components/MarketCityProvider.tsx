@@ -19,7 +19,8 @@ import {
   getListingTaxRate,
   PREMIUM_SELLER_STORAGE_KEY,
 } from "@/lib/listing-tax";
-import type { GuideProfitRangesByCity, GuideProfitOutcomesByCity } from "@/lib/guide-economics";
+import type { GuideProfitRangesByCity, GuideProfitOutcomesByPremium } from "@/lib/guide-economics";
+import { pickGuideProfitOutcomes } from "@/lib/guide-economics";
 import { effectiveMarketCity } from "@/lib/guide-market-city";
 
 interface MarketCityContextValue {
@@ -125,16 +126,18 @@ export function useProfitRangesForCity(
   );
 }
 
-export function useProfitOutcomesForCity(
-  profitOutcomesByCity: GuideProfitOutcomesByCity,
+export function useGuideProfitOutcomes(
+  profitOutcomesByPremium: GuideProfitOutcomesByPremium,
+  slug: string,
   guideDefaultCity?: MarketCityId,
 ) {
-  const { marketCity } = useMarketCity();
+  const { marketCity, premiumSeller } = useMarketCity();
   const city = effectiveMarketCity(marketCity, guideDefaultCity);
-  return (
-    profitOutcomesByCity[city] ??
-    profitOutcomesByCity[AVERAGE_MARKET_CITY_ID] ??
-    {}
+  return pickGuideProfitOutcomes(
+    profitOutcomesByPremium,
+    premiumSeller,
+    city,
+    slug,
   );
 }
 

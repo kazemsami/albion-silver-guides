@@ -7,7 +7,7 @@ export function PremiumTaxToggle() {
 
   return (
     <label
-      className="flex cursor-pointer select-none items-center gap-1.5 text-xs text-parchment/70"
+      className="flex cursor-pointer select-none items-center gap-2 text-xs text-parchment/70 sm:text-sm"
       title={
         premiumSeller
           ? "Premium: 6.5% listing tax, +50% gather/fish yield"

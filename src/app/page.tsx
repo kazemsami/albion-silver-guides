@@ -30,7 +30,7 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const featured = getFeaturedGuides();
-  const { ranges: profitRangesByCity, outcomes: profitOutcomesByCity } =
+  const { ranges: profitRangesByCity, outcomes: profitOutcomesByPremium } =
     await fetchAllGuidesMarketDataByCity();
 
   return (
@@ -113,7 +113,7 @@ export default async function Home() {
         <FeaturedGuidesGrid
           guides={featured}
           profitRangesByCity={profitRangesByCity}
-          profitOutcomesByCity={profitOutcomesByCity}
+          profitOutcomesByPremium={profitOutcomesByPremium}
         />
       </section>
 
