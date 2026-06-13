@@ -998,7 +998,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Goose Eggs are shared by Major Healing Potion and Major Gigantify Potion; buy one bulk stack for both recipes.",
       "If any major potion margin drops below 10% after tax, pause that recipe and wait for the next ZvZ cycle.",
       "Craft at Brecilien for the potion city bonus. Thetford helps with herb prices, not alchemy station bonuses.",
-      "The profit calculator includes station fees (~4.5% of output), Premium listing tax (~6.5%), and a sell-through haircut. Toggle focus valuation to see profit with focus treated as free vs at an opportunity cost.",
+      "The profit calculator includes station fees (~4.5% of output), Premium listing tax (~6.5%), material return at the lab (45% on focus heal crafts, 15% on no-focus energy), and a sell-through haircut. Toggle focus valuation to see profit with focus treated as free vs at an opportunity cost.",
       "Plan with batch profit and profit per 10,000 focus on Major Healing. Hourly lines model ~20 heal + ~35 energy batches in one active hour (focus-realistic), not max lab spam.",
       "The focus checkbox is off by default. Healing focus is how you profit, not silver spent. Turn it on only to compare against another focus sink.",
       "Carry an Alchemist's Journal while crafting for laborer returns from your crafting fame.",

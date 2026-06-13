@@ -239,34 +239,40 @@ export function computeGuideProfitOutcomes(
     const conservative = computePotionEconomics(
       prices,
       {
-        tierId: "t5",
+        recipeId: "heal",
+        tierId: "t6",
         sellThroughId: "slow",
+        focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
       },
       listingTaxRate,
-    ).hourlyNetAfterFocus;
+    ).profitPerTenThousandFocus;
     const median = computePotionEconomics(
       prices,
       {
+        recipeId: "heal",
         tierId: "t6",
         sellThroughId: "typical",
+        focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
       },
       listingTaxRate,
-    ).hourlyNetAfterFocus;
+    ).profitPerTenThousandFocus;
     const expected = median;
     const highRoll = computePotionEconomics(
       prices,
       {
-        tierId: "t7",
+        recipeId: "heal",
+        tierId: "t6",
         sellThroughId: "instant",
+        focusMode: "with-focus",
         valueFocus: false,
         defaults: DEFAULT_POTION_DEFAULTS,
       },
       listingTaxRate,
-    ).hourlyNetAfterFocus;
+    ).profitPerTenThousandFocus;
 
     return {
       conservative: conservative ?? null,

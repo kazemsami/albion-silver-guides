@@ -20,10 +20,12 @@ export function ProfitOutcomesTable({
   outcomes,
   compact = false,
   highlight = "expected",
+  unitLabel = "/hr",
 }: {
   outcomes: GuideProfitOutcomes;
   compact?: boolean;
   highlight?: keyof GuideProfitOutcomes;
+  unitLabel?: string;
 }) {
   const hasAny = outcomeOrder.some((key) => outcomes[key] != null);
   if (!hasAny) return null;
@@ -35,8 +37,8 @@ export function ProfitOutcomesTable({
     return (
       <p className="text-sm font-semibold text-gold tabular-nums">
         {lo != null && hi != null && lo !== hi
-          ? `${formatSilverPrice(lo)} – ${formatSilverPrice(hi)}/hr`
-          : `${formatSilverPrice(hi ?? lo!)}/hr`}
+          ? `${formatSilverPrice(lo)} – ${formatSilverPrice(hi)}${unitLabel}`
+          : `${formatSilverPrice(hi ?? lo!)}${unitLabel}`}
         <span className="ml-1 font-normal text-parchment/40">est.</span>
       </p>
     );
@@ -48,7 +50,7 @@ export function ProfitOutcomesTable({
         <thead>
           <tr className="border-b border-gold/10 text-[10px] uppercase tracking-widest text-parchment/40">
             <th className="pb-2 pr-3 font-semibold">Metric</th>
-            <th className="pb-2 pr-3 font-semibold">Take-home / hr</th>
+            <th className="pb-2 pr-3 font-semibold">Take-home{unitLabel}</th>
             <th className="pb-2 font-semibold">Meaning</th>
           </tr>
         </thead>

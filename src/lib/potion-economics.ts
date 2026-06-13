@@ -1,13 +1,10 @@
 import {
-  DEFAULT_DAILY_FOCUS_BUDGET,
-  DEFAULT_FOCUS_SESSION_HOURS,
   DEFAULT_POTION_DEFAULTS,
-  getPotionTierMultiplier,
-  POTION_RECIPES,
+  getPotionRecipe,
   POTION_SELL_THROUGH_META,
-  T6_POTION_SESSION,
   type PotionEconomicsDefaults,
   type PotionRecipe,
+  type PotionRecipeId,
   type PotionSellThroughId,
 } from "@/data/potion-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
@@ -16,22 +13,35 @@ import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
 import type { PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
+export type PotionFocusMode = "with-focus" | "without-focus";
+
 export interface PotionComputeInputs {
+  recipeId: PotionRecipeId;
   tierId: string;
   sellThroughId: PotionSellThroughId;
+  focusMode: PotionFocusMode;
   valueFocus: boolean;
   defaults: PotionEconomicsDefaults;
 }
+
+/** @deprecated Use PotionFocusMode */
+export type MajorHealingFocusMode = PotionFocusMode;
 
 export interface PotionBatchResult {
   recipe: PotionRecipe;
   outputLine: PricedLine;
   materialLines: PricedLine[];
+  returnedMaterialLines: PricedLine[];
+  returnedMaterialsTotal: number | null;
   materialCost: number | null;
-  stationFee: number | null;
+  netMaterialCost: number | null;
+  materialReturnRate: number;
+  craftSilverCost: number;
   listingTax: number | null;
   grossOutput: number | null;
+  sellThroughHaircut: number | null;
   netBeforeFocus: number | null;
+  netAfterSellThrough: number | null;
   focusCost: number;
   netAfterFocus: number | null;
   profitPerTenThousandFocus: number | null;
@@ -43,26 +53,23 @@ export interface PotionEconomicsResult {
   sellThroughLabel: string;
   sellThroughNote: string;
   valueFocus: boolean;
-  healBatchesPerHour: number;
-  energyBatchesPerHour: number;
-  totalPotsPerHour: number;
-  healBatch: PotionBatchResult;
-  energyBatch: PotionBatchResult;
-  hourlyGrossOutput: number | null;
-  hourlyMaterialCost: number | null;
-  hourlyStationFees: number | null;
-  hourlyListingTax: number | null;
-  hourlySellThroughHaircut: number | null;
-  hourlyNetBeforeFocus: number | null;
-  hourlyFocusOpportunityCost: number | null;
-  hourlyFocusPointsBilled: number;
-  hourlyNetAfterFocus: number | null;
-  profitPerCraftingMinute: number | null;
+  focusMode: PotionFocusMode;
+  recipe: PotionRecipe;
+  batch: PotionBatchResult;
+  /** Batches craftable per 10,000 focus (with-focus recipes only). */
+  batchesPerTenThousandFocus: number | null;
+  totalPotsPerTenThousandFocus: number | null;
+  perTenThousandGrossOutput: number | null;
+  perTenThousandMaterialCost: number | null;
+  perTenThousandCraftSilver: number | null;
+  perTenThousandListingTax: number | null;
+  perTenThousandSellThroughHaircut: number | null;
+  perTenThousandNetBeforeFocus: number | null;
+  perTenThousandFocusOpportunityCost: number | null;
+  perTenThousandNetAfterFocus: number | null;
   profitPerTenThousandFocus: number | null;
-  estimatedSellThroughHours: number | null;
   hasEstimatedPrices: boolean;
 }
-
 
 function priceLine(
   prices: PriceMap,
@@ -98,13 +105,37 @@ function computeBatch(
   prices: PriceMap,
   recipe: PotionRecipe,
   defaults: PotionEconomicsDefaults,
+  useFocusReturn: boolean,
   valueFocus: boolean,
+  sellThroughDiscount: number,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): PotionBatchResult {
   const materialLines = recipe.materials.map((m) =>
     priceLine(prices, m.id, m.name, m.quantity, "buy"),
   );
   const materialCost = sumLines(materialLines);
+  const materialReturnRate = useFocusReturn
+    ? defaults.focusMaterialReturnRate
+    : defaults.noFocusMaterialReturnRate;
+  const returnedMaterialLines = materialLines.map((line) => {
+    const returnedQuantity =
+      Math.round(line.quantity * materialReturnRate * 100) / 100;
+    return {
+      ...line,
+      quantity: returnedQuantity,
+      lineTotal:
+        line.unitPrice != null
+          ? roundSilver(line.unitPrice * returnedQuantity)
+          : null,
+    };
+  });
+  const returnedMaterialsTotal = sumLines(returnedMaterialLines);
+  const netMaterialCost =
+    materialCost != null && returnedMaterialsTotal != null
+      ? roundSilver(materialCost - returnedMaterialsTotal)
+      : materialCost != null
+        ? roundSilver(materialCost * (1 - materialReturnRate))
+        : null;
 
   const outputLine = priceLine(
     prices,
@@ -115,10 +146,7 @@ function computeBatch(
   );
   const grossOutput = outputLine.lineTotal;
 
-  const stationFee =
-    grossOutput != null
-      ? roundSilver(grossOutput * defaults.stationFeeRate)
-      : null;
+  const craftSilverCost = recipe.craftSilverCost ?? 0;
 
   const listingTax =
     grossOutput != null
@@ -128,31 +156,53 @@ function computeBatch(
   const netBeforeFocus =
     grossOutput != null
       ? roundSilver(
-          grossOutput - (materialCost ?? 0) - (stationFee ?? 0) - (listingTax ?? 0),
+          grossOutput -
+            (netMaterialCost ?? 0) -
+            craftSilverCost -
+            (listingTax ?? 0),
         )
       : null;
 
-  const focusCost = valueFocus
-    ? roundSilver(recipe.focusCost * defaults.focusSilverPerPoint)
-    : 0;
+  const sellThroughHaircut =
+    grossOutput != null
+      ? roundSilver(grossOutput * sellThroughDiscount)
+      : null;
+
+  const netAfterSellThrough =
+    netBeforeFocus != null
+      ? roundSilver(netBeforeFocus - (sellThroughHaircut ?? 0))
+      : null;
+
+  const focusCost =
+    useFocusReturn && valueFocus
+      ? roundSilver(recipe.focusCost * defaults.focusSilverPerPoint)
+      : 0;
 
   const netAfterFocus =
-    netBeforeFocus != null ? roundSilver(netBeforeFocus - focusCost) : null;
+    netAfterSellThrough != null
+      ? roundSilver(netAfterSellThrough - focusCost)
+      : null;
 
   const profitPerTenThousandFocus =
-    recipe.focusCost > 0 && netBeforeFocus != null
-      ? roundSilver((netBeforeFocus / recipe.focusCost) * 10_000)
+    useFocusReturn && recipe.focusCost > 0 && netAfterSellThrough != null
+      ? roundSilver((netAfterSellThrough / recipe.focusCost) * 10_000)
       : null;
 
   return {
     recipe,
     outputLine,
     materialLines,
+    returnedMaterialLines,
+    returnedMaterialsTotal,
     materialCost,
-    stationFee,
+    netMaterialCost,
+    materialReturnRate,
+    craftSilverCost,
     listingTax,
     grossOutput,
+    sellThroughHaircut,
     netBeforeFocus,
+    netAfterSellThrough,
     focusCost,
     netAfterFocus,
     profitPerTenThousandFocus,
@@ -164,118 +214,65 @@ export function computePotionEconomics(
   inputs: PotionComputeInputs,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): PotionEconomicsResult {
-  const tierMultiplier = getPotionTierMultiplier(inputs.tierId);
   const sellThrough = POTION_SELL_THROUGH_META[inputs.sellThroughId];
+  const useFocusReturn = inputs.focusMode === "with-focus";
+  const recipe = getPotionRecipe(inputs.recipeId);
 
-  const healBatchesPerHour = roundSilver(
-    T6_POTION_SESSION.healBatchesPerHour * tierMultiplier,
-  );
-  const energyBatchesPerHour = roundSilver(
-    T6_POTION_SESSION.energyBatchesPerHour * tierMultiplier,
-  );
-
-  const healRecipe = POTION_RECIPES[0];
-  const energyRecipe = POTION_RECIPES[1];
-
-  const healBatch = computeBatch(
+  const batch = computeBatch(
     prices,
-    healRecipe,
+    recipe,
     inputs.defaults,
+    useFocusReturn,
     inputs.valueFocus,
-    listingTaxRate,
-  );
-  const energyBatch = computeBatch(
-    prices,
-    energyRecipe,
-    inputs.defaults,
-    inputs.valueFocus,
+    sellThrough.outputDiscount,
     listingTaxRate,
   );
 
-  const scale = (batchValue: number | null, batches: number) =>
-    batchValue != null ? roundSilver(batchValue * batches) : null;
+  const batchesPerTenThousandFocus =
+    useFocusReturn && recipe.focusCost > 0
+      ? Math.round((10_000 / recipe.focusCost) * 100) / 100
+      : null;
 
-  const hourlyGrossOutput =
-    scale(healBatch.grossOutput, healBatchesPerHour) != null ||
-    scale(energyBatch.grossOutput, energyBatchesPerHour) != null
+  const scalePer10k = (batchValue: number | null) =>
+    batchValue != null && batchesPerTenThousandFocus != null
+      ? roundSilver(batchValue * batchesPerTenThousandFocus)
+      : null;
+
+  const perTenThousandGrossOutput = scalePer10k(batch.grossOutput);
+  const perTenThousandMaterialCost = scalePer10k(batch.netMaterialCost);
+  const perTenThousandCraftSilver = scalePer10k(batch.craftSilverCost);
+  const perTenThousandListingTax = scalePer10k(batch.listingTax);
+  const perTenThousandSellThroughHaircut = scalePer10k(batch.sellThroughHaircut);
+
+  const perTenThousandNetBeforeFocus =
+    perTenThousandGrossOutput != null
       ? roundSilver(
-          (scale(healBatch.grossOutput, healBatchesPerHour) ?? 0) +
-            (scale(energyBatch.grossOutput, energyBatchesPerHour) ?? 0),
+          perTenThousandGrossOutput -
+            (perTenThousandMaterialCost ?? 0) -
+            (perTenThousandCraftSilver ?? 0) -
+            (perTenThousandListingTax ?? 0) -
+            (perTenThousandSellThroughHaircut ?? 0),
         )
       : null;
 
-  const hourlyMaterialCost = roundSilver(
-    (scale(healBatch.materialCost, healBatchesPerHour) ?? 0) +
-      (scale(energyBatch.materialCost, energyBatchesPerHour) ?? 0),
-  );
+  const perTenThousandFocusOpportunityCost =
+    useFocusReturn && inputs.valueFocus
+      ? roundSilver(10_000 * inputs.defaults.focusSilverPerPoint)
+      : 0;
 
-  const hourlyStationFees = roundSilver(
-    (scale(healBatch.stationFee, healBatchesPerHour) ?? 0) +
-      (scale(energyBatch.stationFee, energyBatchesPerHour) ?? 0),
-  );
-
-  const hourlyListingTax = roundSilver(
-    (scale(healBatch.listingTax, healBatchesPerHour) ?? 0) +
-      (scale(energyBatch.listingTax, energyBatchesPerHour) ?? 0),
-  );
-
-  const hourlySellThroughHaircut =
-    hourlyGrossOutput != null
-      ? roundSilver(hourlyGrossOutput * sellThrough.outputDiscount)
+  const perTenThousandNetAfterFocus =
+    perTenThousandNetBeforeFocus != null
+      ? roundSilver(perTenThousandNetBeforeFocus - perTenThousandFocusOpportunityCost)
       : null;
 
-  const hourlyNetBeforeFocus =
-    hourlyGrossOutput != null
-      ? roundSilver(
-          hourlyGrossOutput -
-            hourlyMaterialCost -
-            hourlyStationFees -
-            hourlyListingTax -
-            (hourlySellThroughHaircut ?? 0),
-        )
-      : null;
-
-  const hourlyFocusPointsBilled = inputs.valueFocus
-    ? Math.min(
-        healRecipe.focusCost * healBatchesPerHour,
-        DEFAULT_DAILY_FOCUS_BUDGET / DEFAULT_FOCUS_SESSION_HOURS,
-      )
-    : 0;
-
-  const hourlyFocusOpportunityCost = inputs.valueFocus
-    ? roundSilver(
-        hourlyFocusPointsBilled * inputs.defaults.focusSilverPerPoint,
-      )
-    : 0;
-
-  const hourlyNetAfterFocus =
-    hourlyNetBeforeFocus != null
-      ? roundSilver(hourlyNetBeforeFocus - hourlyFocusOpportunityCost)
-      : null;
-
-  const totalBatchesPerHour = healBatchesPerHour + energyBatchesPerHour;
-  const minutesPerHour = totalBatchesPerHour * inputs.defaults.minutesPerBatch;
-  const profitPerCraftingMinute =
-    hourlyNetAfterFocus != null && minutesPerHour > 0
-      ? roundSilver(hourlyNetAfterFocus / minutesPerHour)
-      : null;
-
-  const totalPotsPerHour = roundSilver(
-    healBatchesPerHour * healRecipe.outputQuantity +
-      energyBatchesPerHour * energyRecipe.outputQuantity,
-  );
-
-  const estimatedSellThroughHours =
-    inputs.defaults.sellThroughPotsPerHour > 0
-      ? Math.round((totalPotsPerHour / inputs.defaults.sellThroughPotsPerHour) * 10) /
-        10
+  const totalPotsPerTenThousandFocus =
+    batchesPerTenThousandFocus != null
+      ? roundSilver(batchesPerTenThousandFocus * recipe.outputQuantity)
       : null;
 
   const hasEstimatedPrices = [
-    ...healBatch.materialLines,
-    ...energyBatch.materialLines,
-    healBatch.outputLine,
-    energyBatch.outputLine,
+    ...batch.materialLines,
+    batch.outputLine,
   ].some((line) => line.priceSource === "estimated");
 
   return {
@@ -284,46 +281,47 @@ export function computePotionEconomics(
     sellThroughLabel: sellThrough.label,
     sellThroughNote: sellThrough.note,
     valueFocus: inputs.valueFocus,
-    healBatchesPerHour,
-    energyBatchesPerHour,
-    totalPotsPerHour,
-    healBatch,
-    energyBatch,
-    hourlyGrossOutput,
-    hourlyMaterialCost,
-    hourlyStationFees,
-    hourlyListingTax,
-    hourlySellThroughHaircut,
-    hourlyNetBeforeFocus,
-    hourlyFocusOpportunityCost,
-    hourlyFocusPointsBilled: roundSilver(hourlyFocusPointsBilled),
-    hourlyNetAfterFocus,
-    profitPerCraftingMinute,
-    profitPerTenThousandFocus: healBatch.profitPerTenThousandFocus,
-    estimatedSellThroughHours,
+    focusMode: inputs.focusMode,
+    recipe,
+    batch,
+    batchesPerTenThousandFocus,
+    totalPotsPerTenThousandFocus,
+    perTenThousandGrossOutput,
+    perTenThousandMaterialCost,
+    perTenThousandCraftSilver,
+    perTenThousandListingTax,
+    perTenThousandSellThroughHaircut,
+    perTenThousandNetBeforeFocus,
+    perTenThousandFocusOpportunityCost,
+    perTenThousandNetAfterFocus,
+    profitPerTenThousandFocus: batch.profitPerTenThousandFocus,
     hasEstimatedPrices,
   };
 }
 
 export type PotionProfitRange = { min: number; max: number };
 
-/** Per-hour range for guide cards (typical sell-through, focus treated as free). */
+/** Per 10k focus range for guide cards (Major Healing with focus). */
 export function computePotionProfitRange(prices: PriceMap): PotionProfitRange {
   const conservative = computePotionEconomics(prices, {
-    tierId: "t5",
+    recipeId: "heal",
+    tierId: "t6",
     sellThroughId: "slow",
+    focusMode: "with-focus",
     valueFocus: false,
     defaults: DEFAULT_POTION_DEFAULTS,
   });
   const typical = computePotionEconomics(prices, {
+    recipeId: "heal",
     tierId: "t6",
     sellThroughId: "typical",
+    focusMode: "with-focus",
     valueFocus: false,
     defaults: DEFAULT_POTION_DEFAULTS,
   });
 
   return {
-    min: conservative.hourlyNetAfterFocus ?? 80_000,
-    max: typical.hourlyNetAfterFocus ?? 350_000,
+    min: conservative.profitPerTenThousandFocus ?? 0,
+    max: typical.profitPerTenThousandFocus ?? 150_000,
   };
 }

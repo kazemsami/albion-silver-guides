@@ -36,6 +36,12 @@ export function GuideCard({
   profitOutcomes?: GuideProfitOutcomes | null;
 }) {
   const liveProfit = hasLiveProfitRange(profitRange);
+  const profitUnit =
+    guide.slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
+  const profitRangeLabel =
+    guide.slug === "potions-crafting-bulk"
+      ? "Profit range / 10k focus"
+      : "Profit range / hr";
   return (
     <Link
       href={`/guides/${guide.slug}`}
@@ -71,11 +77,15 @@ export function GuideCard({
 
       <div className="mt-4 border-t border-gold/10 pt-4">
         <span className="text-[10px] uppercase tracking-widest text-parchment/35">
-          Profit range / hr
+          {profitRangeLabel}
         </span>
         {profitOutcomes ? (
           <div className="mt-1">
-            <ProfitOutcomesTable outcomes={profitOutcomes} compact />
+            <ProfitOutcomesTable
+              outcomes={profitOutcomes}
+              compact
+              unitLabel={profitUnit}
+            />
           </div>
         ) : (
           <p className="mt-1 text-sm font-semibold text-gold">

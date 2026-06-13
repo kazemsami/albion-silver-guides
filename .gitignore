@@ -36,6 +36,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# audit data (download via scripts/audit-potion-recipes.mjs)
+scripts/.albion-items.xml
+scripts/potion-recipes-audit.json

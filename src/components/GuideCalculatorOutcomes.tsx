@@ -33,15 +33,22 @@ export function GuideCalculatorOutcomes({
     });
   }, [guideSlug, listingTaxRate, premiumSeller, prices]);
 
+  const outcomesLabel =
+    guideSlug === "potions-crafting-bulk"
+      ? "Profit outcomes / 10k focus (after tax)"
+      : "Profit outcomes / hr (after tax)";
+  const outcomesUnit =
+    guideSlug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
+
   return (
     <>
       <GuideMarketNote defaultMarketCity={defaultMarketCity} />
       <div className="wiki-note theme-surface mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-          Profit outcomes / hr (after tax)
+          {outcomesLabel}
         </p>
         <div className="mt-3">
-          <ProfitOutcomesTable outcomes={outcomes} />
+          <ProfitOutcomesTable outcomes={outcomes} unitLabel={outcomesUnit} />
         </div>
       </div>
     </>
