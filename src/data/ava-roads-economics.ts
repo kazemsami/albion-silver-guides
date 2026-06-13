@@ -5,6 +5,9 @@ export type AvaRoadsSnapperViewId = "expected" | "lucky";
 
 export const AVA_CHOPS_PER_FISH = 15;
 
+/** One Puremist Snapper school catch yields four fish in inventory. */
+export const PUREMIST_SNAPPER_PER_CATCH = 4;
+
 /** T7 gear: ~2/5 of fish are Sturgeon. */
 export const AVA_T7_STURGEON_SHARE = 2 / 5;
 /** T8 gear: ~3/7 of fish are Sturgeon. */
@@ -23,10 +26,12 @@ export interface AvaRoadsPreset {
   portalSearchDowntime: number;
   /** Bank every N minutes on average. */
   bankingIntervalMinutes: number;
-  /** Expected Puremist Snapper per hour (RNG average). */
+  /** Expected Puremist Snapper catches per hour (RNG average). Each catch = 4 fish. */
   snapperExpectedPerHour: number;
-  /** Lucky hour: bonus snapper count (shown separately). */
+  /** Lucky hour: bonus Snapper catches (shown separately). Each catch = 4 fish. */
   snapperLuckyCount: number;
+  /** Geared preset: rod id for death replacement (0.65× per death). */
+  fishingRodId?: string;
   geared: boolean;
   consumables: {
     baitPerHour: number;
@@ -56,15 +61,16 @@ export const AVA_ROADS_PRESETS: AvaRoadsPreset[] = [
     id: "normal",
     label: "Normal",
     description:
-      "T8 fisherman set on a decent T8 road. Balanced banking, moderate death and portal time.",
-    tierId: "profit",
-    fishPerHour: 450,
-    sturgeonShare: AVA_T8_STURGEON_SHARE,
+      "Grandmaster fisherman set + GM rod on a decent T8 road. Balanced banking, moderate death and portal time.",
+    tierId: "grandmaster",
+    fishPerHour: 400,
+    sturgeonShare: AVA_T7_STURGEON_SHARE,
     deathsPerHour: 0.1,
     portalSearchDowntime: 0.15,
     bankingIntervalMinutes: 22,
-    snapperExpectedPerHour: 0.5,
+    snapperExpectedPerHour: 0.35,
     snapperLuckyCount: 1,
+    fishingRodId: "T7_2H_TOOL_FISHINGROD",
     geared: true,
     consumables: { baitPerHour: 10, porkPiePerHour: 2, invisPerHour: 0.6 },
   },
@@ -72,7 +78,7 @@ export const AVA_ROADS_PRESETS: AvaRoadsPreset[] = [
     id: "greedy",
     label: "Greedy max profit",
     description:
-      "Deep T8 road, fish until bag is heavy before banking. Highest upside and highest death swing.",
+      "Full T8 fisherman set + Elder's rod on deep roads. Fish until bag is heavy before banking.",
     tierId: "expert",
     fishPerHour: 550,
     sturgeonShare: AVA_T8_STURGEON_SHARE,
@@ -81,6 +87,7 @@ export const AVA_ROADS_PRESETS: AvaRoadsPreset[] = [
     bankingIntervalMinutes: 35,
     snapperExpectedPerHour: 1.2,
     snapperLuckyCount: 2,
+    fishingRodId: "T8_2H_TOOL_FISHINGROD",
     geared: true,
     consumables: { baitPerHour: 10, porkPiePerHour: 2, invisPerHour: 1 },
   },
@@ -96,10 +103,10 @@ export const AVA_ROADS_SNAPPER_META: Record<
 > = {
   expected: {
     label: "Expected Snapper",
-    note: "Zone-tier RNG average on normal schools. Dry hours with zero Snapper are common.",
+    note: "Zone-tier RNG average on normal schools. Each catch yields 4 Snapper. Dry hours with zero catches are common.",
   },
   lucky: {
     label: "Lucky Snapper hour",
-    note: "Extra Snapper on top of expected fish income. Not a stable hourly rate.",
+    note: "Extra Snapper catches on top of expected fish income. Each catch yields 4 fish. Not a stable hourly rate.",
   },
 };

@@ -7,6 +7,11 @@ import {
 import type { HourlyItem } from "@/types/guide";
 import { SKILL_TIERS, tiers } from "@/data/guide-skill-tiers";
 import {
+  AVA_T7_STURGEON_SHARE,
+  AVA_T8_STURGEON_SHARE,
+  PUREMIST_SNAPPER_PER_CATCH,
+} from "@/data/ava-roads-economics";
+import {
   TRACKING_AVERAGE_LOOT_PER_KILL,
   TRACKING_TIER_CONFIGS,
 } from "@/data/tracking-economics";
@@ -40,11 +45,6 @@ function avaRoadsFishOutput(
   ];
 }
 
-/** T7 gear: ~3 T7/down + ~2 T8 per cast → 2/5 of fish are Sturgeon. */
-const AVA_T7_STURGEON_SHARE = 2 / 5;
-/** T8 gear: ~4 T7/down + ~3 T8 per cast → 3/7 of fish are Sturgeon. */
-const AVA_T8_STURGEON_SHARE = 3 / 7;
-
 const AVA_FISHING_JOURNAL_EMPTY: HourlyItem = {
   id: "T7_JOURNAL_FISHING_EMPTY",
   name: "Grandmaster Fisherman's Journal (Empty)",
@@ -52,7 +52,11 @@ const AVA_FISHING_JOURNAL_EMPTY: HourlyItem = {
   side: "sell",
 };
 
-function avaRoadsDeathInputs(deathRate: number, geared: boolean): HourlyItem[] {
+function avaRoadsDeathInputs(
+  deathRate: number,
+  geared: boolean,
+  fishingRodId: "T7_2H_TOOL_FISHINGROD" | "T8_2H_TOOL_FISHINGROD" = "T8_2H_TOOL_FISHINGROD",
+): HourlyItem[] {
   const base: HourlyItem[] = [
     {
       id: "T4_MAIN_RAPIER_MORGANA",
@@ -61,8 +65,8 @@ function avaRoadsDeathInputs(deathRate: number, geared: boolean): HourlyItem[] {
       side: "buy",
     },
     {
-      id: "T4_CAPEITEM_FW_THETFORD",
-      name: "Thetford Cape (death replacement)",
+      id: "T4_CAPEITEM_FW_FORTSTERLING",
+      name: "Fort Sterling Cape (death replacement)",
       quantity: deathRate,
       side: "buy",
     },
@@ -85,7 +89,7 @@ function avaRoadsDeathInputs(deathRate: number, geared: boolean): HourlyItem[] {
         side: "buy",
       },
       {
-        id: "T8_2H_TOOL_FISHINGROD",
+        id: fishingRodId,
         name: "Fishing rod (death replacement)",
         quantity: deathRate * 0.65,
         side: "buy",
@@ -351,7 +355,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
             name: "Puremist Snapper (Rare+ T7 mist, avg)",
-            quantity: 0.08,
+            quantity: 0.08 * PUREMIST_SNAPPER_PER_CATCH,
           },
         ],
       },
@@ -380,7 +384,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
             name: "Puremist Snapper (Rare+ T7 mist, avg)",
-            quantity: 0.4,
+            quantity: 0.4 * PUREMIST_SNAPPER_PER_CATCH,
           },
         ],
       },
@@ -409,46 +413,46 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.avaGrandmaster,
         hourlyOutput: avaRoadsFishOutput(400, AVA_T7_STURGEON_SHARE),
-        hourlyInputs: avaRoadsDeathInputs(0.1, true),
+        hourlyInputs: avaRoadsDeathInputs(0.1, true, "T7_2H_TOOL_FISHINGROD"),
         description:
           "T7 fisherman set, ~400 fish/hr, 2/5 Sturgeon and 3/5 butchered to chops",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
             name: "Puremist Snapper (avg)",
-            quantity: 0.35,
+            quantity: 0.35 * PUREMIST_SNAPPER_PER_CATCH,
           },
         ],
       },
       {
         ...SKILL_TIERS.avaProfit,
-        hourlyInputs: avaRoadsDeathInputs(0.12, true),
+        hourlyInputs: avaRoadsDeathInputs(0.12, true, "T8_2H_TOOL_FISHINGROD"),
         description:
           "T8 fisherman set, ~450 fish/hr, 3/7 Sturgeon and 4/7 butchered to chops",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
             name: "Puremist Snapper (avg)",
-            quantity: 0.5,
+            quantity: 0.5 * PUREMIST_SNAPPER_PER_CATCH,
           },
         ],
       },
       {
         ...SKILL_TIERS.avaExpert,
         hourlyOutput: avaRoadsFishOutput(550, AVA_T8_STURGEON_SHARE),
-        hourlyInputs: avaRoadsDeathInputs(0.18, true),
+        hourlyInputs: avaRoadsDeathInputs(0.18, true, "T8_2H_TOOL_FISHINGROD"),
         description:
           "T8 max spec, ~550 fish/hr on deep T8 road maps. Sturgeon/Snapper from zone-tier RNG on normal schools.",
         bonusOutput: [
           {
             id: "T7_FISH_FRESHWATER_AVALON_RARE",
             name: "Puremist Snapper (avg)",
-            quantity: 1.35,
+            quantity: 1.35 * PUREMIST_SNAPPER_PER_CATCH,
           },
         ],
       },
     ),
-    defaultSkillTierId: "profit",
+    defaultSkillTierId: "grandmaster",
   },
   "laborer-passive-income": {
     /** T8 houses, T7 journals, 150% yield, all laborers same specialty; baseline 10 laborers, 22h per job. */

@@ -695,7 +695,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     silverPerHour: { min: 600_000, max: 1_800_000 },
     silverByLevel: [
       { label: "Safe escape (bank ~12 min)", min: 400_000, max: 900_000 },
-      { label: "Normal (T8 gear, ~22 min banking)", min: 700_000, max: 1_500_000 },
+      { label: "Normal (GM gear, ~22 min banking)", min: 600_000, max: 1_300_000 },
       { label: "Greedy max profit (~35 min banking)", min: 900_000, max: 2_000_000 },
       { label: "Greedy + lucky Snapper hour (RNG)", min: 1_200_000, max: 2_800_000 },
     ],
@@ -762,7 +762,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     profitBuild: {
       title: "Max Profit Fishing Gear",
       description:
-        "Full T8 fisherman set with pork pie. Rod in bag; Thetford cape (Chain Lightning), Giant Stag, and invis potion for road escapes.",
+        "Full T8 fisherman set with pork pie. Rod in bag; Fort Sterling cape, Giant Stag, and invis potion for road escapes.",
       slots: {
         head: {
           id: "T8_HEAD_GATHERER_FISH",
@@ -785,9 +785,9 @@ const rawGuides: Omit<Guide, "reliability">[] = [
           hint: "Fight back or escape if dismounted on roads",
         },
         cape: {
-          id: "T4_CAPEITEM_FW_THETFORD",
-          name: "Adept's Thetford Cape",
-          hint: "Chain Lightning burst; use invis potion to escape",
+          id: "T4_CAPEITEM_FW_FORTSTERLING",
+          name: "Adept's Fort Sterling Cape",
+          hint: "CC reduction; pair with invis potion to escape",
         },
         bag: {
           id: "T5_BAG",
@@ -854,10 +854,10 @@ const rawGuides: Omit<Guide, "reliability">[] = [
       "Pork Pie ×2 per hour grants +15% gathering yield (which also boosts fishing yield) and +30% carry weight, including on the safe escape build.",
       "If dismounted on the safe build, pop Flee on Miner's Workboots, then Ambush on the Assassin's Jacket to juke and remount your T3 horse.",
       "A single death with a full bag can wipe hours of profit. The calculator shows gear replacement plus death probability × carried fish value, not kit alone.",
-      "Use Safe escape if you bank every ~12 min, Normal for ~22 min banking on T8 gear, Greedy if you push deep roads and carry more loot between banks.",
+      "Use Safe escape if you bank every ~12 min, Normal for ~22 min banking on GM gear, Greedy if you push deep roads with full T8 set.",
       "Puremist Snapper is the big swing factor. The calculator lists Snapper separately from Sturgeon/chops so you can see expected vs lucky hours.",
       "Portal time finding a good T8 road reduces effective fish/hr. A bad road or contested schools cut income even with max gear.",
-      "Thetford Cape is Chain Lightning, not invisibility. Carry invisibility potions on geared tabs for dismount escapes.",
+      "Fort Sterling Cape gives CC reduction on geared tabs. Carry invisibility potions for dismount escapes.",
       "The fishing rod stays in your bag. Cast at schools without equipping it.",
     ],
     references: [

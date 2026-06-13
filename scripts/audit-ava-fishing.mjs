@@ -2,6 +2,7 @@
 import { readFileSync } from "fs";
 
 const CHOPS_PER_FISH = 15;
+const SNAPPER_PER_CATCH = 4;
 const T7_STURGEON_SHARE = 2 / 5;
 const T8_STURGEON_SHARE = 3 / 7;
 const CHOP_PRICE = Number(process.env.CHOP_PRICE ?? 340);
@@ -76,7 +77,7 @@ for (const tier of tiers) {
     sturgeon * price("T8_FISH_FRESHWATER_ALL_COMMON", "sell") +
     chops * price("T1_FISHCHOPS", "sell") +
     price("T7_JOURNAL_FISHING_FULL", "sell");
-  gross += tier.snapper * price("T7_FISH_FRESHWATER_AVALON_RARE", "sell");
+  gross += tier.snapper * SNAPPER_PER_CATCH * price("T7_FISH_FRESHWATER_AVALON_RARE", "sell");
 
   let costs = journalBuy.q * price(journalBuy.id, "buy");
   const cons = tier.consumables ?? baseConsumables;

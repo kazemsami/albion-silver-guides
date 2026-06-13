@@ -36,9 +36,9 @@ const FISHING_COMBAT_SLOTS = {
     hint: "Escape if dismounted on dangerous maps",
   },
   cape: {
-    id: "T4_CAPEITEM_FW_THETFORD",
-    name: "Adept's Thetford Cape",
-    hint: "Chain Lightning burst on dangerous maps",
+    id: "T4_CAPEITEM_FW_FORTSTERLING",
+    name: "Adept's Fort Sterling Cape",
+    hint: "CC reduction on dangerous maps",
   },
   bag: {
     id: "T4_BAG",
@@ -542,9 +542,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         head: { id: "T8_HEAD_GATHERER_FISH", name: "Elder's Fisherman Cap", hint: "Fishing yield" },
         armor: { id: "T8_ARMOR_GATHERER_FISH", name: "Elder's Fisherman Garb", hint: "Fishing yield" },
         shoes: { id: "T8_SHOES_GATHERER_FISH", name: "Elder's Fisherman Workboots", hint: "Weight reduction" },
-        mainhand: FISHING_COMBAT_SLOTS.mainhand,
-        cape: { id: "T4_CAPEITEM_AVALON", name: "Adept's Avalonian Cape", hint: "Extra yield" },
-        bag: FISHING_COMBAT_SLOTS_T5.bag,
+        ...FISHING_COMBAT_SLOTS_T5,
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", quantity: 2, hint: "+15% yield, +30% carry weight, 2/hr" },
         potion: { id: "T8_POTION_CLEANSE", name: "Invisibility Potion", hint: "Essential escape" },
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight on road loops" },

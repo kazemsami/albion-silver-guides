@@ -194,7 +194,7 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T5_FISH_FRESHWATER_ALL_COMMON: { sell: 2200, buy: 2800 },
   // Fishing
   T3_FISHINGBAIT: { sell: 180, buy: 210 },
-  T7_FISH_FRESHWATER_AVALON_RARE: { sell: 380_000, buy: 450_000 },
+  T7_FISH_FRESHWATER_AVALON_RARE: { sell: 80_000, buy: 65_000 },
   T8_FISH_FRESHWATER_ALL_COMMON: { sell: 9500, buy: 12_000 },
   // Food & potions
   T4_MEAL_STEW: { sell: 420, buy: 480 },

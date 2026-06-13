@@ -2,6 +2,7 @@ import {
   AVA_CHOPS_PER_FISH,
   AVA_ROADS_SNAPPER_META,
   getAvaRoadsPreset,
+  PUREMIST_SNAPPER_PER_CATCH,
   type AvaRoadsPresetId,
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
@@ -50,17 +51,16 @@ export interface AvaRoadsEconomicsResult {
 
 const GEAR_REPLACEMENT_SAFE = [
   "T4_MAIN_RAPIER_MORGANA",
-  "T4_CAPEITEM_FW_THETFORD",
+  "T4_CAPEITEM_FW_FORTSTERLING",
   "T4_BAG",
   "T3_MOUNT_HORSE",
 ] as const;
 
 const GEAR_REPLACEMENT_GEARED = [
   "T4_MAIN_RAPIER_MORGANA",
-  "T4_CAPEITEM_FW_THETFORD",
+  "T4_CAPEITEM_FW_FORTSTERLING",
   "T5_BAG",
   "T4_MOUNT_GIANTSTAG",
-  "T8_2H_TOOL_FISHINGROD",
 ] as const;
 
 
@@ -94,14 +94,22 @@ function sumLines(lines: PricedLine[]): number | null {
   return hasPrice ? roundSilver(total) : null;
 }
 
-function kitReplacementCost(prices: PriceMap, geared: boolean): number | null {
-  const ids = geared ? GEAR_REPLACEMENT_GEARED : GEAR_REPLACEMENT_SAFE;
+function kitReplacementCost(
+  prices: PriceMap,
+  preset: ReturnType<typeof getAvaRoadsPreset>,
+): number | null {
+  const ids = preset.geared
+    ? [
+        ...GEAR_REPLACEMENT_GEARED,
+        ...(preset.fishingRodId ? [preset.fishingRodId] : []),
+      ]
+    : [...GEAR_REPLACEMENT_SAFE];
   let total = 0;
   let hasPrice = false;
   for (const id of ids) {
     const { unitPrice } = resolveBuyPrice(prices, id);
     if (unitPrice == null) continue;
-    const qty = id === "T8_2H_TOOL_FISHINGROD" ? 0.65 : 1;
+    const qty = id.includes("_TOOL_FISHINGROD") ? 0.65 : 1;
     total += unitPrice * qty;
     hasPrice = true;
   }
@@ -149,10 +157,11 @@ export function computeAvaRoadsEconomics(
     preset.sturgeonShare,
   );
 
-  const snapperQty =
+  const snapperCatches =
     inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
       ? preset.snapperLuckyCount
       : preset.snapperExpectedPerHour * uptimeFactor;
+  const snapperQty = snapperCatches * PUREMIST_SNAPPER_PER_CATCH;
 
   const snapperLine =
     snapperQty > 0
@@ -160,8 +169,8 @@ export function computeAvaRoadsEconomics(
           prices,
           "T7_FISH_FRESHWATER_AVALON_RARE",
           inputs.snapperViewId === "lucky"
-            ? "Puremist Snapper (lucky bonus)"
-            : "Puremist Snapper (expected avg)",
+            ? `Puremist Snapper (${snapperCatches} lucky catch${snapperCatches === 1 ? "" : "es"} × ${PUREMIST_SNAPPER_PER_CATCH})`
+            : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
           snapperQty,
           "sell",
         )
@@ -235,7 +244,7 @@ export function computeAvaRoadsEconomics(
       ? roundSilver(baseFishGross * carriedLootFraction)
       : null;
 
-  const kitCost = kitReplacementCost(prices, preset.geared);
+  const kitCost = kitReplacementCost(prices, preset);
   const gearReplacementCost =
     kitCost != null
       ? roundSilver(kitCost * preset.deathsPerHour)
