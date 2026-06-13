@@ -108,7 +108,7 @@ const rawGuides: Omit<Guide, "reliability">[] = [
     profitBuild: {
       title: "Required Gear",
       description:
-        "T5 harvester set + Avalonian cape + Pork Pie for the Thetford swamp loop. Carry two cropper journals.",
+        "T5 harvester set + Pork Pie for the Thetford swamp loop. Carry two cropper journals.",
       slots: {
         head: {
           id: "T5_HEAD_GATHERER_FIBER",
@@ -129,11 +129,6 @@ const rawGuides: Omit<Guide, "reliability">[] = [
           id: "T5_2H_TOOL_SICKLE",
           name: "Expert's Sickle",
           hint: "T5 sickle for hemp (T4) and skyflower (T5)",
-        },
-        cape: {
-          id: "T4_CAPEITEM_AVALON",
-          name: "Adept's Avalonian Cape",
-          hint: "Gathering yield bonus",
         },
         mount: {
           id: "T4_MOUNT_GIANTSTAG",
@@ -596,7 +591,6 @@ const rawGuides: Omit<Guide, "reliability">[] = [
   
     tips: [
       "Yellow-zone Mists are knockdown-only, so wear your best gear instead of cheap throwaway kit.",
-      "The Avalonian Fishing Rod is the Avalonian item that matters for fishing yield, not the cape.",
       "Your fishing rod can stay in your inventory. You do not need to put it in your main hand to fish.",
       "T7 fishing zones are not the default Mist you spawn into. You are usually hunting for better nested Mists, especially Epic and Legendary ones.",
       "Puremist Snapper is a rare T7 Mist/Roads fish, not its own visible fishing school. Treat it as RNG upside, not stable hourly income.",

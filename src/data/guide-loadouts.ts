@@ -102,7 +102,6 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         armor: { id: "T5_ARMOR_GATHERER_ORE", name: "Expert's Miner Garb", hint: "Higher mining yield" },
         shoes: { id: "T5_SHOES_GATHERER_ORE", name: "Expert's Miner Workboots", hint: "Yield + weight reduction" },
         mainhand: { id: "T5_2H_TOOL_PICK", name: "Expert's Pickaxe", hint: "Mines titanium (T5)" },
-        cape: { id: "T4_CAPEITEM_AVALON", name: "Adept's Avalonian Cape", hint: "Gathering yield bonus" },
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight mount" },
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
@@ -144,13 +143,12 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     },
     high: {
       title: "Advanced Fiber Gear",
-      description: "T6 set with Avalonian cape and pork pie for max swamp yields.",
+      description: "T6 set with pork pie for max swamp yields.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FIBER", name: "Master's Harvester Cap", hint: "Max fiber yield" },
         armor: { id: "T6_ARMOR_GATHERER_FIBER", name: "Master's Harvester Garb", hint: "Max fiber yield" },
         shoes: { id: "T6_SHOES_GATHERER_FIBER", name: "Master's Harvester Workboots", hint: "Yield + weight reduction" },
         mainhand: { id: "T6_2H_TOOL_SICKLE", name: "Master's Sickle", hint: "T6 fiber nodes" },
-        cape: { id: "T4_CAPEITEM_AVALON", name: "Adept's Avalonian Cape", hint: "Gathering yield bonus" },
         mount: { id: "T4_MOUNT_GIANTSTAG", name: "Adept's Giant Stag", hint: "High carry weight" },
         food: { id: "T7_MEAL_PIE", name: "Pork Pie", hint: "+15% yield, +30% carry weight" },
       },
