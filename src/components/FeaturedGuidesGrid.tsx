@@ -12,7 +12,7 @@ export function FeaturedGuidesGrid({
   guides: Guide[];
   marketData: GuidesListMarketData;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData);
+  const profitRanges = useProfitRangesForCity(marketData, guides);
 
   return (
     <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

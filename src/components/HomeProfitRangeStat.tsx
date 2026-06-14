@@ -12,7 +12,7 @@ export function HomeProfitRangeStat({
   guides: Guide[];
   marketData: GuidesListMarketData;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData);
+  const profitRanges = useProfitRangesForCity(marketData, guides);
 
   const liveMins = Object.values(profitRanges).map((r) => r.min);
   const liveMaxs = Object.values(profitRanges).map((r) => r.max);

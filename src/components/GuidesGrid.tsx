@@ -16,7 +16,7 @@ export function GuidesGrid({
   marketData: GuidesListMarketData;
   sort?: GuideSort;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData);
+  const profitRanges = useProfitRangesForCity(marketData, guides);
 
   const sorted = useMemo(
     () => sortGuidesByProfit(guides, profitRanges, sort),

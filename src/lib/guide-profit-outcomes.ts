@@ -27,6 +27,20 @@ import { roundSilver } from "@/lib/format";
 
 export type GuideProfitOutcomesMap = Record<string, GuideProfitOutcomes>;
 
+export type GuideCardProfitRange = { min: number; max: number };
+
+/** Same span as ProfitOutcomesTable compact mode (conservative through high-roll). */
+export function profitRangeFromOutcomes(
+  outcomes: GuideProfitOutcomes,
+): GuideCardProfitRange | null {
+  const lo = outcomes.conservative ?? outcomes.median;
+  const hi = outcomes.highRoll ?? outcomes.expected ?? outcomes.median;
+  if (lo == null && hi == null) return null;
+  const min = lo ?? hi!;
+  const max = hi ?? lo!;
+  return { min: Math.min(min, max), max: Math.max(min, max) };
+}
+
 function medianValue(values: number[]): number | null {
   if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);

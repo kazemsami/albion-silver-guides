@@ -45,7 +45,10 @@ import {
   type PriceMapKind,
   type PriceMapsByCity,
 } from "@/lib/albion-prices";
-import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
+import {
+  computeGuideProfitOutcomes,
+  profitRangeFromOutcomes,
+} from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomesMap } from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomes } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
@@ -283,7 +286,6 @@ function computeAllGuideProfitRanges(
   premiumSeller: boolean,
 ): GuideProfitRangesByCity {
   const listingTaxRate = getListingTaxRate(premiumSeller);
-  const gatheringYieldMultiplier = getGatheringYieldMultiplier(premiumSeller);
   const result: GuideProfitRangesByCity = {};
 
   for (const city of Object.keys(priceMaps)) {
@@ -291,39 +293,14 @@ function computeAllGuideProfitRanges(
     const cityRanges: GuideProfitRangeMap = {};
 
     for (const slug of slugs) {
-      const economics = guideEconomicsBySlug[slug];
-      if (slug === "high-tier-group-tracking") {
-        const range = computeTrackingProfitRange(prices, listingTaxRate);
-        cityRanges[slug] = range;
-        continue;
-      }
-      if (slug === "potions-crafting-bulk") {
-        cityRanges[slug] = computePotionProfitRange(prices, listingTaxRate);
-        continue;
-      }
-      if (slug === "ava-roads-fishing") {
-        cityRanges[slug] = computeAvaRoadsProfitRange(
-          prices,
-          listingTaxRate,
-          gatheringYieldMultiplier,
-        );
-        continue;
-      }
-      if (slug === "abyssal-depths-farming") {
-        cityRanges[slug] = computeAbyssalProfitRange(prices, listingTaxRate);
-        continue;
-      }
-      const range = computeProfitRange(
-        economics,
-        prices,
+      const outcomes = computeGuideProfitOutcomes(slug, prices, {
         listingTaxRate,
-        getGatheringYieldMultiplier(
-          premiumSeller,
-          economics.gatherYieldBaseline,
-        ),
-      );
-      if (range.min != null && range.max != null) {
-        cityRanges[slug] = { min: range.min, max: range.max };
+        premiumSeller,
+        priceMapKind: "snapshot",
+      });
+      const range = profitRangeFromOutcomes(outcomes);
+      if (range) {
+        cityRanges[slug] = range;
       }
     }
 
@@ -331,6 +308,18 @@ function computeAllGuideProfitRanges(
   }
 
   return result;
+}
+
+/** Match detail-page outcomes: logged Standard baseline guides ignore Premium toggle. */
+export function resolveGuideOutcomesPremiumSeller(
+  slug: string,
+  premiumSeller: boolean,
+): boolean {
+  const economics = guideEconomicsBySlug[slug];
+  if (economics?.gatherYieldBaseline === "standard") {
+    return false;
+  }
+  return premiumSeller;
 }
 
 /** Compute profit/hr ranges for every guide with economics using estimated prices. */

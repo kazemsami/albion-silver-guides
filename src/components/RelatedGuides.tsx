@@ -12,7 +12,7 @@ export function RelatedGuides({
   guides: Guide[];
   marketData: GuidesListMarketData;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData);
+  const profitRanges = useProfitRangesForCity(marketData, guides);
 
   return (
     <section className="mt-16 border-t border-gold/10 pt-10">

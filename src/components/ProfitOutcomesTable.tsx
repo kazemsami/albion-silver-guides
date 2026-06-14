@@ -1,6 +1,7 @@
 import type { GuideProfitOutcomes } from "@/types/guide";
 import { profitOutcomeLabels } from "@/types/guide";
 import { formatSilverPrice } from "@/lib/format";
+import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
 
 const outcomeOrder: (keyof GuideProfitOutcomes)[] = [
   "conservative",
@@ -36,14 +37,13 @@ export function ProfitOutcomesTable({
   if (!hasAny) return null;
 
   if (compact) {
-    const lo = outcomes.conservative ?? outcomes.median;
-    const hi = outcomes.highRoll ?? outcomes.expected ?? outcomes.median;
-    if (lo == null && hi == null) return null;
+    const range = profitRangeFromOutcomes(outcomes);
+    if (!range) return null;
     return (
       <p className="text-sm font-semibold text-gold tabular-nums">
-        {lo != null && hi != null && lo !== hi
-          ? `${formatSilverPrice(lo)} – ${formatSilverPrice(hi)}${unitLabel}`
-          : `${formatSilverPrice(hi ?? lo!)}${unitLabel}`}
+        {range.min !== range.max
+          ? `${formatSilverPrice(range.min)} – ${formatSilverPrice(range.max)}${unitLabel}`
+          : `${formatSilverPrice(range.max)}${unitLabel}`}
         <span className="ml-1 font-normal text-parchment/40">
           {priceSourceLabel ?? "est."}
         </span>

@@ -21,7 +21,12 @@ import {
   PREMIUM_SELLER_STORAGE_KEY,
 } from "@/lib/listing-tax";
 import type { GuidesListMarketData } from "@/lib/guide-economics";
-import { pickGuideProfitOutcomes, pickGuideProfitRanges } from "@/lib/guide-economics";
+import {
+  pickGuideProfitOutcomes,
+  pickGuideProfitRanges,
+  resolveGuideOutcomesPremiumSeller,
+} from "@/lib/guide-economics";
+import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
 import { effectiveMarketCity } from "@/lib/guide-market-city";
 import { deserializePriceMap, pickGuideMarketPrices } from "@/lib/guide-economics";
 import type { PriceMapKind } from "@/lib/albion-prices";
@@ -153,12 +158,39 @@ export function useGuidesListMarketSource(
 
 export function useProfitRangesForCity(
   marketData: GuidesListMarketData,
-  guideDefaultCity?: MarketCityId,
+  guideList: readonly {
+    slug: string;
+    defaultMarketCity?: MarketCityId;
+  }[] = [],
 ) {
   const { marketCity, premiumSeller } = useMarketCity();
-  const city = effectiveMarketCity(marketCity, guideDefaultCity);
   const source = useGuidesListMarketSource(marketData);
-  return pickGuideProfitRanges(source.ranges, premiumSeller, city);
+
+  return useMemo(() => {
+    if (guideList.length === 0) {
+      return pickGuideProfitRanges(source.ranges, premiumSeller, marketCity);
+    }
+
+    const result: Record<string, { min: number; max: number }> = {};
+    for (const guide of guideList) {
+      const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
+      const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(
+        guide.slug,
+        premiumSeller,
+      );
+      const outcomes = pickGuideProfitOutcomes(
+        source.outcomes,
+        outcomesPremiumSeller,
+        city,
+        guide.slug,
+      );
+      const range = outcomes ? profitRangeFromOutcomes(outcomes) : null;
+      if (range) {
+        result[guide.slug] = range;
+      }
+    }
+    return result;
+  }, [guideList, marketCity, premiumSeller, source]);
 }
 
 export function useGuideProfitOutcomes(
