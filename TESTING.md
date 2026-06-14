@@ -18,11 +18,13 @@ npx playwright install --with-deps chromium
 
 ## Running the tests
 
-### All tests (validate scripts + E2E)
+### All tests
 
 ```bash
 npm test
 ```
+
+Runs the full Playwright suite (same as `npm run test:e2e`).
 
 ### E2E tests only (fastest for development)
 
@@ -77,20 +79,16 @@ npm run test:e2e:debug
 | `tests/e2e/json-ld.spec.ts` | Type-specific JSON-LD: `WebSite` on `/`, `ItemList` on guides list/category landings, `Article` + `BreadcrumbList` on guide detail pages |
 | `tests/e2e/navigation.spec.ts` | Header dropdown, mobile menu, feedback/donate, theme toggle, persisted market preferences |
 | `tests/e2e/homepage.spec.ts` | Guide count, featured guide links, category cards, silver/hr range sanity, skip link, single h1 |
+| `tests/e2e/guide-data.spec.ts` | Required guide fields, profitBuild structure, reliability and economics entries, GUIDE_SLUGS parity |
+| `tests/e2e/guides-seo-config.spec.ts` | `guides-seo.ts` category landing rules, noindex logic, dungeon server profit ranges vs calculator outcomes |
+| `tests/e2e/profit-calculator-data.spec.ts` | Guide card profit ranges match baked outcomes; default calculator outcomes match `tests/fixtures/profit-snapshots.json` |
 
-### Offline validation (`npm run validate`)
-
-| Script | What it checks |
-|--------|----------------|
-| `scripts/validate-guides.mjs` | Guide data completeness and item icon CDN availability |
-| `scripts/check-guide-profit-consistency.ts` | Guide card profit ranges match calculator outcomes |
-| `scripts/check-guides-seo-metadata.ts` | Server-rendered SEO metadata |
-| `scripts/check-profit-snapshots.ts` | Default profit outcomes match `tests/fixtures/profit-snapshots.json` |
+All former offline validation scripts are covered by Playwright tests above.
 
 Regenerate profit snapshots after intentional calculator changes:
 
 ```bash
-npx tsx scripts/check-profit-snapshots.ts --write
+npm run test:snapshots:write
 ```
 
 ---

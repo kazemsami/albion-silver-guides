@@ -146,6 +146,32 @@ test.describe("Filtered pages are noindex", () => {
       expect(robotsMeta).not.toMatch(/noindex/i);
     }
   });
+
+  for (const category of CATEGORIES) {
+    test(`/guides?category=${category} (category landing) is indexable`, async ({
+      page,
+    }) => {
+      await blockLivePriceApis(page);
+      await page.goto(`/guides?category=${category}`);
+      const robotsMeta = await page
+        .locator('meta[name="robots"]')
+        .getAttribute("content");
+      if (robotsMeta) {
+        expect(robotsMeta).not.toMatch(/noindex/i);
+      }
+    });
+  }
+
+  test("/guides?category=dungeons&difficulty=advanced is noindex", async ({
+    page,
+  }) => {
+    await blockLivePriceApis(page);
+    await page.goto("/guides?category=dungeons&difficulty=advanced");
+    const robotsMeta = await page
+      .locator('meta[name="robots"]')
+      .getAttribute("content");
+    expect(robotsMeta ?? "").toMatch(/noindex/i);
+  });
 });
 
 test.describe("Server-rendered text does not contain loading placeholders", () => {
