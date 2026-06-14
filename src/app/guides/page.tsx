@@ -127,11 +127,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
 
       <div className="grid gap-10 lg:grid-cols-[260px_1fr]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <Suspense
-            fallback={
-              <div className="text-sm text-parchment/40">Loading filters…</div>
-            }
-          >
+          <Suspense fallback={null}>
             <GuideFilters />
           </Suspense>
         </aside>

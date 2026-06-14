@@ -21,7 +21,7 @@ export function GuideEvidencePanel({
     return (
       <p className="mt-3 text-xs text-parchment/45">
         {verificationStatusLabels[reliability.status]}:{" "}
-        {verificationStatusDescriptions[reliability.status]}. No test logs
+        {verificationStatusDescriptions[reliability.status]} No test logs
         attached yet.
       </p>
     );

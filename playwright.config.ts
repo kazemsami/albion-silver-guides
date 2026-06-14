@@ -1,8 +1,18 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const baseURL =
+  process.env.BASE_URL ??
+  process.env.PLAYWRIGHT_BASE_URL ??
+  "http://localhost:3000";
+
+const useExternalServer = !/^https?:\/\/localhost(?::\d+)?\/?$/i.test(
+  baseURL.replace(/\/$/, ""),
+);
+
 /**
  * Playwright configuration for E2E tests.
- * Tests run against a local production build (next build && next start).
+ * Local: next build && next start via webServer.
+ * Vercel CI: set BASE_URL to the deployment URL (webServer skipped).
  * Run: npm run test:e2e
  */
 export default defineConfig({
@@ -15,7 +25,7 @@ export default defineConfig({
   timeout: 30_000,
 
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
+    baseURL,
     trace: "on-first-retry",
     // Disable JavaScript-based market price fetching so tests use snapshot
     // prices only and are not sensitive to live Albion API responses.
@@ -29,12 +39,16 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: "npm run build && npm run start",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-    stdout: "pipe",
-    stderr: "pipe",
-  },
+  ...(useExternalServer
+    ? {}
+    : {
+        webServer: {
+          command: "npm run build && npm run start",
+          url: "http://localhost:3000",
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000,
+          stdout: "pipe",
+          stderr: "pipe",
+        },
+      }),
 });

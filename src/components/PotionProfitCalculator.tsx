@@ -275,7 +275,7 @@ export function PotionProfitCalculator({
               profitRange.min != null &&
               profitRange.max != null && (
                 <p className="mt-1 text-xs text-parchment/45">
-                  Major Healing normal vs event hold:{" "}
+                  Major Healing normal vs event holding scenario:{" "}
                   {formatSilverRange(profitRange.min, profitRange.max)}/10k
                   focus
                 </p>

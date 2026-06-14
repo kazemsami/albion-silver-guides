@@ -294,9 +294,11 @@ export function GuideProfitCalculator({
             )}
             {profitRange?.min != null && profitRange.max != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                {usesLoggedStandardBaseline
-                  ? "All tiers (logged baseline, Standard tax): "
-                  : "All skill levels (after tax): "}
+                {hasLaborerSpecialtyPicker
+                  ? "All calculator extremes (all specialties and house counts, after tax): "
+                  : usesLoggedStandardBaseline
+                    ? "All tiers (logged baseline, Standard tax): "
+                    : "All skill levels (after tax): "}
                 {formatSilverRange(profitRange.min, profitRange.max)}/hr
               </p>
             )}

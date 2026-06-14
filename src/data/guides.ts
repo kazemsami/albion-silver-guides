@@ -283,7 +283,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "dungeon-maps-solo",
     title: "Solo Dungeon Maps",
     description:
-      "Buy solo dungeon maps from the market, open a private dungeon entrance, and farm silver in a dedicated instance with no competition. Accessible from ~1100 IP (T6 maps) up to 1540+ IP (T8.2 maps). A logged 2.5-hour session at 1540 IP with 20 T8.2 maps produced 4.2M gross loot before listing tax. Unlike free open-world spawns, maps stay in the zone you open them, and you can chain runs back-to-back without waiting.",
+      "Buy solo dungeon maps from the market, open a hidden dungeon entrance, and farm silver before other players notice. Accessible from ~1100 IP (T6 maps) up to 1540+ IP (T8.2 maps). A logged 2.5-hour session at 1540 IP with 20 T8.2 maps produced 4.2M gross loot before listing tax. Unlike free open-world spawns, maps stay in the zone you open them, and you can chain runs back-to-back without waiting. Other players can still enter once the entrance appears.",
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
@@ -306,7 +306,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Sell runes, souls, and relics on Caerleon. List 1 silver under the lowest sell order during prime hours. Relics sometimes have better value crafted than sold raw.",
     ],
     tips: [
-      "Maps guarantee a private instance. Unlike free open-world dungeons, no other player can take your chest.",
+      "Maps give you first access to a hidden entrance, but other players can enter once it appears. You still beat open-world competition for the first chest, yet a faster rival can contest later loot.",
       "T8 maps jump to random zones constantly which creates a lot of travel downtime. T7 maps run at 11 per hour vs T8 at 8 to 9 per hour. Both tiers reach similar silver per hour before tax, but T7 is more consistent and forgiving if you are learning routes.",
       "Zone trick detail: if your current zone is T7 and all surrounding zones are T8, T7 map portals have nowhere to spawn except in your zone. This removes all inter-zone travel. It works for T6 and T7 maps. T8 maps cannot use this trick since T8 is the highest tier.",
       "Roads of Avalon hideout zones starting with SEC are T6 and starting with SET are T7. These zones accept maps of the same tier only, so your portals will never jump to another zone. Roads are a popular spot for consistent high-volume sessions.",
