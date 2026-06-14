@@ -5,7 +5,7 @@ import type { MarketCityId } from "@/lib/market-cities";
 export const guideDefaultMarketCityBySlug: Record<string, MarketCityId> = {
   "t4-ore-mining-yellow-zone": "Martlock",
   "fiber-farming-solo": "Bridgewatch",
-  "solo-dungeon-farming": "Martlock",
+  "dungeon-maps-solo": "Caerleon",
   "corrupted-dungeons-pvpve": "Caerleon",
   "abyssal-depths-farming": "Caerleon",
   "high-tier-group-tracking": "Caerleon",
@@ -19,7 +19,7 @@ export const guideRiskProfileBySlug: Record<string, GuideRiskProfile> = {
   "t4-ore-mining-yellow-zone": "beginner-safe",
   "fiber-farming-solo": "beginner-safe",
   "mists-fishing": "beginner-safe",
-  "solo-dungeon-farming": "rng-heavy",
+  "dungeon-maps-solo": "rng-heavy",
   "corrupted-dungeons-pvpve": "rng-heavy",
   "abyssal-depths-farming": "rng-heavy",
   "high-tier-group-tracking": "rng-heavy",

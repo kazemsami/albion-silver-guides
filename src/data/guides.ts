@@ -188,90 +188,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     readTime: 6,
   },
   {
-    slug: "solo-dungeon-farming",
-    title: "Solo Randomized Dungeon Farming",
-    description:
-      "Farm T6 red-zone solo dungeons near Martlock for roughly 300 Master's Runes, ~90 souls, and leather per hour at a steady clear pace (closer to ~400 runes / ~120 souls in black zones). Yellow zones are for learning; red zones pay more but full-loot deaths cut take-home. Use the calculator for after-tax loot minus modeled kit losses.",
-    category: "dungeons",
-    difficulty: "intermediate",
-    zoneType: "dangerous",
-    silverPerHour: { min: 150_000, max: 800_000 },
-    requirements: [
-      "T6 Bloodletter + Scholar Cowl clear build (see gear below)",
-      "Mutton Stew + Major Healing Potions: budget 2 stew and 3 healing pots per hour (the calculator prices these). Carry a Major Energy Potion as optional backup",
-      "Red-zone access near Martlock (e.g. Redtree Enclave, T6 red)",
-      "No keys, solo entrances are free hidden world spawns",
-    ],
-    steps: [
-      "Roam T6 red zones around Martlock for green-glowing solo entrances. Yellow T5 zones work for practice but pay roughly half the loot.",
-      "Enter, clear trash in a circle back to the entrance, pull mobs into corridors so you never fight more than 3 at once.",
-      "Activate Small Combat Shrines when you find them, each gives a random 1-minute buff (damage, sustain, or cooldown reduction) to the first player who clicks it.",
-      "Loot every chest: Master's Runes and Souls are the main silver (sell on Caerleon). Grab silver bags and tomes but do not slow the run for green loot.",
-      "Exit after the boss chest, aim for 4-5 full clears per hour. A steady red-zone hour is around 300 runes and 90 souls; black zones push toward 400 and 120. Bank in Martlock every 2 runs so a death does not wipe your stack.",
-      "Sell runes in stacks of 100+ on Caerleon during EU prime. Souls can be sold raw or saved for your own crafting; check which pays more today.",
-    ],
-    tips: [
-      "Bloodletter E → Q → W rotation with Scholar Cowl energy refund is the standard speed-clear, practice the rotation until trash dies in under 8 seconds.",
-      "Red zone deaths are full loot. Never carry more than 2 runs of loot on you. Bank is free insurance.",
-      "The profit calculator models ~0.08 full-kit replacements per hour on the red tab and prices 2 Mutton Stew plus 3 Major Healing Potions per hour. Major Energy Potion is optional carry only and is not in the hourly cost.",
-      "Dungeon tier = zone tier. T6 red near Martlock is the sweet spot for T6 rune income without black-zone risk.",
-      "Skip dungeons with other players inside, shared loot cuts your runes/hour in half.",
-    ],
-    profitBuild: {
-      title: "Required Gear",
-      description:
-        "T6 Bloodletter + Scholar Cowl for 4-5 red-zone solo clears per hour. Calculator prices 2 Mutton Stew and 3 Major Healing Potions per hour.",
-      slots: {
-        head: {
-          id: "T4_HEAD_CLOTH_SET1",
-          name: "Adept's Scholar Cowl",
-          hint: "Energy regeneration on every spell cast",
-        },
-        armor: {
-          id: "T6_ARMOR_LEATHER_SET1",
-          name: "Master's Mercenary Jacket",
-          hint: "Strong damage and defensive option",
-        },
-        shoes: {
-          id: "T6_SHOES_PLATE_SET1",
-          name: "Master's Soldier Boots",
-          hint: "Gap close or defensive boot skill",
-        },
-        mainhand: {
-          id: "T6_MAIN_RAPIER_MORGANA",
-          name: "Master's Bloodletter",
-          hint: "Lifesteal sustain + mobility dashes",
-        },
-        cape: {
-          id: "T4_CAPEITEM_FW_THETFORD",
-          name: "Adept's Thetford Cape",
-          hint: "Chain Lightning burst on burst damage",
-        },
-        food: {
-          id: "T6_MEAL_STEW",
-          name: "Mutton Stew",
-          quantity: 2,
-          hint: "+damage to speed up clears, 2/hr (calculator)",
-        },
-        potion: {
-          id: "T6_POTION_HEAL",
-          name: "Major Healing Potion",
-          quantity: 3,
-          hint: "Emergency heal between pulls, 3/hr (calculator)",
-        },
-      },
-      inventory: [
-        {
-          id: "T6_POTION_ENERGY",
-          name: "Major Energy Potion",
-          hint: "Optional backup; not priced in hourly calculator",
-        },
-      ],
-    },
-    featured: false,
-    readTime: 7,
-  },
-  {
     slug: "corrupted-dungeons-pvpve",
     title: "Corrupted Dungeons for PvPvE Profit",
     description:
@@ -362,6 +278,95 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     },
     featured: false,
     readTime: 9,
+  },
+  {
+    slug: "dungeon-maps-solo",
+    title: "Solo Dungeon Maps",
+    description:
+      "Buy solo dungeon maps from the market, open a private dungeon entrance, and farm silver in a dedicated instance with no competition. Accessible from ~1100 IP (T6 maps) up to 1540+ IP (T8.2 maps). A logged 2.5-hour session at 1540 IP with 20 T8.2 maps produced 4.2M gross loot before listing tax. Unlike free open-world spawns, maps stay in the zone you open them, and you can chain runs back-to-back without waiting.",
+    category: "dungeons",
+    difficulty: "advanced",
+    zoneType: "dangerous",
+    silverPerHour: { min: 900_000, max: 1_600_000 },
+    requirements: [
+      "~1100 IP minimum for T6 or T7 maps; ~1400-1540 IP for T8+ maps",
+      "Solo dungeon maps from the market (T6 ~10-15k each, T7 ~25-30k, T8.2 ~40k); buy in bulk of 20+",
+      "Red or black zone near a royal city; yellow zones work but pay significantly less",
+      "An extra 2 to 3 maps in your bag for the spawn-blocking trick (see tips)",
+    ],
+    steps: [
+      "Buy solo dungeon maps in bulk from the market. T7 maps offer solid loot with less zone-hopping than T8. T8.2 is the high end (~40k each). Check the order book daily; map prices fluctuate.",
+      "Pick your zone. You want a red zone surrounded by higher-tier zones so your map portal can only spawn in your current zone. Alternatively, enter the Roads of Avalon and find a Hideout zone whose name starts with SEC (for T6 maps) or SET (for T7 maps). These zone types keep map portals locked to the same zone.",
+      "Optional spawn-block trick: bring 3 to 4 extra maps. Open one map, walk to its portal location, then open a second one. Repeat until the game shows a message that all dungeon slots are filled. Close the last dungeon immediately. Every slot is now taken so your next map will always spawn right where you are standing, eliminating travel between runs.",
+      "Enter the dungeon. Clear packs efficiently. Do not wait for the 90-second post-kill chest timer. A real run takes 4 to 5 minutes to clear naturally, so waiting every chest adds 33 percent dead time to your session.",
+      "Mob threshold rule: you can skip up to 5 mobs without the final chest locking. Chrome Golems are an exception and do not count toward the threshold even if skipped. When a pack mixes large and small mobs, killing only the small mobs still counts, so clear mixed packs at minimum.",
+      "Shaman boss warning: if the boss uses its ability, the five shrines around it become active and each shrine counts as one mob toward the threshold. Do not let any aggroed mob live when fighting a Shaman boss or the chest will not open.",
+      "Watch for Morganotones near mob packs. If you aggro a pack too close to a Morganotone it will shadow-aggro and silently count toward the threshold. Kill Morganotones before finishing a nearby pack.",
+      "Loot all chests. Open silver bags immediately inside the dungeon so they convert to silver on death instead of dropping as loot. Bank after every 1 to 2 runs.",
+      "Sell runes, souls, and relics on Caerleon. List 1 silver under the lowest sell order during prime hours. Relics sometimes have better value crafted than sold raw.",
+    ],
+    tips: [
+      "Maps guarantee a private instance. Unlike free open-world dungeons, no other player can take your chest.",
+      "T8 maps jump to random zones constantly which creates a lot of travel downtime. T7 maps run at 11 per hour vs T8 at 8 to 9 per hour. Both tiers reach similar silver per hour before tax, but T7 is more consistent and forgiving if you are learning routes.",
+      "Zone trick detail: if your current zone is T7 and all surrounding zones are T8, T7 map portals have nowhere to spawn except in your zone. This removes all inter-zone travel. It works for T6 and T7 maps. T8 maps cannot use this trick since T8 is the highest tier.",
+      "Roads of Avalon hideout zones starting with SEC are T6 and starting with SET are T7. These zones accept maps of the same tier only, so your portals will never jump to another zone. Roads are a popular spot for consistent high-volume sessions.",
+      "T8.2 maps at ~40k each cost roughly 19 percent of your gross loot per run. Watch the buy price before restocking. A jump from 40k to 55k reduces net margin by about 120k per hour at 8 runs per hour.",
+      "Do not wait the 90-second chest timer. A full clear takes 4 to 5 minutes anyway. Waiting adds 33 percent dead time per run which directly cuts maps per hour.",
+      "Chrome Golems are the one mob type that does not count toward the 5-mob skip threshold. You can safely ignore them if needed.",
+      "Coldmetal Robe or a tanky chest piece can substitute for Mercenary Jacket if you need more HP for survival. Crypt Candle offhand gives more damage than Torch; Torch gives cooldown reduction and more mobility between packs.",
+      "Thetford Cape is the strongest cape for this activity. Leather Shoes give cooldown reduction for faster ability cycling if you do not have energy problems; Cloth Sandals are safer if you need the mana.",
+      "Red-zone deaths drop your full inventory. Never carry more than 2 runs of unsold loot into a third run. The calculator models only the map cost as an input; consumables are a real additional cost not tracked in the logged session.",
+    ],
+    references: [
+      {
+        title: "Lemisi1235: T8.2 Solo Dungeon Map Run (2.5 hrs, 4.2M loot)",
+        url: "https://www.youtube.com/watch?v=kdZ9GL9kpoo",
+      },
+    ],
+    profitBuild: {
+      title: "T8.2 Map Build (~1540 IP)",
+      description:
+        "Elder's gear from the logged 2.5-hour T8.2 session. ~1540 IP. Swap offhand to Crypt Candle for more damage, or keep Torch for cooldown reduction and faster pack-to-pack movement.",
+      slots: {
+        head: {
+          id: "T8_HEAD_CLOTH_SET1",
+          name: "Elder's Scholar Cowl",
+          hint: "Energy regen on every spell cast",
+        },
+        armor: {
+          id: "T8_ARMOR_LEATHER_SET1",
+          name: "Elder's Mercenary Jacket",
+          hint: "Strong AoE damage output; swap to Coldmetal Robe for more HP",
+        },
+        shoes: {
+          id: "T8_SHOES_PLATE_SET1",
+          name: "Elder's Soldier Boots",
+          hint: "Gap close between packs; swap to Leather Shoes for CDR if energy is not an issue",
+        },
+        mainhand: {
+          id: "T8_XBOW_HEAVY",
+          name: "Elder's Heavy Crossbow",
+          hint: "High AoE bolt clear speed",
+        },
+        cape: {
+          id: "T4_CAPEITEM_FW_THETFORD",
+          name: "Thetford Cape",
+          hint: "Strongest cape option for this activity",
+        },
+        food: {
+          id: "T8_MEAL_STEW",
+          name: "Elder's Mutton Stew",
+          hint: "+damage for faster clears",
+        },
+        potion: {
+          id: "T8_POTION_HEAL",
+          name: "Elder's Healing Potion",
+          hint: "Emergency heal between pulls",
+        },
+      },
+    },
+    featured: false,
+    readTime: 8,
   },
   {
     slug: "abyssal-depths-farming",

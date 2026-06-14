@@ -191,6 +191,27 @@ export const SKILL_TIERS = {
     description: "48 laborers on a full T8 island (48 T7 journals per 22h at 150% yield)",
     outputMultiplier: 1.6,
   },
+  mapDungeonT8_1: {
+    id: "t8-1",
+    label: "T8.1 Maps",
+    description: "T8+1 enchanted solo dungeon maps (~30k each, ~75% loot vs T8.2 baseline)",
+    outputMultiplier: 0.75,
+    inputMultiplier: 0.75,
+  },
+  mapDungeonT8_2: {
+    id: "t8-2",
+    label: "T8.2 Maps (logged)",
+    description: "T8+2 enchanted solo dungeon maps (~40k each). Baseline from a 2.5-hour logged session at ~1540 IP.",
+    outputMultiplier: 1,
+    inputMultiplier: 1,
+  },
+  mapDungeonT8_3: {
+    id: "t8-3",
+    label: "T8.3 Maps",
+    description: "T8+3 enchanted solo dungeon maps (~65k each), higher-variance top-end loot",
+    outputMultiplier: 1.35,
+    inputMultiplier: 1.625,
+  },
   craftingT5: {
     id: "t5",
     label: "T5 crafting",

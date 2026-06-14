@@ -232,56 +232,33 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ),
     defaultSkillTierId: "mid",
   },
-  "solo-dungeon-farming": {
+  "dungeon-maps-solo": {
+    // Logged: 2.5h, 20 T8.2 solo maps, 4.2M gross loot → 1.68M/hr gross, 8 maps/hr × 40k = 320k/hr input.
     hourlyOutput: [
-      { id: "T6_RUNE", name: "Master's Rune", quantity: 400 },
-      { id: "T6_SOUL", name: "Master's Soul", quantity: 120 },
-      { id: "T6_LEATHER", name: "Hardened Leather", quantity: 25 },
+      {
+        // Proxy ID; fixedSilverPerUnit overrides market lookup — loot is too varied for per-item pricing.
+        id: "T8_RUNE",
+        name: "Dungeon loot (gear, runes, souls, relics — 2.5-hr logged average)",
+        quantity: 1,
+        fixedSilverPerUnit: 1_680_000,
+      },
     ],
     hourlyInputs: [
       {
-        id: "T4_HEAD_CLOTH_SET1",
-        name: "Adept's Scholar Cowl (kit replacement)",
-        quantity: 0.08,
+        // Quantity is scaled by tier inputMultiplier to model higher-tier map costs (not more maps per hr).
+        id: "T7_RUNE",
+        name: "T8.2 Solo Dungeon Map (avg 40k; tier slider adjusts effective map cost)",
+        quantity: 8,
         side: "buy",
+        fixedSilverPerUnit: 40_000,
       },
-      {
-        id: "T6_ARMOR_LEATHER_SET1",
-        name: "Master's Mercenary Jacket (kit replacement)",
-        quantity: 0.08,
-        side: "buy",
-      },
-      {
-        id: "T6_SHOES_PLATE_SET1",
-        name: "Master's Soldier Boots (kit replacement)",
-        quantity: 0.08,
-        side: "buy",
-      },
-      {
-        id: "T6_MAIN_RAPIER_MORGANA",
-        name: "Master's Bloodletter (kit replacement)",
-        quantity: 0.08,
-        side: "buy",
-      },
-      {
-        id: "T4_CAPEITEM_FW_THETFORD",
-        name: "Adept's Thetford Cape (kit replacement)",
-        quantity: 0.08,
-        side: "buy",
-      },
-    ],
-    hourlyConsumables: [
-      { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2 },
-      { id: "T6_POTION_HEAL", name: "Major Healing Potion", quantity: 3 },
     ],
     skillTiers: tiers(
-      { ...SKILL_TIERS.dungeonYellow, consumableMultiplier: 1 },
-      { ...SKILL_TIERS.dungeonRed, consumableMultiplier: 1 },
-      { ...SKILL_TIERS.dungeonBlack, consumableMultiplier: 1 },
+      SKILL_TIERS.mapDungeonT8_1,
+      SKILL_TIERS.mapDungeonT8_2,
+      SKILL_TIERS.mapDungeonT8_3,
     ),
-    defaultSkillTierId: "red",
-    consumableNote:
-      "The calculator includes 2 Mutton Stews and 3 Major Healing Potions per hour. Major Energy Potion is optional backup and is not included by default.",
+    defaultSkillTierId: "t8-2",
   },
   "abyssal-depths-farming": {
     // Baseline ~1M/hr floor-2 extract; duo soul PvP pushes higher. One ~45 min run per hour with queue.

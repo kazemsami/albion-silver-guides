@@ -195,68 +195,76 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       ],
     },
   },
-  "solo-dungeon-farming": {
-    yellow: {
-      title: "Yellow Zone Build",
-      description: "Budget T4 sustain build for safe solo RDs: knockdown only.",
+  "dungeon-maps-solo": {
+    "t8-2": {
+      title: "T8.2 Map Build (~1540 IP)",
+      description:
+        "Elder's gear setup from the logged 2.5-hour T8.2 dungeon map session. ~1540 Item Power. Adjust weapon to your preferred AoE clear style.",
       slots: {
-        head: { id: "T4_HEAD_CLOTH_SET1", name: "Adept's Scholar Cowl", hint: "Energy regen" },
-        armor: { id: "T4_ARMOR_LEATHER_SET1", name: "Adept's Mercenary Jacket", hint: "Damage + defense" },
-        shoes: { id: "T4_SHOES_PLATE_SET1", name: "Adept's Soldier Boots", hint: "Gap close" },
-        mainhand: { id: "T4_MAIN_RAPIER_MORGANA", name: "Adept's Bloodletter", hint: "Lifesteal sustain" },
-        food: { id: "T4_MEAL_STEW", name: "Goat Stew", hint: "+damage" },
-        potion: { id: "T4_POTION_HEAL", name: "Healing Potion", hint: "Emergency heal" },
+        head: {
+          id: "T8_HEAD_CLOTH_SET1",
+          name: "Elder's Scholar Cowl",
+          hint: "Energy regen on every spell cast",
+        },
+        armor: {
+          id: "T8_ARMOR_LEATHER_SET1",
+          name: "Elder's Mercenary Jacket",
+          hint: "Strong AoE damage output",
+        },
+        shoes: {
+          id: "T8_SHOES_PLATE_SET1",
+          name: "Elder's Soldier Boots",
+          hint: "Gap close between mob packs",
+        },
+        mainhand: {
+          id: "T8_XBOW_HEAVY",
+          name: "Elder's Heavy Crossbow",
+          hint: "High AoE bolts for fast pack clearing",
+        },
+        cape: {
+          id: "T8_CAPEITEM_FW_CAERLEON",
+          name: "Elder's Caerleon Cape",
+          hint: "Chain Lightning burst on large packs",
+        },
+        food: {
+          id: "T8_MEAL_STEW",
+          name: "Elder's Mutton Stew",
+          hint: "+damage to speed up clears",
+        },
+        potion: {
+          id: "T8_POTION_HEAL",
+          name: "Elder's Healing Potion",
+          hint: "Emergency heal between pulls",
+        },
       },
     },
-    red: {
-      title: "Red Zone Build",
-      description: "T6 Bloodletter build for red-zone solo RDs; matches calculator loot and death-cost tab.",
+    "t8-1": {
+      title: "T8.1 Map Build",
+      description:
+        "Budget version of the T8.2 build. Use T8.1 maps (~30k each) for lower investment. Loot runs roughly 75% of T8.2 value.",
       slots: {
-        head: { id: "T4_HEAD_CLOTH_SET1", name: "Adept's Scholar Cowl", hint: "Energy regen" },
-        armor: { id: "T6_ARMOR_LEATHER_SET1", name: "Master's Mercenary Jacket", hint: "Stronger defense" },
-        shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
-        mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal + mobility" },
-        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2, hint: "+damage, 2/hr (calculator)" },
-        potion: {
-          id: "T6_POTION_HEAL",
-          name: "Major Healing Potion",
-          quantity: 3,
-          hint: "Sustain, 3/hr (calculator)",
-        },
+        head: { id: "T8_HEAD_CLOTH_SET1", name: "Elder's Scholar Cowl", hint: "Energy regen" },
+        armor: { id: "T8_ARMOR_LEATHER_SET1", name: "Elder's Mercenary Jacket", hint: "AoE damage" },
+        shoes: { id: "T8_SHOES_PLATE_SET1", name: "Elder's Soldier Boots", hint: "Gap close" },
+        mainhand: { id: "T8_XBOW_HEAVY", name: "Elder's Heavy Crossbow", hint: "AoE clearing" },
+        cape: { id: "T8_CAPEITEM_FW_CAERLEON", name: "Elder's Caerleon Cape", hint: "Chain Lightning" },
+        food: { id: "T8_MEAL_STEW", name: "Elder's Mutton Stew", hint: "+damage" },
+        potion: { id: "T8_POTION_HEAL", name: "Elder's Healing Potion", hint: "Emergency sustain" },
       },
-      inventory: [
-        {
-          id: "T6_POTION_ENERGY",
-          name: "Major Energy Potion",
-          hint: "Optional backup; not priced in hourly calculator",
-        },
-      ],
     },
-    black: {
-      title: "Black Zone Build",
-      description: "T6 bloodletter build for max solo RD profit in black zones.",
+    "t8-3": {
+      title: "T8.3 Map Build",
+      description:
+        "T8.3 maps (~65k each) for maximum loot potential. High variance; top drops can exceed 2M/hr gross. Same gear as T8.2 baseline.",
       slots: {
-        head: { id: "T4_HEAD_CLOTH_SET1", name: "Adept's Scholar Cowl", hint: "Energy regen" },
-        armor: { id: "T6_ARMOR_LEATHER_SET1", name: "Master's Mercenary Jacket", hint: "Strong damage + defense" },
-        shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
-        mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal sustain" },
-        cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2, hint: "+damage, 2/hr (calculator)" },
-        potion: {
-          id: "T6_POTION_HEAL",
-          name: "Major Healing Potion",
-          quantity: 3,
-          hint: "Emergency heal, 3/hr (calculator)",
-        },
+        head: { id: "T8_HEAD_CLOTH_SET1", name: "Elder's Scholar Cowl", hint: "Energy regen" },
+        armor: { id: "T8_ARMOR_LEATHER_SET1", name: "Elder's Mercenary Jacket", hint: "AoE damage" },
+        shoes: { id: "T8_SHOES_PLATE_SET1", name: "Elder's Soldier Boots", hint: "Gap close" },
+        mainhand: { id: "T8_XBOW_HEAVY", name: "Elder's Heavy Crossbow", hint: "AoE clearing" },
+        cape: { id: "T8_CAPEITEM_FW_CAERLEON", name: "Elder's Caerleon Cape", hint: "Chain Lightning" },
+        food: { id: "T8_MEAL_STEW", name: "Elder's Mutton Stew", hint: "+damage" },
+        potion: { id: "T8_POTION_HEAL", name: "Elder's Healing Potion", hint: "Emergency sustain" },
       },
-      inventory: [
-        {
-          id: "T6_POTION_ENERGY",
-          name: "Major Energy Potion",
-          hint: "Optional backup; not priced in hourly calculator",
-        },
-      ],
     },
   },
   "abyssal-depths-farming": {
