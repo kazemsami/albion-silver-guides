@@ -101,8 +101,8 @@ export function AbyssalProfitCalculator({
   );
 
   const profitRange = useMemo(
-    () => computeAbyssalProfitRange(priceMap),
-    [priceMap],
+    () => computeAbyssalProfitRange(priceMap, listingTaxRate),
+    [priceMap, listingTaxRate],
   );
 
   const activeLoadout = useMemo(() => {
