@@ -31,12 +31,16 @@ const zoneTypeColors = {
 export function GuideCard({
   guide,
   profitRange,
+  priceSourceLabel: priceSourceLabelOverride,
 }: {
   guide: Guide;
   profitRange?: GuideProfitRange | null;
+  /** SSR hint when client market toggles are not hydrated yet. */
+  priceSourceLabel?: string;
 }) {
   const { useLivePrices } = useMarketCity();
-  const priceSourceLabel = getCardPriceSourceLabel(useLivePrices);
+  const priceSourceLabel =
+    priceSourceLabelOverride ?? getCardPriceSourceLabel(useLivePrices);
   const profitUnit =
     guide.slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
   const profitRangeLabel =

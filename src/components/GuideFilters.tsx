@@ -2,24 +2,14 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { GuideCategory, Difficulty, ZoneType } from "@/types/guide";
-import { categoryLabels, difficultyLabels, zoneTypeLabels } from "@/types/guide";
+import type { Difficulty, ZoneType } from "@/types/guide";
+import { difficultyLabels, zoneTypeLabels } from "@/types/guide";
 import {
-  getActiveCategoryFilter,
   getActiveDifficultyFilter,
   getActiveSortFilter,
   getActiveZoneFilter,
   type GuideSort,
 } from "@/lib/guide-display";
-
-const categories: (GuideCategory | "all")[] = [
-  "all",
-  "gathering",
-  "crafting",
-  "dungeons",
-  "fishing",
-  "laborers",
-];
 
 const difficulties: (Difficulty | "all")[] = [
   "all",
@@ -40,16 +30,14 @@ export function GuideFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const activeCategory = getActiveCategoryFilter(
-    searchParams.get("category"),
-  );
+  const activeCategory = searchParams.get("category");
   const activeDifficulty = getActiveDifficultyFilter(
     searchParams.get("difficulty"),
   );
   const activeZone = getActiveZoneFilter(searchParams.get("zone"));
   const activeSort = getActiveSortFilter(searchParams.get("sort"));
   const hasActiveFilters =
-    activeCategory !== "all" ||
+    Boolean(activeCategory) ||
     activeDifficulty !== "all" ||
     activeZone !== "all" ||
     activeSort !== "profit-desc";
@@ -102,34 +90,6 @@ export function GuideFilters() {
               }`}
             >
               {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <p
-          id="filter-category-label"
-          className="mb-2 text-xs font-semibold uppercase tracking-widest text-parchment/40"
-        >
-          Category
-        </p>
-        <div
-          className="flex flex-wrap gap-2"
-          role="group"
-          aria-labelledby="filter-category-label"
-        >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              aria-pressed={activeCategory === cat}
-              onClick={() => updateFilter("category", cat)}
-              className={`filter-chip px-3 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
-                activeCategory === cat ? "filter-chip-active" : ""
-              }`}
-            >
-              {cat === "all" ? "All" : categoryLabels[cat]}
             </button>
           ))}
         </div>

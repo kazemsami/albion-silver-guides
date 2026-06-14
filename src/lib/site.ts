@@ -5,7 +5,7 @@ export const siteTagline = "Money Making Guides";
 export const siteTitle = `${siteName} | ${siteTagline}`;
 
 export const siteDescription =
-  "Proven Albion Online money making guides. Gathering routes, dungeon farming, fishing, crafting, laborers, and more, with live silver/hour estimates from market data.";
+  "Proven Albion Online money making guides. Gathering routes, dungeon farming, fishing, crafting, laborers, and more, with silver/hour estimates from saved market prices.";
 
 export const siteKeywords = [
   "Albion Online",

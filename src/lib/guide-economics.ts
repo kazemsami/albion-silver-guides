@@ -32,6 +32,7 @@ import type {
   TierLoadoutBundle,
   GuideMarketPrices,
 } from "@/types/guide";
+import { effectiveMarketCity } from "@/lib/guide-market-city";
 import {
   AVERAGE_MARKET_CITY_ID,
   type MarketCityId,
@@ -410,6 +411,47 @@ export function pickGuideProfitRanges(
 ): GuideProfitRangeMap {
   const byCity = premiumSeller ? data.premium : data.standard;
   return byCity[city] ?? byCity[AVERAGE_MARKET_CITY_ID] ?? {};
+}
+
+/** Server-side profit ranges for guide list cards (saved prices, Standard tax defaults). */
+export function computeGuideListProfitRanges(
+  marketData: GuidesListMarketData,
+  guideList: readonly {
+    slug: string;
+    defaultMarketCity?: MarketCityId;
+  }[],
+  options: {
+    premiumSeller?: boolean;
+    useLivePrices?: boolean;
+    marketCity?: MarketCityId;
+  } = {},
+): GuideProfitRangeMap {
+  const marketCity = options.marketCity ?? AVERAGE_MARKET_CITY_ID;
+  const premiumSeller = options.premiumSeller ?? false;
+  const source = options.useLivePrices
+    ? marketData.live
+    : marketData.estimated;
+  const result: GuideProfitRangeMap = {};
+
+  for (const guide of guideList) {
+    const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
+    const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(
+      guide.slug,
+      premiumSeller,
+    );
+    const outcomes = pickGuideProfitOutcomes(
+      source.outcomes,
+      outcomesPremiumSeller,
+      city,
+      guide.slug,
+    );
+    const range = outcomes ? profitRangeFromOutcomes(outcomes) : null;
+    if (range) {
+      result[guide.slug] = range;
+    }
+  }
+
+  return result;
 }
 
 /** Profit ranges per market city for list pages and the city selector. */

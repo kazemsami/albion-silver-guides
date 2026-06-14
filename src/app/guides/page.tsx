@@ -4,13 +4,22 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { GuidesGrid } from "@/components/GuidesGrid";
 import { GuideFilters } from "@/components/GuideFilters";
+import { GuideCategorySelect } from "@/components/GuideCategorySelect";
 import { guides } from "@/data/guides";
-import { fetchAllGuidesMarketDataByCity } from "@/lib/guide-economics";
+import {
+  computeGuideListProfitRanges,
+  fetchAllGuidesMarketDataByCity,
+} from "@/lib/guide-economics";
 import {
   buildGuidesFilterUrl,
   hasInvalidFilterParams,
   parseGuideFilters,
 } from "@/lib/guide-display";
+import {
+  isGuidesCategoryLandingPage,
+  resolveGuidesListSeo,
+  shouldNoIndexGuidesList,
+} from "@/lib/guides-seo";
 import { categoryLabels, difficultyLabels, zoneTypeLabels } from "@/types/guide";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
@@ -45,14 +54,13 @@ export async function generateMetadata({
   searchParams,
 }: GuidesPageProps): Promise<Metadata> {
   const params = await searchParams;
-  const filtered = hasActiveListFilters(params);
+  const seo = resolveGuidesListSeo(params);
 
   return createPageMetadata({
-    title: "All Albion Online Money Making Guides",
-    description:
-      "Browse Albion Online silver guides for gathering, fishing, dungeons, crafting, and laborers. Sort by estimated profit per hour.",
-    path: "/guides",
-    noIndex: filtered,
+    title: seo.title,
+    description: seo.description,
+    path: seo.path,
+    noIndex: shouldNoIndexGuidesList(params),
   });
 }
 
@@ -65,6 +73,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
 
   const { category, difficulty, zone, sort } = parseGuideFilters(params);
   const hasFilters = hasActiveListFilters(params);
+  const categoryLanding = isGuidesCategoryLandingPage(params);
   const marketData = await fetchAllGuidesMarketDataByCity();
 
   const filtered = guides.filter((g) => {
@@ -73,6 +82,8 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
     if (zone && g.zoneType !== zone) return false;
     return true;
   });
+
+  const serverProfitRanges = computeGuideListProfitRanges(marketData, filtered);
 
   const filterDescription =
     category || difficulty || zone
@@ -85,18 +96,46 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
           .join(" · ")
       : null;
 
+  const pageTitle = categoryLanding && category
+    ? `${categoryLabels[category]} Silver Guides`
+    : "Money Making Guides";
+
+  const pageIntro =
+    categoryLanding && category
+      ? resolveGuidesListSeo(params).description
+      : `${filtered.length} guide${filtered.length !== 1 ? "s" : ""} found${
+          filterDescription ? ` for ${filterDescription}` : ""
+        }. Pick a strategy, follow the steps, and start stacking silver.`;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      {!hasFilters && <JsonLd data={guideListJsonLd(guides)} />}
-      <div className="mb-10">
-        <h1 className="wiki-heading font-display text-3xl font-bold text-parchment sm:text-4xl">
-          Money Making Guides
-        </h1>
-        <p className="mt-3 max-w-2xl text-parchment/55">
-          {filtered.length} guide{filtered.length !== 1 ? "s" : ""} found
-          {filterDescription ? ` for ${filterDescription}` : ""}. Pick a
-          strategy, follow the steps, and start stacking silver.
-        </p>
+      {!hasFilters || categoryLanding ? (
+        <JsonLd
+          data={guideListJsonLd(
+            filtered,
+            categoryLanding && category
+              ? `${categoryLabels[category]} Silver Guides`
+              : undefined,
+          )}
+        />
+      ) : null}
+      <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <h1 className="wiki-heading font-display text-3xl font-bold text-parchment sm:text-4xl">
+            {pageTitle}
+          </h1>
+          <p className="mt-3 max-w-2xl text-parchment/55">{pageIntro}</p>
+        </div>
+        <Suspense
+          fallback={
+            <div className="h-10 w-full min-w-[12rem] animate-pulse rounded-lg border border-gold/15 bg-obsidian-light sm:w-48" />
+          }
+        >
+          <GuideCategorySelect
+            id="guides-page-category"
+            className="w-full shrink-0 sm:w-52"
+          />
+        </Suspense>
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[260px_1fr]">
@@ -116,6 +155,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
               guides={filtered}
               marketData={marketData}
               sort={sort}
+              serverProfitRanges={serverProfitRanges}
             />
           ) : (
             <div className="theme-surface rounded-xl border border-gold/15 bg-obsidian-light p-12 text-center">

@@ -8,16 +8,16 @@ export function websiteJsonLd() {
     name: siteName,
     url: siteUrl,
     description:
-      "Fan-made Albion Online money making guides with live profit estimates.",
+      "Fan-made Albion Online money making guides with saved-price profit estimates.",
     inLanguage: "en-US",
   };
 }
 
-export function guideListJsonLd(guides: Guide[]) {
+export function guideListJsonLd(guides: Guide[], listName?: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Albion Online Money Making Guides",
+    name: listName ?? "Albion Online Money Making Guides",
     numberOfItems: guides.length,
     itemListElement: guides.map((guide, index) => ({
       "@type": "ListItem",

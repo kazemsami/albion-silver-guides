@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "validate": "node scripts/validate-guides.mjs && npx tsx scripts/check-guide-profit-consistency.ts",
+    "validate": "node scripts/validate-guides.mjs && npx tsx scripts/check-guide-profit-consistency.ts && npx tsx scripts/check-guides-seo-metadata.ts",
     "refresh-price-fallbacks": "node scripts/refresh-price-fallbacks.mjs",
     "build:icons": "node scripts/build-icons.mjs"
   },

@@ -1,22 +1,31 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import { useProfitRangesForCity } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuidesListMarketData } from "@/lib/guide-economics";
+import type { GuideProfitRangeMap, GuidesListMarketData } from "@/lib/guide-economics";
 import { sortGuidesByProfit, type GuideSort } from "@/lib/guide-display";
 
 export function GuidesGrid({
   guides,
   marketData,
   sort = "profit-desc",
+  serverProfitRanges,
 }: {
   guides: Guide[];
   marketData: GuidesListMarketData;
   sort?: GuideSort;
+  serverProfitRanges: GuideProfitRangeMap;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData, guides);
+  const clientProfitRanges = useProfitRangesForCity(marketData, guides);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const profitRanges = mounted ? clientProfitRanges : serverProfitRanges;
 
   const sorted = useMemo(
     () => sortGuidesByProfit(guides, profitRanges, sort),
@@ -30,6 +39,7 @@ export function GuidesGrid({
           key={guide.slug}
           guide={guide}
           profitRange={profitRanges[guide.slug]}
+          priceSourceLabel={mounted ? undefined : "saved prices"}
         />
       ))}
     </div>
