@@ -10,7 +10,7 @@ export const SKILL_TIERS = {
   gatheringMid: {
     id: "mid",
     label: "Intermediate",
-    description: "T5 gear, Lazygrass Plain. Default tier matches one logged 30-min Bridgewatch run extrapolated to 1 hr.",
+    description: "T5 gear, Lazygrass Plain. Default tier matches the logged 30-min Bridgewatch run (~209k/hr net at saved prices).",
     outputMultiplier: 1,
   },
   gatheringHigh: {

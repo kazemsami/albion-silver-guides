@@ -4,7 +4,7 @@ A frontend-only Next.js site with Albion Online money making guides. Browse stra
 
 ## Features
 
-- **10 detailed guides** across 7 categories (gathering, crafting, dungeons, transport, market, fishing, laborers)
+- **10 detailed guides** across 5 categories: Gathering, Crafting, Dungeons & PvE, Fishing, and Laborers
 - **Category & difficulty filters** on the guides page
 - **Individual guide pages** with requirements, steps, and pro tips
 - **Dark medieval theme** inspired by Albion Online's aesthetic

@@ -99,11 +99,11 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "fiber-farming-solo",
     title: "Fiber Farming in Yellow Zones",
     description:
-      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. Reviewed against 1 logged 30-min run with Pork Pie (no Premium): ~250k/hr net after Standard tax and 1 Pork Pie.",
+      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. This route currently models ~209k/hr net under saved Bridgewatch prices (Standard listing tax, 1 Pork Pie, no Premium). Reviewed against 1 logged 30-min run on the same loop.",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
-    silverPerHour: { min: 250_000, max: 450_000 },
+    silverPerHour: { min: 104_000, max: 283_000 },
     requirements: [
       "T5 sickle in bag + T5 harvester gear (cap, garb, workboots)",
       "Giant Stag for loop travel and carry weight on every tier",
@@ -121,7 +121,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     ],
     tips: [
       "Reviewed against 1 logged run on Lazygrass Plain (Bridgewatch, T5 harvester gear, Pork Pie, no Premium). Logged fiber/hr already includes the Pork Pie gather bonus.",
-      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. ~140k gross before tax (~280k/hr); ~125k net after Standard listing tax and 1 Pork Pie (~250k/hr).",
+      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. Session take-home was 125k net in 30 min. At current saved Bridgewatch prices the calculator models ~209k/hr net (Standard listing tax, 1 Pork Pie, no Premium).",
       "Enchanted nodes are bonus silver from intermediate tier up: rare hemp (.2) at beginner; uncommon or rare skyflower (.1/.2) once you run T5 gear and higher mining/fiber spec.",
       "With Premium on the same Lazygrass Plain loop, expect roughly ~450k/hr before tax (+50% gather yield and lower listing tax). That figure is projected, not logged. Toggle Premium in the header to compare.",
       "Skyflower (T5) is most of your silver; prioritize T5 nodes even if it means skipping a T4 cluster.",

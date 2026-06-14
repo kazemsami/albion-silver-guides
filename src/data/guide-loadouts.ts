@@ -154,7 +154,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     mid: {
       title: "Standard Fiber Gear",
       description:
-        "T5 harvester set + Pork Pie, Lazygrass Plain. Logged 30-min run extrapolated to 1 hr (~250k/hr net with Standard tax and 1 Pork Pie, no Premium).",
+        "T5 harvester set + Pork Pie, Lazygrass Plain. Default tier matches the logged 30-min Bridgewatch run. Saved prices model ~209k/hr net (Standard listing tax, 1 Pork Pie, no Premium).",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FIBER", name: "Expert's Harvester Cap", hint: "Fiber yield bonus" },
         armor: { id: "T5_ARMOR_GATHERER_FIBER", name: "Expert's Harvester Garb", hint: "Fiber yield bonus" },

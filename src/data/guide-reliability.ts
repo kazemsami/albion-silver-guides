@@ -119,7 +119,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
       netSilver: 125_000,
       deathsOrKnockdowns: 0,
       notes:
-        "1 logged run (~30 min). Guide, calculator, and evidence all match this route: Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. ~140k gross before tax (~280k/hr gross); ~125k net after Standard listing tax and 1 Pork Pie (~250k/hr). Premium upside figures in tips are projected only.",
+        "1 logged run (~30 min). Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. Session take-home: 125k net in 30 min (~140k gross before tax at session sell prices). Saved Bridgewatch prices in the calculator model ~209k/hr net (Standard listing tax, 1 Pork Pie, no Premium). Premium upside figures in tips are projected only.",
     },
   },
   "dungeon-maps-solo": {
