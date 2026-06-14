@@ -1,5 +1,16 @@
-export const PREMIUM_LISTING_TAX_RATE = 0.065;
-export const STANDARD_LISTING_TAX_RATE = 0.105;
+// Market fee component breakdown (Albion Online marketplace fees)
+export const SETUP_FEE_RATE = 0.025; // 2.5% setup fee (same for Standard and Premium)
+export const STANDARD_TRANSACTION_TAX_RATE = 0.08; // 8% transaction tax (Standard)
+export const PREMIUM_TRANSACTION_TAX_RATE = 0.04; // 4% transaction tax (Premium)
+
+// Total market fees for sell orders (setup fee + transaction tax)
+export const STANDARD_MARKET_FEE_RATE = SETUP_FEE_RATE + STANDARD_TRANSACTION_TAX_RATE; // 10.5%
+export const PREMIUM_MARKET_FEE_RATE = SETUP_FEE_RATE + PREMIUM_TRANSACTION_TAX_RATE; // 6.5%
+
+// Legacy aliases (deprecated naming, use MARKET_FEE_RATE instead)
+export const PREMIUM_LISTING_TAX_RATE = PREMIUM_MARKET_FEE_RATE;
+export const STANDARD_LISTING_TAX_RATE = STANDARD_MARKET_FEE_RATE;
+
 export const PREMIUM_SELLER_STORAGE_KEY = "albion-premium-seller";
 
 /** Premium adds +50% gathering and fishing yield vs non-Premium. */

@@ -209,7 +209,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Clear mobs for infamy until the final boss spawns. Loot Grandmaster's Souls and Elder's Souls from the chest; they are most of the run's value.",
       "When invaded before the boss: duel if you have the advantage, or destroy three Demonic Shards (they appear on your minimap) to banish the invader for free. Killing the invader also ends further invasions for that run.",
       "After the final boss dies, invasions stop. Exit normally or chain through the post-boss portal. Bank after each chest. Stalker deaths are full loot.",
-      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours; subtract ~6.5% listing tax (Premium) from your margin.",
+      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours. Expect Standard market fees of ~10.5% (or ~6.5% with Premium) when calculating take-home profit.",
     ],
     tips: [
       "Stalker pays much more than Hunter but is full-loot PvP, only run it when your invasion win rate is solid.",
@@ -218,7 +218,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Healing is reduced 40% in Corrupted Dungeons, burst and shard-banish plays often beat trying to out-heal a geared invader.",
       "Slayer is for high-infamy veterans; higher IP cap and T8 mobs, but death risk dwarfs the extra loot for most farmers.",
       "Never chain runs with a full inventory. One death loses the chest and your kit on Stalker/Slayer.",
-      "The profit calculator already subtracts ~6.5% Premium listing tax from sell value. Undercutting sell orders eats into the margin on top of that.",
+      "The profit calculator subtracts market fees based on your Premium toggle (Standard: ~10.5% setup fee + transaction tax; Premium: ~6.5%). Undercutting sell orders reduces your margin further on top of those fees.",
       "Stalker gear losses swing your hourly. At ~290k kit value, the calculator assumes ~0.3 deaths/hour (~85k/hr); aggressive or unlucky sessions lose multiples of that plus the chest loot on each death.",
       "Bank after each chest when possible. Real hourly profit swings with invasion frequency, win rate, loot RNG, and infamy tier.",
     ],
@@ -819,7 +819,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "laborer-passive-income",
     title: "Laborer Passive Income",
     description:
-      "Run a fully upgraded T8 laborer island on T7 journals. Each laborer processes one full journal every 22 hours at 150% yield and returns unrefined T7 resources plus an empty journal.",
+      "Run a fully upgraded T8 laborer island on T7 journals. Each laborer processes one full journal every 22 hours at 150% yield. Gathering laborers return unrefined T7 resources; crafting laborers return refined materials. All return an empty journal.",
     category: "laborers",
     difficulty: "advanced",
     zoneType: "safe",
@@ -845,7 +845,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Repeat. Match laborer specialty to whatever activity you already do so journal filling costs nothing extra.",
     ],
     tips: [
-      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - listing tax on sells. Filling journals yourself removes the buy cost and is the most profitable approach.",
+      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - market fee on sells. Filling journals yourself lowers upfront cash spending, but compare the profit to selling full journals directly since a filled journal has market value (opportunity cost).",
       "Each T8 laborer house holds three laborers. Island tiers in the calculator count houses, not individual laborers.",
       "Breakeven island spend: compare total T8 house + furniture cost to (profit per journal × journals per 22h cycle × 30). A full island often pays back over weeks, not hours.",
       "T8 bed + T8 table on a T8 laborer already hits 150% yield on T7 journals (wiki cap: min(150%, happiness ÷ 2)). Extra trophies mainly help T8 journals or trophy journal jobs.",

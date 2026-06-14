@@ -23,6 +23,11 @@ test.describe("Laborer Passive Income - Laborer type accuracy", () => {
       text,
       'Must not claim "all laborers return unrefined T7 resources"',
     ).not.toMatch(/all\s+laborers?\s+return\s+unrefined/i);
+
+    expect(
+      text,
+      'Must not claim "each laborer returns unrefined T7"',
+    ).not.toMatch(/each\s+laborer\s+returns?\s+unrefined/i);
   });
 
   test("distinguishes gathering laborers from crafting laborers", async ({
@@ -48,6 +53,27 @@ test.describe("Laborer Passive Income - Laborer type accuracy", () => {
       ).toBe(true);
     }
   });
+
+  test("mentions opportunity cost when discussing self-filled journals", async ({
+    page,
+  }) => {
+    await page.goto("/guides/laborer-passive-income");
+    const text = await getPageText(page);
+
+    // If the page recommends filling journals yourself, it should mention opportunity cost
+    const recommendsSelfFilling = /filling?\s+journals?\s+yourself|self-fill/i.test(text);
+
+    if (recommendsSelfFilling) {
+      const mentionsOpportunityCost =
+        /opportunity cost|sell value|selling full journals|compare.*profit|market value.*journal/i.test(
+          text,
+        );
+      expect(
+        mentionsOpportunityCost,
+        "When recommending self-filling journals, guide must mention opportunity cost or sell value comparison",
+      ).toBe(true);
+    }
+  });
 });
 
 test.describe("Corrupted Dungeons - Tax assumption consistency", () => {
@@ -55,38 +81,63 @@ test.describe("Corrupted Dungeons - Tax assumption consistency", () => {
     await blockLivePriceApis(page);
   });
 
-  test("does not statically mix Standard and Premium tax assumptions without labelling", async ({
+  test("does not claim calculator uses only Premium tax as default", async ({
     page,
   }) => {
     await page.goto("/guides/corrupted-dungeons-pvpve");
     const text = await getPageText(page);
 
-    // If the page mentions both Standard and Premium tax, they must be
-    // clearly distinguished (not mixed in the same profit calculation).
-    const mentionsStandard = /standard\s+tax|standard\s+player|non-premium/i.test(text);
-    const mentionsPremium = /premium\s+tax|with\s+premium|premium\s+tog/i.test(text);
+    // Calculator should mention the Premium toggle, not claim one tax as "already subtracted"
+    // without conditioning it on toggle state.
+    const claimsPremiumDefault = /calculator.*already.*premium|calculator.*subtracts.*6\.5%.*without/i.test(text);
+    expect(
+      claimsPremiumDefault,
+      "Page must not claim calculator uses Premium tax by default without mentioning the toggle",
+    ).toBe(false);
+  });
 
-    if (mentionsStandard && mentionsPremium) {
-      // Both are mentioned: they must be in separate labeled sections or
-      // the premium toggle must be mentioned as controlling the assumption.
-      const isClearlyLabeled =
-        /premium\s+toggle|toggle\s+controls|switch\s+between|premium\s+vs|vs.*premium|standard.*separately|different\s+tax/i.test(
-          text,
-        );
+  test("premium tax mention includes conditional language", async ({
+    page,
+  }) => {
+    await page.goto("/guides/corrupted-dungeons-pvpve");
+    const text = await getPageText(page);
+
+    // If Premium tax rate (6.5%) is mentioned, it must be near conditional language
+    if (/6\.5%|0\.065/.test(text)) {
+      const hasPremiumContext = /premium.*toggle|with premium|premium.*enabled|standard.*premium/i.test(text);
       expect(
-        isClearlyLabeled,
-        "Corrupted Dungeons mentions both Standard and Premium taxes. " +
-          "They must be clearly separated (e.g. via Premium toggle, not mixed in one calculation).",
+        hasPremiumContext,
+        "When 6.5% Premium rate is mentioned, page must include Premium toggle or conditional context",
       ).toBe(true);
     }
   });
 
-  test("corrupted dungeons page mentions tax", async ({ page }) => {
+  test("mentions both Standard and Premium market fees with clear distinction", async ({
+    page,
+  }) => {
     await page.goto("/guides/corrupted-dungeons-pvpve");
     const text = await getPageText(page);
-    // Tax should be mentioned since it significantly affects profit
-    expect(text, "Corrupted Dungeons guide must mention tax").toMatch(
-      /tax|listing fee|market fee/i,
+
+    // The page should mention both tax tiers with clear distinction
+    const mentionsStandard = /standard.*10\.5%|10\.5%.*standard/i.test(text);
+    const mentionsPremium = /premium.*6\.5%|6\.5%.*premium/i.test(text);
+
+    if (mentionsStandard && mentionsPremium) {
+      // Both mentioned: they must be clearly contrasted (not mixed as single default)
+      const clearlyContrasted = /standard.*premium|premium.*standard|toggle|vs|or.*with premium/i.test(text);
+      expect(
+        clearlyContrasted,
+        "When both Standard and Premium rates are mentioned, they must be clearly contrasted",
+      ).toBe(true);
+    }
+  });
+
+  test("corrupted dungeons page mentions market fees", async ({ page }) => {
+    await page.goto("/guides/corrupted-dungeons-pvpve");
+    const text = await getPageText(page);
+    // Market fees should be mentioned since they significantly affect profit
+    expect(text, "Corrupted Dungeons guide must mention market fees").toMatch(
+      /market fee|setup fee|transaction tax/i,
     );
   });
 });
