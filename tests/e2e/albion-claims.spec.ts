@@ -102,12 +102,14 @@ test.describe("Corrupted Dungeons - Tax assumption consistency", () => {
     await page.goto("/guides/corrupted-dungeons-pvpve");
     const text = await getPageText(page);
 
-    // If Premium tax rate (6.5%) is mentioned, it must be near conditional language
-    if (/6\.5%|0\.065/.test(text)) {
-      const hasPremiumContext = /premium.*toggle|with premium|premium.*enabled|standard.*premium/i.test(text);
+    if (/4% transaction tax.*premium|premium.*4% transaction tax/i.test(text)) {
+      const hasPremiumContext =
+        /premium.*toggle|with premium|premium.*enabled|standard.*premium/i.test(
+          text,
+        );
       expect(
         hasPremiumContext,
-        "When 6.5% Premium rate is mentioned, page must include Premium toggle or conditional context",
+        "When Premium transaction tax is mentioned, page must include Premium toggle or conditional context",
       ).toBe(true);
     }
   });
@@ -118,13 +120,20 @@ test.describe("Corrupted Dungeons - Tax assumption consistency", () => {
     await page.goto("/guides/corrupted-dungeons-pvpve");
     const text = await getPageText(page);
 
-    // The page should mention both tax tiers with clear distinction
-    const mentionsStandard = /standard.*10\.5%|10\.5%.*standard/i.test(text);
-    const mentionsPremium = /premium.*6\.5%|6\.5%.*premium/i.test(text);
+    const mentionsStandard =
+      /standard.*2\.5% setup fee \+ 8% transaction tax|2\.5% setup fee \+ 8% transaction tax.*standard/i.test(
+        text,
+      );
+    const mentionsPremium =
+      /premium.*2\.5% setup fee \+ 4% transaction tax|2\.5% setup fee \+ 4% transaction tax.*premium/i.test(
+        text,
+      );
 
     if (mentionsStandard && mentionsPremium) {
-      // Both mentioned: they must be clearly contrasted (not mixed as single default)
-      const clearlyContrasted = /standard.*premium|premium.*standard|toggle|vs|or.*with premium/i.test(text);
+      const clearlyContrasted =
+        /standard.*premium|premium.*standard|toggle|vs|or.*with premium/i.test(
+          text,
+        );
       expect(
         clearlyContrasted,
         "When both Standard and Premium rates are mentioned, they must be clearly contrasted",

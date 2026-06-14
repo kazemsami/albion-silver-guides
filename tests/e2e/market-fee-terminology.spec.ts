@@ -1,10 +1,16 @@
 /**
  * Market fee terminology and constants tests.
- * Ensures guides use clear, consistent terminology for Albion marketplace costs
- * and that constants are properly centralized.
+ * Ensures visible copy uses setup fee + transaction tax breakdowns,
+ * never bare combined totals like 10.5% or 6.5%.
  */
 import { test, expect } from "@playwright/test";
-import { GUIDE_SLUGS, blockLivePriceApis, getPageText } from "./helpers";
+import {
+  GUIDE_SLUGS,
+  CATEGORIES,
+  blockLivePriceApis,
+  getPageText,
+  assertNoBareMarketFeeTotals,
+} from "./helpers";
 import {
   STANDARD_MARKET_FEE_RATE,
   PREMIUM_MARKET_FEE_RATE,
@@ -13,10 +19,31 @@ import {
   PREMIUM_TRANSACTION_TAX_RATE,
 } from "@/lib/listing-tax";
 
+const ALL_ROUTES = [
+  "/",
+  "/guides",
+  ...CATEGORIES.map((c) => `/guides?category=${c}`),
+  ...GUIDE_SLUGS.map((s) => `/guides/${s}`),
+];
+
 test.describe("Market fee terminology consistency", () => {
   test.beforeEach(async ({ page }) => {
     await blockLivePriceApis(page);
   });
+
+  for (const route of ALL_ROUTES) {
+    test(`${route} - no bare 10.5% or 6.5% market fee totals`, async ({
+      page,
+    }) => {
+      await page.goto(route);
+      await page
+        .waitForSelector("main, article, [role='main']", { timeout: 10_000 })
+        .catch(() => null);
+
+      const text = await getPageText(page);
+      assertNoBareMarketFeeTotals(text);
+    });
+  }
 
   for (const slug of GUIDE_SLUGS) {
     test(`${slug} - avoids misleading standalone "listing tax" terminology`, async ({
@@ -25,35 +52,24 @@ test.describe("Market fee terminology consistency", () => {
       await page.goto(`/guides/${slug}`);
       const text = await getPageText(page);
 
-      // Check for problematic standalone phrases that don't explain components
       const hasListingTax = /listing tax|listing fee/i.test(text);
 
       if (hasListingTax) {
-        // If "listing tax" appears, check that it's clarified with proper context
-        // about setup fee + transaction tax, OR the page uses better terminology
         const hasGoodContext =
           /setup fee.*transaction tax|transaction tax.*setup fee|market fee|sell-order fee/i.test(
             text,
           );
 
-        if (!hasGoodContext) {
-          // Allow legacy "listing tax" only if immediately followed by breakdown like "(10.5%)"
-          // and the page explains it elsewhere
-          const hasPercentageBreakdown = /listing tax.*\(.*10\.5%.*\)|listing tax.*\(.*6\.5%.*\)/i.test(
-            text,
-          );
-          expect(
-            hasPercentageBreakdown,
-            `Guide uses "listing tax" terminology without clear context. ` +
-              `Prefer "market fee", "sell-order fee", or explicitly mention "setup fee + transaction tax".`,
-          ).toBe(true);
-        }
+        expect(
+          hasGoodContext,
+          `Guide uses "listing tax" terminology without clear context. ` +
+            `Prefer "market fee", "sell-order fee", or explicitly mention "setup fee + transaction tax".`,
+        ).toBe(true);
       }
     });
   }
 
   test("guides prefer clear market fee terminology", async ({ page }) => {
-    // Check that at least some guides use the preferred terminology
     let guidesWithGoodTerminology = 0;
 
     for (const slug of GUIDE_SLUGS) {

@@ -716,7 +716,7 @@ export function computeLoadoutPricing(
 export { PREMIUM_LISTING_TAX_RATE };
 
 export const ESTIMATED_PRICES_NOTE =
-  "Estimated snapshot prices. Set station fee in calculator assumptions. Toggle Premium seller for listing tax rate.";
+  "Estimated snapshot prices. Set station fee in calculator assumptions. Toggle Premium seller for sell-order fee rate.";
 
 export function marketCityLocationNote(_city: MarketCityId): string {
   return ESTIMATED_PRICES_NOTE;

@@ -488,6 +488,7 @@ function BatchBreakdown({
   grossPerTenThousandFocus?: number | null;
   batchesPerTenThousandFocus?: number | null;
 }) {
+  const { premiumSeller } = useMarketCity();
   const returnPct = Math.round(batch.materialReturnRate * 100);
   const focusNote =
     focusMode === "with-focus" && batch.focusPointsPerBatch > 0
@@ -583,7 +584,10 @@ function BatchBreakdown({
           />
         )}
         {batch.listingTax != null && (
-          <EconomicsSummaryRow label="Minus listing tax" value={-batch.listingTax} />
+          <EconomicsSummaryRow
+            label={listingTaxRowLabel(premiumSeller)}
+            value={-batch.listingTax}
+          />
         )}
         {batch.sellThroughHaircut != null && batch.sellThroughHaircut !== 0 && (
           <EconomicsSummaryRow

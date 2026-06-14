@@ -127,6 +127,29 @@ export async function assertCoreSeo(page: Page): Promise<void> {
   }
 }
 
+/** Combined fee totals must not appear in user-facing copy; use setup + transaction breakdown. */
+export const BARE_MARKET_FEE_TOTAL_PATTERNS: Array<{
+  pattern: RegExp;
+  reason: string;
+}> = [
+  {
+    pattern: /\b10\.5\s*%/,
+    reason:
+      'Use "2.5% setup fee + 8% transaction tax" instead of bare 10.5% market fee totals',
+  },
+  {
+    pattern: /\b6\.5\s*%/,
+    reason:
+      'Use "2.5% setup fee + 4% transaction tax" instead of bare 6.5% market fee totals',
+  },
+];
+
+export function assertNoBareMarketFeeTotals(text: string): void {
+  for (const { pattern, reason } of BARE_MARKET_FEE_TOTAL_PATTERNS) {
+    expect(text, reason).not.toMatch(pattern);
+  }
+}
+
 /**
  * Return page text as a single normalised string.
  */

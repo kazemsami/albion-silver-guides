@@ -56,11 +56,17 @@ export function formatListingTaxPercent(rate: number): string {
   return `${Math.round(rate * 1000) / 10}%`;
 }
 
+/** User-facing breakdown of sell-order fees (setup + transaction, no combined total). */
+export const STANDARD_MARKET_FEE_LABEL =
+  "Standard sell-order market fees: 2.5% setup fee + 8% transaction tax";
+
+export const PREMIUM_MARKET_FEE_LABEL =
+  "Premium sell-order market fees: 2.5% setup fee + 4% transaction tax";
+
 export function listingTaxRowLabel(premiumSeller: boolean): string {
-  const rate = formatListingTaxPercent(getListingTaxRate(premiumSeller));
   return premiumSeller
-    ? `Minus Premium listing tax (~${rate})`
-    : `Minus Standard listing tax (~${rate})`;
+    ? "Minus Premium sell-order fees (2.5% setup fee + 4% transaction tax)"
+    : "Minus Standard sell-order fees (2.5% setup fee + 8% transaction tax)";
 }
 
 /** Footer copy for guide profit calculators; reflects the active Premium toggle. */
@@ -68,8 +74,6 @@ export function takeHomeFormulaNote(
   premiumSeller: boolean,
   gatherYieldBaseline: GatherYieldBaseline = "premium",
 ): string {
-  const rate = formatListingTaxPercent(getListingTaxRate(premiumSeller));
-  const taxTier = premiumSeller ? "Premium" : "Standard";
   let yieldNote = "";
   if (gatherYieldBaseline === "standard") {
     yieldNote = premiumSeller
@@ -80,5 +84,8 @@ export function takeHomeFormulaNote(
   } else {
     yieldNote = " Gather/fish yields are scaled down for no Premium.";
   }
-  return `Take-home = output sell value - input buys - consumables - ~${rate} ${taxTier} listing tax on gross output.${yieldNote} Deaths, repairs, and station fees are not included unless listed as inputs. Yields scale with your selected skill level.`;
+  const feeLabel = premiumSeller
+    ? PREMIUM_MARKET_FEE_LABEL
+    : STANDARD_MARKET_FEE_LABEL;
+  return `Take-home = output sell value - input buys - consumables - ${feeLabel} on gross output.${yieldNote} Deaths, repairs, and station fees are not included unless listed as inputs. Yields scale with your selected skill level.`;
 }

@@ -25,7 +25,9 @@ import {
   getGatheringYieldMultiplier,
   getListingTaxRate,
   listingTaxRowLabel,
+  PREMIUM_MARKET_FEE_LABEL,
   STANDARD_LISTING_TAX_RATE,
+  STANDARD_MARKET_FEE_LABEL,
   takeHomeFormulaNote,
 } from "@/lib/listing-tax";
 import {
@@ -261,9 +263,9 @@ export function GuideProfitCalculator({
               <p className="mt-1 text-xs text-parchment/45">
                 Before{" "}
                 {usesLoggedStandardBaseline && premiumSeller
-                  ? "Premium listing tax"
+                  ? "Premium sell-order fees"
                   : usesLoggedStandardBaseline
-                    ? "Standard listing tax"
+                    ? "Standard sell-order fees"
                     : "tax"}
                 : {formatSilverPrice(heroBeforeTax)}/hr
               </p>
@@ -401,8 +403,8 @@ export function GuideProfitCalculator({
         {usesLoggedStandardBaseline && (
           <p className="mt-2 text-sm text-parchment/55">
             {premiumSeller
-              ? "Projected with Premium enabled: yields scaled +50% vs the logged no-Premium baseline, Premium listing tax (~6.5%). Toggle Premium off in the header to see the logged Standard-tax result."
-              : "Reviewed without Premium. Yields and tax match the logged run. Toggle Premium in the header to model projected upside (+50% gather yield, ~6.5% listing tax)."}
+              ? `Projected with Premium enabled: yields scaled +50% vs the logged no-Premium baseline, ${PREMIUM_MARKET_FEE_LABEL}. Toggle Premium off in the header to see the logged Standard-tax result.`
+              : "Reviewed without Premium. Yields and tax match the logged run. Toggle Premium in the header to model projected upside (+50% gather yield, 2.5% setup fee + 4% transaction tax)."}
           </p>
         )}
         <p className="mt-2 text-sm text-parchment/50">
@@ -413,8 +415,8 @@ export function GuideProfitCalculator({
           </span>{" "}
           yield.{" "}
           {premiumSeller
-            ? "Premium listing tax (~6.5%)."
-            : "Standard listing tax (~10.5%)."}{" "}
+            ? `${PREMIUM_MARKET_FEE_LABEL}.`
+            : `${STANDARD_MARKET_FEE_LABEL}.`}{" "}
           {useLivePrices
             ? "Live royal market prices (Albion Online Data)."
             : "Site snapshot averages."}{" "}
@@ -467,7 +469,7 @@ export function GuideProfitCalculator({
             />
           )}
           <EconomicsSummaryRow
-            label="Net before listing tax"
+            label="Net before sell-order fees"
             value={breakdownResult.netTotal}
           />
           {breakdownResult.marketTaxTotal != null && (

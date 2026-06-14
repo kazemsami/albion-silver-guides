@@ -4,7 +4,12 @@
  * Live Albion API calls are mocked so results stay deterministic.
  */
 import { test, expect } from "@playwright/test";
-import { blockLivePriceApis } from "./helpers";
+import { blockLivePriceApis, GUIDE_SLUGS } from "./helpers";
+
+const STANDARD_FEE_LABEL =
+  /Standard sell-order fees \(2\.5% setup fee \+ 8% transaction tax\)/;
+const PREMIUM_FEE_LABEL =
+  /Premium sell-order fees \(2\.5% setup fee \+ 4% transaction tax\)/;
 
 async function heroTakeHomeText(
   page: import("@playwright/test").Page,
@@ -19,29 +24,27 @@ test.describe("Premium tax toggle", () => {
     await blockLivePriceApis(page);
   });
 
-  test("corrupted dungeons breakdown switches Standard and Premium tax labels", async ({
-    page,
-  }) => {
-    await page.goto("/guides/corrupted-dungeons-pvpve");
-    await page.waitForSelector(".profit-hero-panel", { timeout: 15_000 });
+  for (const slug of GUIDE_SLUGS) {
+    test(`${slug} switches Standard and Premium sell-order fee labels`, async ({
+      page,
+    }) => {
+      await page.goto(`/guides/${slug}`);
+      await page.waitForSelector(".profit-hero-panel", { timeout: 15_000 });
 
-    const premium = page.getByLabel("Premium account");
-    await premium.setChecked(false);
-    await expect(page.locator("main")).toContainText(
-      /Standard listing tax \(~10\.5%\)/,
-    );
+      const premium = page.getByLabel("Premium account");
+      await premium.setChecked(false);
+      await expect(page.locator("main")).toContainText(STANDARD_FEE_LABEL);
 
-    const standardProfit = await heroTakeHomeText(page);
-    await premium.setChecked(true);
-    await expect(page.locator("main")).toContainText(
-      /Premium listing tax \(~6\.5%\)/,
-    );
+      const standardProfit = await heroTakeHomeText(page);
+      await premium.setChecked(true);
+      await expect(page.locator("main")).toContainText(PREMIUM_FEE_LABEL);
 
-    const premiumProfit = await heroTakeHomeText(page);
-    expect(premiumProfit, "Premium toggle should change take-home").not.toBe(
-      standardProfit,
-    );
-  });
+      const premiumProfit = await heroTakeHomeText(page);
+      expect(premiumProfit, "Premium toggle should change take-home").not.toBe(
+        standardProfit,
+      );
+    });
+  }
 });
 
 test.describe("Skill tier picker", () => {

@@ -10,8 +10,8 @@ export function PremiumTaxToggle() {
       className="flex cursor-pointer select-none items-center gap-2 text-xs text-parchment/70 sm:text-sm"
       title={
         premiumSeller
-          ? "Premium: 6.5% listing tax, +50% gather/fish yield"
-          : "No Premium: 10.5% listing tax, no gather/fish bonus"
+          ? "Premium: 2.5% setup fee + 4% transaction tax on sell orders, +50% gather/fish yield"
+          : "No Premium: 2.5% setup fee + 8% transaction tax on sell orders, no gather/fish bonus"
       }
     >
       <input

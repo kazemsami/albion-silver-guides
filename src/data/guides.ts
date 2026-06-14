@@ -28,10 +28,10 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Bank when carry weight hits ~80%. With Pork Pie and a bag, a mixed-ore trip is roughly 700+ ore before banking (logged 30 min: 190 iron, 405 tin, 68 titanium, plus uncommon spawns).",
       "Do not refine. Sell raw ore on the Martlock market (list 1 silver under the lowest sell order). Tin sells but iron and uncommon ore usually pay better per minute.",
       "After depositing, buy another Pork Pie and repeat. Upgrade to T5 pick when you can one-shot titanium nodes without slowing the route.",
-      "Track profit as: (ore sold × price) minus Pork Pie cost minus listing tax. Journals add bonus silver if you fill one while mining.",
+      "Track profit as: (ore sold × price) minus Pork Pie cost minus sell-order market fees. Journals add bonus silver if you fill one while mining.",
     ],
     tips: [
-      "Logged 30-min intermediate run (Eldon Hill, T5 gear, Pork Pie, miner backpack, gatherer bag, every node, no Premium): 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Calculator extrapolates yields to 1 hr at ×1.9 (banking/travel overhead, not straight ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~105k net in 30 min after Standard listing tax (10.5%) and 1 Pork Pie (~205k/hr). Premium (+50% gather yield, 6.5% tax) is projected only; toggle Premium in the header to compare.",
+      "Logged 30-min intermediate run (Eldon Hill, T5 gear, Pork Pie, miner backpack, gatherer bag, every node, no Premium): 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Calculator extrapolates yields to 1 hr at ×1.9 (banking/travel overhead, not straight ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~105k net in 30 min after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and 1 Pork Pie (~205k/hr). Premium (+50% gather yield, 2.5% setup fee + 4% transaction tax) is projected only; toggle Premium in the header to compare.",
       "Iron-only routing should raise iron/hr above 361 but total stack weight drops. Tin is fast to mine but lower silver per minute. Titanium and enchanted ore need T5 pick and higher spec (intermediate tier in the calculator).",
       "Martlock has solid local ore buy volume; only haul to Caerleon if the price gap exceeds ~8% after transport time.",
       "Mine during EU off-peak if your zone is crowded; contested nodes cut ore/hr directly.",
@@ -99,7 +99,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "fiber-farming-solo",
     title: "Fiber Farming in Yellow Zones",
     description:
-      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. This route currently models ~209k/hr net under saved Bridgewatch prices (Standard listing tax, 1 Pork Pie, no Premium). Reviewed against 1 logged 30-min run on the same loop.",
+      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. This route currently models ~209k/hr net under saved Bridgewatch prices (Standard sell-order fees, 1 Pork Pie, no Premium). Reviewed against 1 logged 30-min run on the same loop.",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
@@ -121,9 +121,9 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     ],
     tips: [
       "Reviewed against 1 logged run on Lazygrass Plain (Bridgewatch, T5 harvester gear, Pork Pie, no Premium). Logged fiber/hr already includes the Pork Pie gather bonus.",
-      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. Session take-home was 125k net in 30 min. At current saved Bridgewatch prices the calculator models ~209k/hr net (Standard listing tax, 1 Pork Pie, no Premium).",
+      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. Session take-home was 125k net in 30 min. At current saved Bridgewatch prices the calculator models ~209k/hr net (Standard sell-order fees, 1 Pork Pie, no Premium).",
       "Enchanted nodes are bonus silver from intermediate tier up: rare hemp (.2) at beginner; uncommon or rare skyflower (.1/.2) once you run T5 gear and higher mining/fiber spec.",
-      "With Premium on the same Lazygrass Plain loop, expect roughly ~450k/hr before tax (+50% gather yield and lower listing tax). That figure is projected, not logged. Toggle Premium in the header to compare.",
+      "With Premium on the same Lazygrass Plain loop, expect roughly ~450k/hr before tax (+50% gather yield and lower sell-order fees: 2.5% setup fee + 4% transaction tax). That figure is projected, not logged. Toggle Premium in the header to compare.",
       "Skyflower (T5) is most of your silver; prioritize T5 nodes even if it means skipping a T4 cluster.",
       "Bridgewatch is your bank and market; sell locally instead of hauling to Caerleon unless the spread clearly covers travel time.",
       "Pork Pie (+15% yield, +30% carry weight) is part of every loadout tier and was active on the logged run.",
@@ -209,7 +209,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Clear mobs for infamy until the final boss spawns. Loot Grandmaster's Souls and Elder's Souls from the chest; they are most of the run's value.",
       "When invaded before the boss: duel if you have the advantage, or destroy three Demonic Shards (they appear on your minimap) to banish the invader for free. Killing the invader also ends further invasions for that run.",
       "After the final boss dies, invasions stop. Exit normally or chain through the post-boss portal. Bank after each chest. Stalker deaths are full loot.",
-      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours. Expect Standard market fees of ~10.5% (or ~6.5% with Premium) when calculating take-home profit.",
+      "Sell souls and runes on Caerleon. List 1 silver under the lowest sell order during prime hours. Expect Standard sell-order market fees (2.5% setup fee + 8% transaction tax), or 2.5% setup fee + 4% transaction tax with Premium, when calculating take-home profit.",
     ],
     tips: [
       "Stalker pays much more than Hunter but is full-loot PvP, only run it when your invasion win rate is solid.",
@@ -218,7 +218,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Healing is reduced 40% in Corrupted Dungeons, burst and shard-banish plays often beat trying to out-heal a geared invader.",
       "Slayer is for high-infamy veterans; higher IP cap and T8 mobs, but death risk dwarfs the extra loot for most farmers.",
       "Never chain runs with a full inventory. One death loses the chest and your kit on Stalker/Slayer.",
-      "The profit calculator subtracts market fees based on your Premium toggle (Standard: ~10.5% setup fee + transaction tax; Premium: ~6.5%). Undercutting sell orders reduces your margin further on top of those fees.",
+      "The profit calculator subtracts market fees based on your Premium toggle (Standard: 2.5% setup fee + 8% transaction tax; Premium: 2.5% setup fee + 4% transaction tax). Undercutting sell orders reduces your margin further on top of those fees.",
       "Stalker gear losses swing your hourly. At ~290k kit value, the calculator assumes ~0.3 deaths/hour (~85k/hr); aggressive or unlucky sessions lose multiples of that plus the chest loot on each death.",
       "Bank after each chest when possible. Real hourly profit swings with invasion frequency, win rate, loot RNG, and infamy tier.",
     ],
@@ -793,7 +793,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Bank every 30-40 min on all builds so a gank does not wipe your whole bag. Bank sooner if scouts appear or your bag is nearly full.",
     ],
     tips: [
-      "Logged Safe escape run (2026-06-14, no Premium, 30 min): 447k est. market value in bag (8 Sturgeon, 2 Puremist Snapper, 25 T7 catfish, 18 T6 zander, 18 T3 Whitefog Snapper, 2 T5 Clearhaze Snapper, 56 seaweed) plus 0.84 of a full Grandmaster Fisherman's Journal (5600/6640 fame, ~96k net progress at saved prices: 0.84 × (150k full − 36k empty sell)) = ~543k session gross. 24k on 2 Brecilien portal returns while scouting for a better T8 road, 0 deaths. ~462k net in 30 min after Standard sell-order tax (10.5%) and portal fees (~924k/hr at ×2). The Safe escape calculator doubles the logged 30-min catch mix to /hr (~1.69 full journal equivalents at fixed 0.84 fill) and scales fish with Premium yield only; journal fill does not change with Premium or T7 garb/boots.",
+      "Logged Safe escape run (2026-06-14, no Premium, 30 min): 447k est. market value in bag (8 Sturgeon, 2 Puremist Snapper, 25 T7 catfish, 18 T6 zander, 18 T3 Whitefog Snapper, 2 T5 Clearhaze Snapper, 56 seaweed) plus 0.84 of a full Grandmaster Fisherman's Journal (5600/6640 fame, ~96k net progress at saved prices: 0.84 × (150k full − 36k empty sell)) = ~543k session gross. 24k on 2 Brecilien portal returns while scouting for a better T8 road, 0 deaths. ~462k net in 30 min after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and portal fees (~924k/hr at ×2). The Safe escape calculator doubles the logged 30-min catch mix to /hr (~1.69 full journal equivalents at fixed 0.84 fill) and scales fish with Premium yield only; journal fill does not change with Premium or T7 garb/boots.",
       "You catch ~350-550 fish/hr depending on gear, premium, and specs. T7 gear ≈400/hr (40% Sturgeon, 60% butchered). T8 gear ≈450/hr (3/7 Sturgeon, 4/7 butchered). Each butchered fish yields ~15 chopped fish.",
       "Sell River Sturgeon and Puremist Snapper raw. Butcher T7-and-lower bycatch into chopped fish. Never chop Sturgeon (raw sells for far more).",
       "Puremist Snapper is the big swing factor on T7/T8 maps. Strong Snapper RNG on a normal school pushes a good hour into a great one.",
@@ -820,7 +820,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "laborer-passive-income",
     title: "Laborer Passive Income",
     description:
-      "Run a fully upgraded T8 laborer island on T7 journals. Each laborer processes one full journal every 22 hours at 150% yield. Gathering laborers return unrefined T7 resources; crafting laborers return refined materials. All return an empty journal.",
+      "Run a fully upgraded T8 laborer island on T7 journals. Each laborer processes one full journal every 22 hours. Gathering laborers return raw resources plus an empty journal; crafting laborers return refined materials; mercenary laborers return silver.",
     category: "laborers",
     difficulty: "advanced",
     zoneType: "safe",
@@ -846,7 +846,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Repeat. Match laborer specialty to whatever activity you already do so journal filling costs nothing extra.",
     ],
     tips: [
-      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - market fee on sells. Filling journals yourself lowers upfront cash spending, but compare the profit to selling full journals directly since a filled journal has market value (opportunity cost).",
+      "Profit per journal ≈ (resource sell value + empty journal value) - full journal cost - market fee on sells. Filling journals yourself lowers cash spending, but the full journal still has market value. Compare feeding the journal to selling the full journal directly.",
       "Each T8 laborer house holds three laborers. Island tiers in the calculator count houses, not individual laborers.",
       "Breakeven island spend: compare total T8 house + furniture cost to (profit per journal × journals per 22h cycle × 30). A full island often pays back over weeks, not hours.",
       "T8 bed + T8 table on a T8 laborer already hits 150% yield on T7 journals (wiki cap: min(150%, happiness ÷ 2)). Extra trophies mainly help T8 journals or trophy journal jobs.",
@@ -942,7 +942,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "T5 starter path: craft Healing Potion (24× Crenellated Burdock + 6× Hen Eggs per 5) and Energy Potion (24× Crenellated Burdock + 6× Goat's Milk per 5) until T6 majors unlock.",
       "Thu-Sat before CTAs: craft Major Gigantify .1 (5,278 focus), Major Resistance .1 (6,368 focus), and Major Sticky (5,503 focus). Each makes 5 pots per batch with 72× mullein plus the foxglove, burdock, egg, milk, and corn hooch shown in the calculator.",
       "List pots in Bridgewatch 1 silver under the lowest sell order in stacks of 50. Use Sell normally in the calculator for a normal week, or Hold for events if you stock until CTAs or ZvZ.",
-      "Profit = (potion sell price × 5 per craft) minus net material cost after lab returns minus listing tax. Recheck each recipe in the calculator before batching.",
+      "Profit = (potion sell price × 5 per craft) minus net material cost after lab returns minus sell-order market fees. Recheck each recipe in the calculator before batching.",
     ],
     tips: [
       "Tested focus per batch of 5 pots: T6 Major Healing .1 = 3,461, .2 = 4,895 (+ 2,500 silver lab fee), Major Energy .1 = 4,188, .2 = 5,923, Poison 1,635; T7 Major Gigantify .1 = 5,278, .2 = 7,009, Major Resistance .1 = 6,368, .2 = 8,103, Major Sticky 5,503.",
