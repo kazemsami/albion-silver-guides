@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print payload
-        run: |
-          echo "event action: ${{ github.event.action }}"
-          echo '${{ toJson(github.event.client_payload) }}'
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.client_payload.git.sha }}
@@ -25,4 +20,4 @@ jobs:
       - name: Run tests
         run: npx playwright test
         env:
-          BASE_URL: ${{ github.event.client_payload.url }}
+          BASE_URL: https://www.albion-silver.me
