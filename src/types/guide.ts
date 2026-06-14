@@ -138,6 +138,8 @@ export interface GuideEconomics {
   defaultSkillTierId: string;
   /** When set, the guide page shows an all-laborer specialty picker. */
   defaultLaborerSpecialtyId?: string;
+  /** Optional note shown below the profit summary clarifying consumable assumptions. */
+  consumableNote?: string;
 }
 
 /** JSON-safe price map passed from server to client profit calculator. */

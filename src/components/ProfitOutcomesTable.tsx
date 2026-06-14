@@ -9,7 +9,7 @@ const outcomeOrder: (keyof GuideProfitOutcomes)[] = [
   "highRoll",
 ];
 
-const outcomeHints: Record<keyof GuideProfitOutcomes, string> = {
+const defaultOutcomeHints: Record<keyof GuideProfitOutcomes, string> = {
   conservative: "Bad luck, low spec, slower route, worse market",
   median: "Typical session for a normal player",
   expected: "Includes rare drops mathematically",
@@ -22,13 +22,16 @@ export function ProfitOutcomesTable({
   highlight = "expected",
   unitLabel = "/hr",
   priceSourceLabel,
+  outcomeHints: outcomeHintsOverride,
 }: {
   outcomes: GuideProfitOutcomes;
   compact?: boolean;
   highlight?: keyof GuideProfitOutcomes;
   unitLabel?: string;
   priceSourceLabel?: string;
+  outcomeHints?: Partial<Record<keyof GuideProfitOutcomes, string>>;
 }) {
+  const hints = { ...defaultOutcomeHints, ...outcomeHintsOverride };
   const hasAny = outcomeOrder.some((key) => outcomes[key] != null);
   if (!hasAny) return null;
 
@@ -74,7 +77,7 @@ export function ProfitOutcomesTable({
                   {formatSilverPrice(value)}
                 </td>
                 <td className="py-2 text-xs text-parchment/50">
-                  {outcomeHints[key]}
+                  {hints[key]}
                 </td>
               </tr>
             );

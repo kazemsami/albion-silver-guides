@@ -21,7 +21,13 @@ import {
   getLaborerSpecialty,
 } from "@/data/laborer-specialties";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { getGatheringYieldMultiplier, listingTaxRowLabel } from "@/lib/listing-tax";
+import {
+  getGatheringYieldMultiplier,
+  getListingTaxRate,
+  listingTaxRowLabel,
+  STANDARD_LISTING_TAX_RATE,
+  takeHomeFormulaNote,
+} from "@/lib/listing-tax";
 import {
   computeHourlyEconomics,
   computeLoadoutPricing,
@@ -130,14 +136,105 @@ export function GuideProfitCalculator({
     tier,
   ]);
 
+  const gatherYieldBaseline = economics.gatherYieldBaseline ?? "premium";
+  const usesLoggedStandardBaseline = gatherYieldBaseline === "standard";
+
+  const loggedBaselineResult = useMemo(() => {
+    if (!usesLoggedStandardBaseline) return null;
+    const scaled = hasLaborerSpecialtyPicker
+      ? buildLaborerHourlyEconomics(specialty, tier)
+      : scaleGuideEconomics(economics, tier, { gatheringYieldMultiplier: 1 });
+    return computeHourlyEconomics(
+      { ...economics, ...scaled },
+      priceMap,
+      marketCity,
+      STANDARD_LISTING_TAX_RATE,
+      mapKind,
+    );
+  }, [
+    economics,
+    hasLaborerSpecialtyPicker,
+    mapKind,
+    marketCity,
+    priceMap,
+    specialty,
+    tier,
+    usesLoggedStandardBaseline,
+  ]);
+
+  const projectedPremiumResult = useMemo(() => {
+    if (!usesLoggedStandardBaseline || premiumSeller) return null;
+    const scaled = hasLaborerSpecialtyPicker
+      ? buildLaborerHourlyEconomics(specialty, tier)
+      : scaleGuideEconomics(economics, tier, {
+          gatheringYieldMultiplier: getGatheringYieldMultiplier(
+            true,
+            gatherYieldBaseline,
+          ),
+        });
+    return computeHourlyEconomics(
+      { ...economics, ...scaled },
+      priceMap,
+      marketCity,
+      getListingTaxRate(true),
+      mapKind,
+    );
+  }, [
+    economics,
+    gatherYieldBaseline,
+    hasLaborerSpecialtyPicker,
+    mapKind,
+    marketCity,
+    premiumSeller,
+    priceMap,
+    specialty,
+    tier,
+    usesLoggedStandardBaseline,
+  ]);
+
+  // When using a logged Standard baseline, the hero and breakdown follow the Premium toggle:
+  // - Premium OFF → hero shows the logged result (Standard tax, no yield scaling)
+  // - Premium ON  → hero shows the Premium projection (Premium tax, +50% yield)
+  // Both the hero and the breakdown always reflect the same mode so the numbers match.
+  const heroTakeHome = usesLoggedStandardBaseline
+    ? premiumSeller
+      ? (result.netAfterTax ?? result.netTotal)
+      : (loggedBaselineResult?.netAfterTax ?? loggedBaselineResult?.netTotal)
+    : (result.netAfterTax ?? result.netTotal);
+
+  const heroBeforeTax = usesLoggedStandardBaseline
+    ? premiumSeller
+      ? result.netTotal
+      : loggedBaselineResult?.netTotal
+    : result.netTotal;
+
+  const breakdownResult =
+    usesLoggedStandardBaseline && !premiumSeller && loggedBaselineResult
+      ? loggedBaselineResult
+      : result;
+
   const profitRange = useMemo(() => {
+    if (!usesLoggedStandardBaseline) {
+      return computeProfitRange(
+        economics,
+        priceMap,
+        listingTaxRate,
+        gatheringYieldMultiplier,
+      );
+    }
     return computeProfitRange(
       economics,
       priceMap,
-      listingTaxRate,
-      gatheringYieldMultiplier,
+      STANDARD_LISTING_TAX_RATE,
+      1,
     );
-  }, [economics, gatheringYieldMultiplier, listingTaxRate, priceMap]);
+  }, [
+    economics,
+    gatheringYieldMultiplier,
+    listingTaxRate,
+    priceMap,
+    usesLoggedStandardBaseline,
+  ]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -150,31 +247,70 @@ export function GuideProfitCalculator({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-              Est. take-home / hour (after tax)
+              {usesLoggedStandardBaseline && premiumSeller
+                ? "Est. take-home / hour (with Premium)"
+                : usesLoggedStandardBaseline
+                  ? "Logged take-home / hour (Standard tax, no Premium)"
+                  : "Est. take-home / hour (after tax)"}
             </p>
             <p className="mt-1 text-3xl font-bold text-gold tabular-nums">
-              {result.netAfterTax != null
-                ? formatSilverPrice(result.netAfterTax)
-                : result.netTotal != null
-                  ? formatSilverPrice(result.netTotal)
-                  : "N/A"}
+              {heroTakeHome != null ? formatSilverPrice(heroTakeHome) : "N/A"}
             </p>
-            {result.netTotal != null && result.netAfterTax != null && (
+            {heroBeforeTax != null && heroTakeHome != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                Before tax: {formatSilverPrice(result.netTotal)}/hr
+                Before{" "}
+                {usesLoggedStandardBaseline && premiumSeller
+                  ? "Premium listing tax"
+                  : usesLoggedStandardBaseline
+                    ? "Standard listing tax"
+                    : "tax"}
+                : {formatSilverPrice(heroBeforeTax)}/hr
+              </p>
+            )}
+            {usesLoggedStandardBaseline && premiumSeller && loggedBaselineResult && (
+              <p className="mt-2 text-xs text-parchment/50">
+                Logged run without Premium:{" "}
+                <span className="font-semibold text-parchment/70 tabular-nums">
+                  {loggedBaselineResult.netAfterTax != null
+                    ? formatSilverPrice(loggedBaselineResult.netAfterTax)
+                    : "N/A"}
+                  /hr
+                </span>
+                {" "}(Standard tax, no yield bonus)
+              </p>
+            )}
+            {usesLoggedStandardBaseline && !premiumSeller && projectedPremiumResult && (
+              <p className="mt-2 text-xs text-parchment/50">
+                Projected with Premium:{" "}
+                <span className="font-semibold text-parchment/70 tabular-nums">
+                  {projectedPremiumResult.netAfterTax != null
+                    ? formatSilverPrice(projectedPremiumResult.netAfterTax)
+                    : "N/A"}
+                  /hr
+                </span>
+                {" "}(toggle Premium in the header)
               </p>
             )}
             {profitRange?.min != null && profitRange.max != null && (
               <p className="mt-1 text-xs text-parchment/45">
-                All skill levels (after tax): {formatSilverRange(profitRange.min, profitRange.max)}/hr
+                {usesLoggedStandardBaseline
+                  ? "All tiers (logged baseline, Standard tax): "
+                  : "All skill levels (after tax): "}
+                {formatSilverRange(profitRange.min, profitRange.max)}/hr
               </p>
             )}
           </div>
-          {result.outputTotal != null && (
+          {(usesLoggedStandardBaseline
+            ? loggedBaselineResult?.outputTotal
+            : result.outputTotal) != null && (
             <div className="text-right text-sm text-parchment/50">
               <p>Gross output</p>
               <p className="font-semibold text-emerald-400/90 tabular-nums">
-                {formatSilverExact(result.outputTotal)}
+                {formatSilverExact(
+                  (usesLoggedStandardBaseline
+                    ? loggedBaselineResult?.outputTotal
+                    : result.outputTotal) ?? 0,
+                )}
               </p>
             </div>
           )}
@@ -254,8 +390,17 @@ export function GuideProfitCalculator({
 
       <section className="theme-surface mt-10 rounded-xl border border-gold/20 bg-obsidian-light p-6">
         <h2 className="wiki-heading font-display text-xl font-semibold text-parchment">
-          Profit breakdown
+          {usesLoggedStandardBaseline && premiumSeller
+            ? "Profit breakdown (projected with Premium)"
+            : "Profit breakdown"}
         </h2>
+        {usesLoggedStandardBaseline && (
+          <p className="mt-2 text-sm text-parchment/55">
+            {premiumSeller
+              ? "Projected with Premium enabled: yields scaled +50% vs the logged no-Premium baseline, Premium listing tax (~6.5%). Toggle Premium off in the header to see the logged Standard-tax result."
+              : "Reviewed without Premium. Yields and tax match the logged run. Toggle Premium in the header to model projected upside (+50% gather yield, ~6.5% listing tax)."}
+          </p>
+        )}
         <p className="mt-2 text-sm text-parchment/50">
           Calculated from 1-hour output at{" "}
           <span className="text-parchment/70">
@@ -263,6 +408,9 @@ export function GuideProfitCalculator({
             {tier.label}
           </span>{" "}
           yield.{" "}
+          {premiumSeller
+            ? "Premium listing tax (~6.5%)."
+            : "Standard listing tax (~10.5%)."}{" "}
           {useLivePrices
             ? "Live royal market prices (Albion Online Data)."
             : "Site snapshot averages."}{" "}
@@ -271,27 +419,27 @@ export function GuideProfitCalculator({
 
         <EconomicsTable
           title="1-Hour Output (sell value)"
-          lines={result.output}
-          total={result.outputTotal}
+          lines={breakdownResult.output}
+          total={breakdownResult.outputTotal}
           totalLabel="Gross output"
           variant="output"
         />
 
-        {result.input.length > 0 && (
+        {breakdownResult.input.length > 0 && (
           <EconomicsTable
             title="1-Hour Input Costs"
-            lines={result.input}
-            total={result.inputTotal}
+            lines={breakdownResult.input}
+            total={breakdownResult.inputTotal}
             totalLabel="Input cost"
             variant="input"
           />
         )}
 
-        {result.consumables.length > 0 && (
+        {breakdownResult.consumables.length > 0 && (
           <EconomicsTable
             title="1-Hour Consumables"
-            lines={result.consumables}
-            total={result.consumableTotal}
+            lines={breakdownResult.consumables}
+            total={breakdownResult.consumableTotal}
             totalLabel="Consumable cost"
             variant="input"
           />
@@ -300,43 +448,51 @@ export function GuideProfitCalculator({
         <div className="profit-summary-box mt-5 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3">
           <EconomicsSummaryRow
             label="Gross output / hour"
-            value={result.outputTotal}
+            value={breakdownResult.outputTotal}
           />
-          {result.inputTotal != null && (
+          {breakdownResult.inputTotal != null && (
             <EconomicsSummaryRow
               label="Minus input costs"
-              value={-result.inputTotal}
+              value={-breakdownResult.inputTotal}
             />
           )}
-          {result.consumableTotal != null && (
+          {breakdownResult.consumableTotal != null && (
             <EconomicsSummaryRow
               label="Minus consumables"
-              value={-result.consumableTotal}
+              value={-breakdownResult.consumableTotal}
             />
           )}
           <EconomicsSummaryRow
             label="Net before listing tax"
-            value={result.netTotal}
+            value={breakdownResult.netTotal}
           />
-          {result.marketTaxTotal != null && (
+          {breakdownResult.marketTaxTotal != null && (
             <EconomicsSummaryRow
               label={listingTaxRowLabel(premiumSeller)}
-              value={-result.marketTaxTotal}
+              value={-breakdownResult.marketTaxTotal}
             />
           )}
           <EconomicsSummaryRow
-            label="Est. take-home / hour"
-            value={result.netAfterTax ?? result.netTotal}
+            label={
+              usesLoggedStandardBaseline && !premiumSeller
+                ? "Logged take-home / hour"
+                : usesLoggedStandardBaseline
+                  ? "Est. take-home / hour (with Premium)"
+                  : "Est. take-home / hour"
+            }
+            value={breakdownResult.netAfterTax ?? breakdownResult.netTotal}
             emphasis
           />
         </div>
 
         <p className="mt-3 text-xs text-parchment/40">
-          Take-home = output sell value - input buys - consumables - ~6.5% Premium
-          listing tax on gross output. Deaths, repairs, and station fees are not
-          included unless listed as inputs. Yields scale with your selected skill
-          level.
+          {takeHomeFormulaNote(premiumSeller, gatherYieldBaseline)}
         </p>
+        {economics.consumableNote && (
+          <p className="mt-2 text-xs text-parchment/40">
+            {economics.consumableNote}
+          </p>
+        )}
       </section>
     </>
   );

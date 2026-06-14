@@ -2,6 +2,7 @@ import {
   ABYSSAL_CONSUMABLES_PER_45MIN,
   ABYSSAL_QUEUE_MINUTES,
   ABYSSAL_TEAM_META,
+  DEFAULT_ABYSSAL_RUN_DURATION,
   getAbyssalScenario,
   type AbyssalRunDurationMinutes,
   type AbyssalScenarioId,
@@ -276,50 +277,98 @@ export function computeAbyssalEconomics(
 
 export type AbyssalProfitRange = { min: number; max: number; highRoll?: number };
 
+/** Cautious floor-2 win rate for the Median outcomes row (below calculator default). */
+export const ABYSSAL_FLOOR2_CAUTIOUS_WIN_RATE = 0.65;
+
+export const ABYSSAL_PROFIT_OUTCOME_HINTS: Record<
+  "conservative" | "median" | "expected" | "highRoll",
+  string
+> = {
+  conservative: "Floor-1 soul exit, solo, 20 min runs",
+  median:
+    "Average floor-2 extract at 65% win rate (duo, 30 min, after bag loss)",
+  expected:
+    "Average floor-2 at 68% win rate; matches calculator default preset",
+  highRoll: "Floor-3 vault high-roll (high variance)",
+};
+
+export type AbyssalOutcomePresetInputs = Omit<
+  AbyssalComputeInputs,
+  "priceMapKind"
+>;
+
+export const ABYSSAL_OUTCOME_PRESETS: Record<
+  "conservative" | "median" | "expected" | "highRoll",
+  AbyssalOutcomePresetInputs
+> = {
+  conservative: {
+    scenarioId: "conservative",
+    teamSizeId: "solo",
+    winRate: 0.72,
+    runDurationMinutes: 20,
+    includePvpLoot: false,
+    includeMercJournal: false,
+  },
+  median: {
+    scenarioId: "floor2",
+    teamSizeId: "duo",
+    winRate: ABYSSAL_FLOOR2_CAUTIOUS_WIN_RATE,
+    runDurationMinutes: DEFAULT_ABYSSAL_RUN_DURATION,
+    includePvpLoot: false,
+    includeMercJournal: false,
+  },
+  expected: {
+    scenarioId: "floor2",
+    teamSizeId: "duo",
+    winRate: getAbyssalScenario("floor2").defaultWinRate,
+    runDurationMinutes: DEFAULT_ABYSSAL_RUN_DURATION,
+    includePvpLoot: false,
+    includeMercJournal: false,
+  },
+  highRoll: {
+    scenarioId: "floor3Vault",
+    teamSizeId: "trio",
+    winRate: 0.5,
+    runDurationMinutes: 45,
+    includePvpLoot: true,
+    includeMercJournal: false,
+  },
+};
+
+export function computeAbyssalProfitOutcomes(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  priceMapKind: PriceMapKind = "snapshot",
+): {
+  conservative: number | null;
+  median: number | null;
+  expected: number | null;
+  highRoll: number | null;
+} {
+  const net = (preset: AbyssalOutcomePresetInputs) =>
+    computeAbyssalEconomics(
+      prices,
+      { ...preset, priceMapKind },
+      listingTaxRate,
+    ).netAfterTaxAndDeath;
+
+  return {
+    conservative: net(ABYSSAL_OUTCOME_PRESETS.conservative),
+    median: net(ABYSSAL_OUTCOME_PRESETS.median),
+    expected: net(ABYSSAL_OUTCOME_PRESETS.expected),
+    highRoll: net(ABYSSAL_OUTCOME_PRESETS.highRoll),
+  };
+}
+
 export function computeAbyssalProfitRange(
   prices: PriceMap,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
 ): AbyssalProfitRange {
-  const conservative = computeAbyssalEconomics(
-    prices,
-    {
-      scenarioId: "conservative",
-      teamSizeId: "solo",
-      winRate: 0.72,
-      runDurationMinutes: 20,
-      includePvpLoot: false,
-      includeMercJournal: false,
-    },
-    listingTaxRate,
-  );
-  const floor2 = computeAbyssalEconomics(
-    prices,
-    {
-      scenarioId: "floor2",
-      teamSizeId: "duo",
-      winRate: 0.65,
-      runDurationMinutes: 30,
-      includePvpLoot: false,
-      includeMercJournal: false,
-    },
-    listingTaxRate,
-  );
-  const vaultHigh = computeAbyssalEconomics(
-    prices,
-    {
-      scenarioId: "floor3Vault",
-      teamSizeId: "trio",
-      winRate: 0.5,
-      runDurationMinutes: 45,
-      includePvpLoot: true,
-      includeMercJournal: false,
-    },
-    listingTaxRate,
-  );
+  const outcomes = computeAbyssalProfitOutcomes(prices, listingTaxRate);
 
   return {
-    min: conservative.netAfterTaxAndDeath ?? 350_000,
-    max: floor2.netAfterTaxAndDeath ?? 1_100_000,
-    highRoll: vaultHigh.netAfterTaxAndDeath ?? undefined,
+    min: outcomes.conservative ?? 350_000,
+    max: outcomes.expected ?? 1_100_000,
+    highRoll: outcomes.highRoll ?? undefined,
   };
 }

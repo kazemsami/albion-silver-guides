@@ -217,11 +217,20 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
         mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal + mobility" },
         cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Sustain" },
+        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2, hint: "+damage, 2/hr (calculator)" },
+        potion: {
+          id: "T6_POTION_HEAL",
+          name: "Major Healing Potion",
+          quantity: 3,
+          hint: "Sustain, 3/hr (calculator)",
+        },
       },
       inventory: [
-        { id: "T6_POTION_ENERGY", name: "Major Energy Potion", hint: "Ability energy" },
+        {
+          id: "T6_POTION_ENERGY",
+          name: "Major Energy Potion",
+          hint: "Optional backup; not priced in hourly calculator",
+        },
       ],
     },
     black: {
@@ -233,11 +242,20 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
         shoes: { id: "T6_SHOES_PLATE_SET1", name: "Master's Soldier Boots", hint: "Gap close" },
         mainhand: { id: "T6_MAIN_RAPIER_MORGANA", name: "Master's Bloodletter", hint: "Lifesteal sustain" },
         cape: { id: "T4_CAPEITEM_FW_THETFORD", name: "Adept's Thetford Cape", hint: "Chain Lightning burst" },
-        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", hint: "+damage" },
-        potion: { id: "T6_POTION_HEAL", name: "Major Healing Potion", hint: "Emergency heal" },
+        food: { id: "T6_MEAL_STEW", name: "Mutton Stew", quantity: 2, hint: "+damage, 2/hr (calculator)" },
+        potion: {
+          id: "T6_POTION_HEAL",
+          name: "Major Healing Potion",
+          quantity: 3,
+          hint: "Emergency heal, 3/hr (calculator)",
+        },
       },
       inventory: [
-        { id: "T6_POTION_ENERGY", name: "Major Energy Potion", hint: "Ability energy" },
+        {
+          id: "T6_POTION_ENERGY",
+          name: "Major Energy Potion",
+          hint: "Optional backup; not priced in hourly calculator",
+        },
       ],
     },
   },

@@ -275,11 +275,13 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       { id: "T6_POTION_HEAL", name: "Major Healing Potion", quantity: 3 },
     ],
     skillTiers: tiers(
-      SKILL_TIERS.dungeonYellow,
-      SKILL_TIERS.dungeonRed,
-      SKILL_TIERS.dungeonBlack,
+      { ...SKILL_TIERS.dungeonYellow, consumableMultiplier: 1 },
+      { ...SKILL_TIERS.dungeonRed, consumableMultiplier: 1 },
+      { ...SKILL_TIERS.dungeonBlack, consumableMultiplier: 1 },
     ),
     defaultSkillTierId: "red",
+    consumableNote:
+      "The calculator includes 2 Mutton Stews and 3 Major Healing Potions per hour. Major Energy Potion is optional backup and is not included by default.",
   },
   "abyssal-depths-farming": {
     // Baseline ~1M/hr floor-2 extract; duo soul PvP pushes higher. One ~45 min run per hour with queue.

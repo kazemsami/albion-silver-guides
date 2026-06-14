@@ -8,7 +8,6 @@ import {
   DEFAULT_TRACKING_RISK,
   TRACKING_TIER_CONFIGS,
 } from "@/data/tracking-economics";
-import { DEFAULT_ABYSSAL_RUN_DURATION } from "@/data/abyssal-economics";
 import { DEFAULT_POTION_DEFAULTS, DEFAULT_POTION_EXTRACT_LEVEL } from "@/data/potion-economics";
 import type { GuideEconomics, GuideProfitOutcomes } from "@/types/guide";
 import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
@@ -18,7 +17,7 @@ import {
 } from "@/lib/guide-economics";
 import { computeTrackingEconomics } from "@/lib/tracking-economics";
 import { computeAvaRoadsEconomics } from "@/lib/ava-roads-economics";
-import { computeAbyssalEconomics } from "@/lib/abyssal-economics";
+import { computeAbyssalProfitOutcomes } from "@/lib/abyssal-economics";
 import { computePotionEconomics } from "@/lib/potion-economics";
 import {
   getGatheringYieldMultiplier,
@@ -109,7 +108,7 @@ export function computeGuideProfitOutcomes(
 ): GuideProfitOutcomes {
   const listingTaxRate = options?.listingTaxRate ?? PREMIUM_LISTING_TAX_RATE;
   const priceMapKind = options?.priceMapKind ?? "snapshot";
-  const premiumSeller = options?.premiumSeller ?? true;
+  const premiumSeller = options?.premiumSeller ?? false;
   const economicsForSlug = guideEconomicsBySlug[slug];
   const gatheringYieldMultiplier = getGatheringYieldMultiplier(
     premiumSeller,
@@ -201,53 +200,7 @@ export function computeGuideProfitOutcomes(
   }
 
   if (slug === "abyssal-depths-farming") {
-    const conservative = computeAbyssalEconomics(
-      prices,
-      {
-        scenarioId: "conservative",
-        teamSizeId: "solo",
-        winRate: 0.72,
-        runDurationMinutes: 20,
-        includePvpLoot: false,
-        includeMercJournal: false,
-        priceMapKind,
-      },
-      listingTaxRate,
-    ).netAfterTaxAndDeath;
-    const median = computeAbyssalEconomics(
-      prices,
-      {
-        scenarioId: "floor2",
-        teamSizeId: "duo",
-        winRate: 0.65,
-        runDurationMinutes: DEFAULT_ABYSSAL_RUN_DURATION,
-        includePvpLoot: false,
-        includeMercJournal: false,
-        priceMapKind,
-      },
-      listingTaxRate,
-    ).netAfterTaxAndDeath;
-    const expected = median;
-    const highRoll = computeAbyssalEconomics(
-      prices,
-      {
-        scenarioId: "floor3Vault",
-        teamSizeId: "trio",
-        winRate: 0.5,
-        runDurationMinutes: 45,
-        includePvpLoot: true,
-        includeMercJournal: false,
-        priceMapKind,
-      },
-      listingTaxRate,
-    ).netAfterTaxAndDeath;
-
-    return {
-      conservative: conservative ?? null,
-      median: median ?? null,
-      expected: expected ?? null,
-      highRoll: highRoll ?? null,
-    };
+    return computeAbyssalProfitOutcomes(prices, listingTaxRate, priceMapKind);
   }
 
   if (slug === "potions-crafting-bulk") {

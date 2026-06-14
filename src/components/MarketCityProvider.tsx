@@ -58,7 +58,7 @@ function readStoredPremiumSeller(): boolean {
   } catch {
     // ignore
   }
-  return true;
+  return false;
 }
 
 function readStoredUseLivePrices(): boolean {
@@ -77,7 +77,7 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
     DEFAULT_MARKET_CITY_ID,
   );
   const [useLivePrices, setUseLivePricesState] = useState(false);
-  const [premiumSeller, setPremiumSellerState] = useState(true);
+  const [premiumSeller, setPremiumSellerState] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
 
   const resolvedCity = mounted ? marketCity : DEFAULT_MARKET_CITY_ID;
   const resolvedUseLivePrices = mounted ? useLivePrices : false;
-  const resolvedPremium = mounted ? premiumSeller : true;
+  const resolvedPremium = mounted ? premiumSeller : false;
 
   return (
     <MarketCityContext.Provider

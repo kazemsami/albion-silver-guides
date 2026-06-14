@@ -51,3 +51,23 @@ export function listingTaxRowLabel(premiumSeller: boolean): string {
     ? `Minus Premium listing tax (~${rate})`
     : `Minus Standard listing tax (~${rate})`;
 }
+
+/** Footer copy for guide profit calculators; reflects the active Premium toggle. */
+export function takeHomeFormulaNote(
+  premiumSeller: boolean,
+  gatherYieldBaseline: GatherYieldBaseline = "premium",
+): string {
+  const rate = formatListingTaxPercent(getListingTaxRate(premiumSeller));
+  const taxTier = premiumSeller ? "Premium" : "Standard";
+  let yieldNote = "";
+  if (gatherYieldBaseline === "standard") {
+    yieldNote = premiumSeller
+      ? " Yields are scaled up +50% vs the logged no-Premium baseline."
+      : " Matches the logged no-Premium baseline (yields and Standard tax).";
+  } else if (premiumSeller) {
+    yieldNote = " Gather/fish yields use the Premium baseline.";
+  } else {
+    yieldNote = " Gather/fish yields are scaled down for no Premium.";
+  }
+  return `Take-home = output sell value - input buys - consumables - ~${rate} ${taxTier} listing tax on gross output.${yieldNote} Deaths, repairs, and station fees are not included unless listed as inputs. Yields scale with your selected skill level.`;
+}

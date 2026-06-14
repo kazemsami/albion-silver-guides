@@ -213,14 +213,14 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     tips: [
       "Bloodletter E → Q → W rotation with Scholar Cowl energy refund is the standard speed-clear, practice the rotation until trash dies in under 8 seconds.",
       "Red zone deaths are full loot. Never carry more than 2 runs of loot on you. Bank is free insurance.",
-      "The profit calculator models ~0.08 full-kit replacements per hour on the red tab. Fewer deaths = higher take-home.",
+      "The profit calculator models ~0.08 full-kit replacements per hour on the red tab and prices 2 Mutton Stew plus 3 Major Healing Potions per hour. Major Energy Potion is optional carry only and is not in the hourly cost.",
       "Dungeon tier = zone tier. T6 red near Martlock is the sweet spot for T6 rune income without black-zone risk.",
       "Skip dungeons with other players inside, shared loot cuts your runes/hour in half.",
     ],
     profitBuild: {
       title: "Required Gear",
       description:
-        "T6 Bloodletter + Scholar Cowl for 4-5 red-zone solo clears per hour. Budget stew and pots per run.",
+        "T6 Bloodletter + Scholar Cowl for 4-5 red-zone solo clears per hour. Calculator prices 2 Mutton Stew and 3 Major Healing Potions per hour.",
       slots: {
         head: {
           id: "T4_HEAD_CLOTH_SET1",
@@ -250,19 +250,21 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
         food: {
           id: "T6_MEAL_STEW",
           name: "Mutton Stew",
-          hint: "+damage to speed up clears",
+          quantity: 2,
+          hint: "+damage to speed up clears, 2/hr (calculator)",
         },
         potion: {
           id: "T6_POTION_HEAL",
           name: "Major Healing Potion",
-          hint: "Emergency heal between pulls",
+          quantity: 3,
+          hint: "Emergency heal between pulls, 3/hr (calculator)",
         },
       },
       inventory: [
         {
           id: "T6_POTION_ENERGY",
           name: "Major Energy Potion",
-          hint: "Restore ability energy during long clears",
+          hint: "Optional backup; not priced in hourly calculator",
         },
       ],
     },
@@ -394,7 +396,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     tips: [
       "1200 IP is the efficient sweet spot, do not overspend on 8.4 for marginal gains. A .4 weapon keeps full Fame Bonus if you are leveling specs safely here.",
       "The loadout panel shows full kit value, but only bag loot drops on death. Astral Staff is for clear speed under the softcap, not a per-death 9M silver loss.",
-      "Use Conservative PvE for floor-1 learning, Average floor-2 for baseline headline, PvP win run when you take fights, Floor-3 vault for high-roll upside.",
+      "Use Conservative PvE for floor-1 learning. Average floor-2 at 68% win rate is the Expected row and calculator default; Median is the same route at 65% if you reset more often. PvP win run when you take fights; Floor-3 vault for high-roll upside.",
       "Adjust win rate and run duration (20, 30, 45 min). Silver/hr drops if runs take longer or you reset often.",
       "Run PvP abilities even while clearing mobs. If you get jumped mid-pull, there is no time to respec.",
       "Never fight without an active room buff if the enemy has one, buffs only proc below 40% HP but are the main edge beyond gear.",

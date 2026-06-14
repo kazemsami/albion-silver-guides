@@ -24,6 +24,7 @@ import { listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeAbyssalEconomics,
   computeAbyssalProfitRange,
+  ABYSSAL_FLOOR2_CAUTIOUS_WIN_RATE,
 } from "@/lib/abyssal-economics";
 import { computeLoadoutPricing, enrichLoadoutWithQuantities } from "@/lib/guide-economics";
 import type {
@@ -129,6 +130,21 @@ export function AbyssalProfitCalculator({
 
   const { deathBreakdown: death } = result;
   const loadoutKitCost = activeLoadout?.pricing?.gearTotal ?? null;
+  const floor2DefaultWinRate = getAbyssalScenario("floor2").defaultWinRate;
+  const matchesExpectedPreset =
+    scenarioId === "floor2" &&
+    teamSizeId === "duo" &&
+    runDurationMinutes === DEFAULT_ABYSSAL_RUN_DURATION &&
+    !includePvpLoot &&
+    !includeMercJournal &&
+    Math.abs(winRate - floor2DefaultWinRate) < 0.001;
+  const matchesMedianPreset =
+    scenarioId === "floor2" &&
+    teamSizeId === "duo" &&
+    runDurationMinutes === DEFAULT_ABYSSAL_RUN_DURATION &&
+    !includePvpLoot &&
+    !includeMercJournal &&
+    Math.abs(winRate - ABYSSAL_FLOOR2_CAUTIOUS_WIN_RATE) < 0.001;
 
   return (
     <>
@@ -196,6 +212,18 @@ export function AbyssalProfitCalculator({
               <p className="mt-1 text-xs text-parchment/45">
                 Before bag death loss: {formatSilverPrice(result.netBeforeDeath)}
                 /hr
+              </p>
+            )}
+            {matchesExpectedPreset && (
+              <p className="mt-1 text-xs text-parchment/50">
+                Matches Expected value in the profit outcomes table above (
+                {formatPercent(floor2DefaultWinRate)} win rate).
+              </p>
+            )}
+            {matchesMedianPreset && !matchesExpectedPreset && (
+              <p className="mt-1 text-xs text-parchment/50">
+                Matches Median in the profit outcomes table above (cautious{" "}
+                {formatPercent(ABYSSAL_FLOOR2_CAUTIOUS_WIN_RATE)} win rate).
               </p>
             )}
             {death.expectedBagLossPerHour != null &&
