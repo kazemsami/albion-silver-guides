@@ -28,7 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
-    ...categoryPages,
     {
       url: absoluteUrl("/license"),
       lastModified: new Date(),
