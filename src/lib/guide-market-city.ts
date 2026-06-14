@@ -3,13 +3,10 @@ import {
   type MarketCityId,
 } from "@/lib/market-cities";
 
-/** When the user has "Average" selected, use the guide's route city for estimates. */
+/** Selected market city for price lookups. "average" uses the cross-city median. */
 export function effectiveMarketCity(
   selectedCity: MarketCityId,
-  guideDefaultCity?: MarketCityId,
+  _guideDefaultCity?: MarketCityId,
 ): MarketCityId {
-  if (selectedCity === AVERAGE_MARKET_CITY_ID && guideDefaultCity) {
-    return guideDefaultCity;
-  }
   return selectedCity;
 }

@@ -9,7 +9,6 @@ import {
   pickGuideProfitOutcomes,
   resolveGuideOutcomesPremiumSeller,
 } from "../src/lib/guide-economics";
-import { effectiveMarketCity } from "../src/lib/guide-market-city";
 import { AVERAGE_MARKET_CITY_ID } from "../src/lib/market-cities";
 import { profitRangeFromOutcomes } from "../src/lib/guide-profit-outcomes";
 
@@ -21,10 +20,7 @@ async function main() {
   for (const guide of guides) {
     if (!guideEconomicsBySlug[guide.slug]) continue;
 
-    const city = effectiveMarketCity(
-      AVERAGE_MARKET_CITY_ID,
-      guide.defaultMarketCity,
-    );
+    const city = AVERAGE_MARKET_CITY_ID;
 
     for (const premiumSeller of [false, true]) {
       const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(

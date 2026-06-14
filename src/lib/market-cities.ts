@@ -26,7 +26,7 @@ export const MARKET_CITY_OPTIONS: {
 }[] = [
   {
     id: AVERAGE_MARKET_CITY_ID,
-    label: "Average (all royal cities)",
+    label: "Average (median, all royal cities)",
     shortLabel: "Average",
   },
   ...ROYAL_MARKET_CITIES.map((city) => ({ id: city, label: city })),

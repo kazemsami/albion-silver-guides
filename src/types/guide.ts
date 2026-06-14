@@ -1,4 +1,5 @@
 import type { MarketCityId } from "@/lib/market-cities";
+import type { AlbionPriceServerId } from "@/lib/albion-servers";
 
 export type GuideCategory =
   | "gathering"
@@ -151,10 +152,10 @@ export type SerializedPriceMap = Record<
 /** Per-city price maps keyed by market city id (includes "average"). */
 export type SerializedPricesByCity = Record<string, SerializedPriceMap>;
 
-/** Estimated snapshot prices plus optional live API prices per city. */
+/** Estimated snapshot prices plus live API prices per Albion server region. */
 export interface GuideMarketPrices {
   estimatedByCity: SerializedPricesByCity;
-  liveByCity: SerializedPricesByCity;
+  liveByServer: Record<AlbionPriceServerId, SerializedPricesByCity>;
 }
 
 export interface PricedLine {

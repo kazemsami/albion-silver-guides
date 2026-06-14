@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MarketCitySelect } from "@/components/MarketCitySelect";
+import { AlbionServerSelect } from "@/components/AlbionServerSelect";
 import { LivePricesToggle } from "@/components/LivePricesToggle";
 import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { useFeedback } from "@/components/FeedbackDialog";
@@ -77,6 +78,7 @@ export function MobileNav() {
           >
             <div className="space-y-2.5 border-b border-gold/10 px-2 py-2.5">
               <LivePricesToggle />
+              <AlbionServerSelect />
               <MarketCitySelect />
               <PremiumTaxToggle />
             </div>

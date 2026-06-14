@@ -4,10 +4,17 @@ import {
   type MarketCityId,
   type RoyalMarketCity,
 } from "@/lib/market-cities";
+import {
+  ALBION_PRICE_SERVERS,
+  DEFAULT_ALBION_PRICE_SERVER_ID,
+  getAlbionPriceServerApiHost,
+  type AlbionPriceServerId,
+} from "@/lib/albion-servers";
 import { getItemPriceFallback } from "@/data/item-price-fallbacks";
 
-const API_HOST =
-  process.env.ALBION_API_HOST ?? "https://west.albion-online-data.com";
+const DEFAULT_API_HOST = getAlbionPriceServerApiHost(
+  DEFAULT_ALBION_PRICE_SERVER_ID,
+);
 
 export { ROYAL_MARKET_CITIES };
 
@@ -40,6 +47,7 @@ function medianPositive(values: number[]): number | null {
     : valid[mid]!;
 }
 
+/** Median across royal cities; one value per city listing per item. */
 function aggregateRows(rows: AlbionPriceRow[]): PriceMap {
   const sellBuckets = new Map<string, number[]>();
   const buyBuckets = new Map<string, number[]>();
@@ -91,10 +99,13 @@ export function buildPriceMapsFromRows(rows: AlbionPriceRow[]): PriceMapsByCity 
   return byCity;
 }
 
-async function fetchPriceBatch(itemIds: string[]): Promise<AlbionPriceRow[]> {
+async function fetchPriceBatch(
+  itemIds: string[],
+  apiHost: string = DEFAULT_API_HOST,
+): Promise<AlbionPriceRow[]> {
   const encoded = itemIds.map((id) => encodeURIComponent(id)).join(",");
   const locations = ROYAL_MARKET_CITIES.join(",");
-  const url = `${API_HOST}/api/v2/stats/prices/${encoded}.json?locations=${locations}&qualities=1`;
+  const url = `${apiHost}/api/v2/stats/prices/${encoded}.json?locations=${locations}&qualities=1`;
 
   const res = await fetch(url, {
     next: { revalidate: 3600 },
@@ -110,6 +121,7 @@ async function fetchPriceBatch(itemIds: string[]): Promise<AlbionPriceRow[]> {
 /** Fetch raw price rows for all royal cities (hourly revalidation). */
 export async function fetchAlbionPriceRows(
   itemIds: string[],
+  apiHost: string = DEFAULT_API_HOST,
 ): Promise<AlbionPriceRow[]> {
   const unique = [...new Set(itemIds)];
   const merged: AlbionPriceRow[] = [];
@@ -118,7 +130,7 @@ export async function fetchAlbionPriceRows(
   for (let i = 0; i < unique.length; i += chunkSize) {
     const chunk = unique.slice(i, i + chunkSize);
     try {
-      merged.push(...(await fetchPriceBatch(chunk)));
+      merged.push(...(await fetchPriceBatch(chunk, apiHost)));
     } catch {
       // Partial failures should not break the page.
     }
@@ -127,17 +139,42 @@ export async function fetchAlbionPriceRows(
   return merged;
 }
 
+/** Fetch per-city price maps for every Albion price server region. */
+export async function fetchAlbionPricesByCityAllServers(
+  itemIds: string[],
+): Promise<Record<AlbionPriceServerId, PriceMapsByCity>> {
+  const fallback = buildEstimatedPriceMapsByCity(itemIds);
+  const entries = await Promise.all(
+    ALBION_PRICE_SERVERS.map(async (server) => {
+      try {
+        const rows = await fetchAlbionPriceRows(itemIds, server.apiHost);
+        return [server.id, buildPriceMapsFromRows(rows)] as const;
+      } catch {
+        return [server.id, fallback] as const;
+      }
+    }),
+  );
+  return Object.fromEntries(entries) as Record<
+    AlbionPriceServerId,
+    PriceMapsByCity
+  >;
+}
+
 /** Fetch median buy/sell prices across all royal cities (default). */
-export async function fetchAlbionPrices(itemIds: string[]): Promise<PriceMap> {
-  const rows = await fetchAlbionPriceRows(itemIds);
+export async function fetchAlbionPrices(
+  itemIds: string[],
+  apiHost: string = DEFAULT_API_HOST,
+): Promise<PriceMap> {
+  const rows = await fetchAlbionPriceRows(itemIds, apiHost);
   return buildPriceMapsFromRows(rows)[AVERAGE_MARKET_CITY_ID];
 }
 
 /** Fetch per-city price maps plus the cross-city average. */
 export async function fetchAlbionPricesByCity(
   itemIds: string[],
+  apiHost: string = DEFAULT_API_HOST,
 ): Promise<PriceMapsByCity> {
-  const rows = await fetchAlbionPriceRows(itemIds);
+  const rows = await fetchAlbionPriceRows(itemIds, apiHost);
   return buildPriceMapsFromRows(rows);
 }
 

@@ -8,7 +8,7 @@ export function LivePricesToggle() {
   return (
     <label
       className="flex cursor-pointer select-none items-center gap-2 text-xs text-parchment/70 sm:text-sm"
-      title="Live prices from west.albion-online-data.com (Albion Online Data Project), refreshed about hourly. Off uses site snapshot averages."
+      title="Live prices from Albion Online Data Project (West, Europe, or Asia server), refreshed about hourly. Off uses site snapshot averages."
     >
       <input
         type="checkbox"

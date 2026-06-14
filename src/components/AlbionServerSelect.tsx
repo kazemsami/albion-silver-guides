@@ -1,47 +1,47 @@
 "use client";
 
-import { MARKET_CITY_OPTIONS } from "@/lib/market-cities";
+import { ALBION_PRICE_SERVERS } from "@/lib/albion-servers";
 import { useMarketCity } from "@/components/MarketCityProvider";
 
-export function MarketCitySelect({ compact = false }: { compact?: boolean }) {
-  const { marketCity, setMarketCity, useLivePrices } = useMarketCity();
-  const cityPickerEnabled = useLivePrices;
+export function AlbionServerSelect({ compact = false }: { compact?: boolean }) {
+  const { priceServer, setPriceServer, useLivePrices } = useMarketCity();
+  const serverPickerEnabled = useLivePrices;
 
   return (
     <label
       className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"} ${
-        cityPickerEnabled ? "" : "cursor-not-allowed opacity-50"
+        serverPickerEnabled ? "" : "cursor-not-allowed opacity-50"
       }`}
       title={
-        cityPickerEnabled
-          ? "Royal city for live market prices"
-          : "Enable live prices to pick a market city"
+        serverPickerEnabled
+          ? "Albion server region for live market prices"
+          : "Enable live prices to pick a server region"
       }
     >
-      <span className="sr-only">Market city for prices</span>
+      <span className="sr-only">Albion server region for prices</span>
       {!compact && (
         <span className="text-muted hidden whitespace-nowrap lg:inline">
-          Market prices
+          Server
         </span>
       )}
       <span className="ui-select-wrap">
         <select
-          value={marketCity}
-          disabled={!cityPickerEnabled}
+          value={priceServer}
+          disabled={!serverPickerEnabled}
           onChange={(event) =>
-            setMarketCity(event.target.value as typeof marketCity)
+            setPriceServer(event.target.value as typeof priceServer)
           }
-          aria-label="Market city for prices"
-          aria-disabled={!cityPickerEnabled}
+          aria-label="Albion server region for prices"
+          aria-disabled={!serverPickerEnabled}
           className={`ui-control ui-select w-full disabled:cursor-not-allowed disabled:opacity-70 ${
             compact
-              ? "min-w-[7.5rem] max-w-[8.5rem] xl:min-w-[8.25rem] xl:max-w-[9.5rem]"
+              ? "min-w-[6.75rem] max-w-[7.75rem] xl:min-w-[7.5rem] xl:max-w-[8.25rem]"
               : "max-w-[11rem] sm:max-w-none sm:min-w-[10.5rem]"
           }`}
         >
-          {MARKET_CITY_OPTIONS.map((option) => (
-            <option key={option.id} value={option.id}>
-              {compact && option.shortLabel ? option.shortLabel : option.label}
+          {ALBION_PRICE_SERVERS.map((server) => (
+            <option key={server.id} value={server.id}>
+              {compact && server.shortLabel ? server.shortLabel : server.label}
             </option>
           ))}
         </select>

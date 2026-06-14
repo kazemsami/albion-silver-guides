@@ -12,7 +12,6 @@ import {
   pickGuideProfitOutcomes,
   resolveGuideOutcomesPremiumSeller,
 } from "../src/lib/guide-economics";
-import { effectiveMarketCity } from "../src/lib/guide-market-city";
 import { AVERAGE_MARKET_CITY_ID } from "../src/lib/market-cities";
 import {
   guidesCategorySeo,
@@ -82,10 +81,7 @@ async function main() {
   const source = marketData.estimated;
 
   for (const guide of dungeonGuides) {
-    const city = effectiveMarketCity(
-      AVERAGE_MARKET_CITY_ID,
-      guide.defaultMarketCity,
-    );
+    const city = AVERAGE_MARKET_CITY_ID;
     const outcomes = pickGuideProfitOutcomes(
       source.outcomes,
       resolveGuideOutcomesPremiumSeller(guide.slug, false),

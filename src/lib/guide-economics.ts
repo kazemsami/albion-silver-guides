@@ -39,13 +39,18 @@ import {
 } from "@/lib/market-cities";
 import {
   buildEstimatedPriceMapsByCity,
-  fetchAlbionPricesByCity,
+  fetchAlbionPricesByCityAllServers,
   resolveBuyPrice,
   resolveSellPrice,
   type PriceMap,
   type PriceMapKind,
   type PriceMapsByCity,
 } from "@/lib/albion-prices";
+import {
+  ALBION_PRICE_SERVERS,
+  DEFAULT_ALBION_PRICE_SERVER_ID,
+  type AlbionPriceServerId,
+} from "@/lib/albion-servers";
 import {
   computeGuideProfitOutcomes,
   profitRangeFromOutcomes,
@@ -193,20 +198,37 @@ export function pickGuideMarketPrices(
   guidePrices: GuideMarketPrices,
   city: MarketCityId,
   useLivePrices: boolean,
+  priceServer: AlbionPriceServerId = DEFAULT_ALBION_PRICE_SERVER_ID,
 ): SerializedPriceMap {
   const source = useLivePrices
-    ? guidePrices.liveByCity
+    ? (guidePrices.liveByServer[priceServer] ??
+      guidePrices.liveByServer[DEFAULT_ALBION_PRICE_SERVER_ID])
     : guidePrices.estimatedByCity;
   return pickSerializedPrices(source, city);
 }
 
+function serializeLivePriceMapsByServer(
+  liveByServer: Record<AlbionPriceServerId, PriceMapsByCity>,
+): GuideMarketPrices["liveByServer"] {
+  return Object.fromEntries(
+    ALBION_PRICE_SERVERS.map((server) => [
+      server.id,
+      serializePriceMapsByCity(liveByServer[server.id]),
+    ]),
+  ) as GuideMarketPrices["liveByServer"];
+}
+
 export function toGuideMarketPrices(
   estimatedByCity: SerializedPricesByCity,
-  liveByCity?: SerializedPricesByCity,
+  liveByServer?: GuideMarketPrices["liveByServer"],
 ): GuideMarketPrices {
+  const fallbackLive = Object.fromEntries(
+    ALBION_PRICE_SERVERS.map((server) => [server.id, estimatedByCity]),
+  ) as GuideMarketPrices["liveByServer"];
+
   return {
     estimatedByCity,
-    liveByCity: liveByCity ?? estimatedByCity,
+    liveByServer: liveByServer ?? fallbackLive,
   };
 }
 
@@ -344,21 +366,20 @@ export type GuideProfitRangesByPremium = {
 };
 
 /** Snapshot and live market data for guide list cards. */
+export type GuidesListMarketSlice = {
+  ranges: GuideProfitRangesByPremium;
+  outcomes: GuideProfitOutcomesByPremium;
+};
+
 export type GuidesListMarketData = {
-  estimated: {
-    ranges: GuideProfitRangesByPremium;
-    outcomes: GuideProfitOutcomesByPremium;
-  };
-  live: {
-    ranges: GuideProfitRangesByPremium;
-    outcomes: GuideProfitOutcomesByPremium;
-  };
+  estimated: GuidesListMarketSlice;
+  liveByServer: Record<AlbionPriceServerId, GuidesListMarketSlice>;
 };
 
 function buildGuidesListMarketSlice(
   slugs: string[],
   priceMaps: PriceMapsByCity,
-): GuidesListMarketData["estimated"] {
+): GuidesListMarketSlice {
   return {
     ranges: {
       premium: computeAllGuideProfitRanges(slugs, priceMaps, true),
@@ -424,12 +445,15 @@ export function computeGuideListProfitRanges(
     premiumSeller?: boolean;
     useLivePrices?: boolean;
     marketCity?: MarketCityId;
+    priceServer?: AlbionPriceServerId;
   } = {},
 ): GuideProfitRangeMap {
   const marketCity = options.marketCity ?? AVERAGE_MARKET_CITY_ID;
   const premiumSeller = options.premiumSeller ?? false;
+  const priceServer = options.priceServer ?? DEFAULT_ALBION_PRICE_SERVER_ID;
   const source = options.useLivePrices
-    ? marketData.live
+    ? (marketData.liveByServer[priceServer] ??
+      marketData.liveByServer[DEFAULT_ALBION_PRICE_SERVER_ID])
     : marketData.estimated;
   const result: GuideProfitRangeMap = {};
 
@@ -484,16 +508,20 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarket
 
   const itemIdList = [...allItemIds];
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIdList);
-  let livePriceMaps: PriceMapsByCity = estimatedPriceMaps;
-  try {
-    livePriceMaps = await fetchAlbionPricesByCity(itemIdList);
-  } catch {
-    // Live API unavailable; cards fall back to snapshot maps for live slice too.
-  }
+  const livePriceMapsByServer =
+    await fetchAlbionPricesByCityAllServers(itemIdList);
 
   return {
     estimated: buildGuidesListMarketSlice(slugs, estimatedPriceMaps),
-    live: buildGuidesListMarketSlice(slugs, livePriceMaps),
+    liveByServer: Object.fromEntries(
+      ALBION_PRICE_SERVERS.map((server) => [
+        server.id,
+        buildGuidesListMarketSlice(
+          slugs,
+          livePriceMapsByServer[server.id] ?? estimatedPriceMaps,
+        ),
+      ]),
+    ) as Record<AlbionPriceServerId, GuidesListMarketSlice>,
   };
 }
 
@@ -788,12 +816,8 @@ export async function fetchGuidePricing(
     ...(slug === "potions-crafting-bulk" ? collectPotionPricingItemIds() : []),
   ];
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIds);
-  let livePriceMaps: PriceMapsByCity = estimatedPriceMaps;
-  try {
-    livePriceMaps = await fetchAlbionPricesByCity(itemIds);
-  } catch {
-    // Live API unavailable; fall back to snapshot maps.
-  }
+  const livePriceMapsByServer =
+    await fetchAlbionPricesByCityAllServers(itemIds);
   const prices = estimatedPriceMaps[AVERAGE_MARKET_CITY_ID];
 
   const defaultTier = economics?.skillTiers.find(
@@ -821,7 +845,7 @@ export async function fetchGuidePricing(
     serializedPricesByCity: serializePriceMapsByCity(estimatedPriceMaps),
     guidePrices: {
       estimatedByCity: serializePriceMapsByCity(estimatedPriceMaps),
-      liveByCity: serializePriceMapsByCity(livePriceMaps),
+      liveByServer: serializeLivePriceMapsByServer(livePriceMapsByServer),
     },
     tierLoadoutBundles,
     hourlyEconomics: scaledEconomics

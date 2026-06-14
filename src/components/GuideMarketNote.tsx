@@ -23,15 +23,16 @@ export function GuideMarketNote({
 
   return (
     <p className="mt-2 text-xs text-parchment/45">
-      This route defaults to{" "}
+      Average uses the median price across all six royal cities. This route
+      was logged in{" "}
       <button
         type="button"
         onClick={() => setMarketCity(defaultMarketCity)}
         className="text-gold/90 underline decoration-gold/30 underline-offset-2 hover:text-gold"
       >
-        {getMarketCityLabel(defaultMarketCity)} prices
+        {getMarketCityLabel(defaultMarketCity)}
       </button>
-      . Change market in the header to compare cities.
+      . Pick that city in the header for route-specific live prices.
     </p>
   );
 }

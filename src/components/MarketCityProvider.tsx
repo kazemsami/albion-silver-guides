@@ -16,11 +16,17 @@ import {
   type MarketCityId,
 } from "@/lib/market-cities";
 import {
+  DEFAULT_ALBION_PRICE_SERVER_ID,
+  isAlbionPriceServerId,
+  ALBION_PRICE_SERVER_STORAGE_KEY,
+  type AlbionPriceServerId,
+} from "@/lib/albion-servers";
+import {
   getGatheringYieldMultiplier,
   getListingTaxRate,
   PREMIUM_SELLER_STORAGE_KEY,
 } from "@/lib/listing-tax";
-import type { GuidesListMarketData } from "@/lib/guide-economics";
+import type { GuidesListMarketData, GuidesListMarketSlice } from "@/lib/guide-economics";
 import {
   pickGuideProfitOutcomes,
   pickGuideProfitRanges,
@@ -35,6 +41,8 @@ import type { GuideMarketPrices } from "@/types/guide";
 interface MarketCityContextValue {
   marketCity: MarketCityId;
   setMarketCity: (city: MarketCityId) => void;
+  priceServer: AlbionPriceServerId;
+  setPriceServer: (server: AlbionPriceServerId) => void;
   useLivePrices: boolean;
   setUseLivePrices: (enabled: boolean) => void;
   premiumSeller: boolean;
@@ -66,6 +74,16 @@ function readStoredPremiumSeller(): boolean {
   return false;
 }
 
+function readStoredPriceServer(): AlbionPriceServerId {
+  try {
+    const stored = localStorage.getItem(ALBION_PRICE_SERVER_STORAGE_KEY);
+    if (isAlbionPriceServerId(stored)) return stored;
+  } catch {
+    // ignore
+  }
+  return DEFAULT_ALBION_PRICE_SERVER_ID;
+}
+
 function readStoredUseLivePrices(): boolean {
   try {
     const stored = localStorage.getItem(LIVE_PRICES_STORAGE_KEY);
@@ -81,12 +99,16 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
   const [marketCity, setMarketCityState] = useState<MarketCityId>(
     DEFAULT_MARKET_CITY_ID,
   );
+  const [priceServer, setPriceServerState] = useState<AlbionPriceServerId>(
+    DEFAULT_ALBION_PRICE_SERVER_ID,
+  );
   const [useLivePrices, setUseLivePricesState] = useState(false);
   const [premiumSeller, setPremiumSellerState] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMarketCityState(readStoredMarketCity());
+    setPriceServerState(readStoredPriceServer());
     setUseLivePricesState(readStoredUseLivePrices());
     setPremiumSellerState(readStoredPremiumSeller());
     setMounted(true);
@@ -96,6 +118,15 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
     setMarketCityState(city);
     try {
       localStorage.setItem(MARKET_CITY_STORAGE_KEY, city);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const setPriceServer = useCallback((server: AlbionPriceServerId) => {
+    setPriceServerState(server);
+    try {
+      localStorage.setItem(ALBION_PRICE_SERVER_STORAGE_KEY, server);
     } catch {
       // ignore
     }
@@ -120,6 +151,9 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const resolvedCity = mounted ? marketCity : DEFAULT_MARKET_CITY_ID;
+  const resolvedPriceServer = mounted
+    ? priceServer
+    : DEFAULT_ALBION_PRICE_SERVER_ID;
   const resolvedUseLivePrices = mounted ? useLivePrices : false;
   const resolvedPremium = mounted ? premiumSeller : false;
 
@@ -128,6 +162,8 @@ export function MarketCityProvider({ children }: { children: React.ReactNode }) 
       value={{
         marketCity: resolvedCity,
         setMarketCity,
+        priceServer: resolvedPriceServer,
+        setPriceServer,
         useLivePrices: resolvedUseLivePrices,
         setUseLivePrices,
         premiumSeller: resolvedPremium,
@@ -151,9 +187,13 @@ export function useMarketCity(): MarketCityContextValue {
 
 export function useGuidesListMarketSource(
   marketData: GuidesListMarketData,
-): GuidesListMarketData["estimated"] {
-  const { useLivePrices } = useMarketCity();
-  return useLivePrices ? marketData.live : marketData.estimated;
+): GuidesListMarketSlice {
+  const { useLivePrices, priceServer } = useMarketCity();
+  if (!useLivePrices) return marketData.estimated;
+  return (
+    marketData.liveByServer[priceServer] ??
+    marketData.liveByServer[DEFAULT_ALBION_PRICE_SERVER_ID]
+  );
 }
 
 export function useProfitRangesForCity(
@@ -218,13 +258,19 @@ export function useGuidePriceMap(
   guidePrices: GuideMarketPrices,
   guideDefaultCity?: MarketCityId,
 ) {
-  const { useLivePrices } = useMarketCity();
+  const { useLivePrices, priceServer } = useMarketCity();
   const effectiveCity = useEffectiveMarketCity(guideDefaultCity);
   const mapKind: PriceMapKind = useLivePrices ? "live" : "snapshot";
 
   const serialized = useMemo(
-    () => pickGuideMarketPrices(guidePrices, effectiveCity, useLivePrices),
-    [guidePrices, effectiveCity, useLivePrices],
+    () =>
+      pickGuideMarketPrices(
+        guidePrices,
+        effectiveCity,
+        useLivePrices,
+        priceServer,
+      ),
+    [guidePrices, effectiveCity, useLivePrices, priceServer],
   );
 
   const priceMap = useMemo(() => deserializePriceMap(serialized), [serialized]);
