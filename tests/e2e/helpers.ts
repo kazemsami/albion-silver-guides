@@ -6,7 +6,6 @@ export const GUIDE_SLUGS = [
   "t4-ore-mining-yellow-zone",
   "fiber-farming-solo",
   "corrupted-dungeons-pvpve",
-  "dungeon-maps-solo",
   "abyssal-depths-farming",
   "high-tier-group-tracking",
   "mists-fishing",
@@ -28,7 +27,6 @@ export const CATEGORY_GUIDES: Record<string, string[]> = {
   crafting: ["potions-crafting-bulk"],
   dungeons: [
     "corrupted-dungeons-pvpve",
-    "dungeon-maps-solo",
     "abyssal-depths-farming",
     "high-tier-group-tracking",
   ],

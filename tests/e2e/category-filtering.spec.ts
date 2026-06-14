@@ -5,7 +5,7 @@
  * categories are handled gracefully.
  */
 import { test, expect } from "@playwright/test";
-import { CATEGORIES, CATEGORY_GUIDES, blockLivePriceApis } from "./helpers";
+import { CATEGORIES, CATEGORY_GUIDES, GUIDE_SLUGS, blockLivePriceApis } from "./helpers";
 
 // Slugs that must NOT appear on a given category page
 function guidesNotInCategory(category: string): string[] {
@@ -107,7 +107,7 @@ test.describe("Invalid category is handled gracefully", () => {
   });
 });
 
-test.describe("All guides page shows all 10 guides", () => {
+test.describe("All guides page shows all published guides", () => {
   test("/guides shows all published guides", async ({ page }) => {
     await blockLivePriceApis(page);
     await page.goto("/guides");
@@ -123,10 +123,9 @@ test.describe("All guides page shows all 10 guides", () => {
     );
     const uniqueSlugs = [...new Set(hrefs)];
 
-    // All 10 published guides should appear
     expect(
       uniqueSlugs.length,
-      `Expected 10 guides on /guides, got ${uniqueSlugs.length}: ${uniqueSlugs.join(", ")}`,
-    ).toBeGreaterThanOrEqual(10);
+      `Expected ${GUIDE_SLUGS.length} guides on /guides, got ${uniqueSlugs.length}: ${uniqueSlugs.join(", ")}`,
+    ).toBeGreaterThanOrEqual(GUIDE_SLUGS.length);
   });
 });

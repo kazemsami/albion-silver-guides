@@ -6,69 +6,6 @@
 import { test, expect } from "@playwright/test";
 import { blockLivePriceApis, getPageText } from "./helpers";
 
-test.describe("Solo Dungeon Maps - Instance privacy claims", () => {
-  test.beforeEach(async ({ page }) => {
-    await blockLivePriceApis(page);
-  });
-
-  test("does not claim maps guarantee a private instance", async ({ page }) => {
-    await page.goto("/guides/dungeon-maps-solo");
-    const text = await getPageText(page);
-
-    // These would be flat-out wrong: maps open a hidden entrance but others can enter
-    expect(
-      text,
-      'Must not claim "Maps guarantee a private instance"',
-    ).not.toMatch(/maps?\s+guarantee\s+a?\s*private\s+instance/i);
-
-    expect(
-      text,
-      'Must not claim "no other player can take your chest"',
-    ).not.toMatch(/no other player can take your chest/i);
-
-    // "private dungeon entrance" without any qualification is misleading
-    // Allow it only if it is followed by a qualifier
-    const privEntranceMatch = text.match(/private\s+dungeon\s+entrance/i);
-    if (privEntranceMatch) {
-      const context = text.substring(
-        Math.max(0, text.indexOf(privEntranceMatch[0]) - 100),
-        text.indexOf(privEntranceMatch[0]) + 300,
-      );
-      const isQualified =
-        /may still enter|can enter|other players|not guaranteed|hidden entrance|first access/i.test(
-          context,
-        );
-      expect(
-        isQualified,
-        `"private dungeon entrance" appears without qualification. Context: "${context}"`,
-      ).toBe(true);
-    }
-  });
-
-  test("solo dungeon maps page mentions that other players may enter", async ({
-    page,
-  }) => {
-    await page.goto("/guides/dungeon-maps-solo");
-    const text = await getPageText(page);
-
-    // The guide should acknowledge that the entrance is hidden but not exclusive
-    // We do a soft check: if the page talks about privacy at all, it should
-    // also mention the caveat.
-    const talkAboutPrivacy =
-      /private|hidden entrance|solo instance|exclusive/i.test(text);
-    if (talkAboutPrivacy) {
-      const talkAboutCaveat =
-        /other players|can still enter|may enter|entrance appears|not guaranteed|not exclusive/i.test(
-          text,
-        );
-      expect(
-        talkAboutCaveat,
-        "If guide discusses map privacy, it must mention the caveat that others may enter",
-      ).toBe(true);
-    }
-  });
-});
-
 test.describe("Laborer Passive Income - Laborer type accuracy", () => {
   test.beforeEach(async ({ page }) => {
     await blockLivePriceApis(page);

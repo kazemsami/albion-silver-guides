@@ -23,14 +23,6 @@
     "rangeMin": 295715,
     "rangeMax": 475231
   },
-  "dungeon-maps-solo": {
-    "conservative": 887700,
-    "median": 983600,
-    "expected": 1183600,
-    "highRoll": 1183600,
-    "rangeMin": 887700,
-    "rangeMax": 1183600
-  },
   "abyssal-depths-farming": {
     "conservative": 180314,
     "median": 301910,

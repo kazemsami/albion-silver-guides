@@ -123,23 +123,6 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         "1 logged run (~30 min). Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. Session take-home: 125k net in 30 min (~140k gross before tax at session sell prices). Saved Bridgewatch prices in the calculator model ~209k/hr net (Standard listing tax, 1 Pork Pie, no Premium). Premium upside figures in tips are projected only.",
     },
   },
-  "dungeon-maps-solo": {
-    status: "needs-review",
-    lastUpdated: "2026-06-14",
-    evidence: {
-      runs: 1,
-      date: "2026-06-14",
-      gear: "~1540 IP: Elder's Scholar Cowl, Mercenary Jacket, Soldier Boots, Heavy Crossbow, Caerleon Cape",
-      market: "Caerleon sell prices; T8.2 maps bought at avg 40k each",
-      rawLootSilver: 4_200_000,
-      netSilver: 3_400_000,
-      deathsOrKnockdowns: 0,
-      sourceTitle: "Lemisi1235: T8.2 Solo Dungeon Map Run (2.5 hrs, 4.2M loot)",
-      sourceUrl: "https://www.youtube.com/watch?v=kdZ9GL9kpoo",
-      notes:
-        "1 logged session (2.5 hours, 20 T8.2 solo dungeon maps). Gross loot 4.2M. Map cost 800k (20 maps at 40k each). Net 3.4M over 2.5h = 1.36M/hr before listing tax. Hourly gross 1.68M, map cost 320k/hr. Consumable cost not explicitly tracked in this run.",
-    },
-  },
   "corrupted-dungeons-pvpve": {
     status: "needs-review",
     lastUpdated: "2026-06-12",

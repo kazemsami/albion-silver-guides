@@ -232,34 +232,6 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ),
     defaultSkillTierId: "mid",
   },
-  "dungeon-maps-solo": {
-    // Logged: 2.5h, 20 T8.2 solo maps, 4.2M gross loot → 1.68M/hr gross, 8 maps/hr × 40k = 320k/hr input.
-    hourlyOutput: [
-      {
-        // Proxy ID; fixedSilverPerUnit overrides market lookup — loot is too varied for per-item pricing.
-        id: "T8_RUNE",
-        name: "Dungeon loot (gear, runes, souls, relics — 2.5-hr logged average)",
-        quantity: 1,
-        fixedSilverPerUnit: 1_680_000,
-      },
-    ],
-    hourlyInputs: [
-      {
-        // Quantity is scaled by tier inputMultiplier to model higher-tier map costs (not more maps per hr).
-        id: "T7_RUNE",
-        name: "T8.2 Solo Dungeon Map (avg 40k; tier slider adjusts effective map cost)",
-        quantity: 8,
-        side: "buy",
-        fixedSilverPerUnit: 40_000,
-      },
-    ],
-    skillTiers: tiers(
-      SKILL_TIERS.mapDungeonT8_1,
-      SKILL_TIERS.mapDungeonT8_2,
-      SKILL_TIERS.mapDungeonT8_3,
-    ),
-    defaultSkillTierId: "t8-2",
-  },
   "abyssal-depths-farming": {
     // Baseline ~1M/hr floor-2 extract; duo soul PvP pushes higher. One ~45 min run per hour with queue.
     hourlyOutput: [

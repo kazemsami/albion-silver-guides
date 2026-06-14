@@ -70,8 +70,8 @@ npm run test:e2e:debug
 | `tests/e2e/guide-card-detail-consistency.spec.ts` | Card titles match detail page h1; every expected guide appears on its category page; profit range min is not greater than max |
 | `tests/e2e/content-quality.spec.ts` | No `NaN`, `undefined`, `[object Object]`, "guide s", "Potion s", `{{`, double punctuation, duplicated list numbers, SSR loading placeholders; header/footer consistent across all routes |
 | `tests/e2e/profit-consistency.spec.ts` | Fiber Farming: no contradictory net profit claims; Ava Roads Fishing: expected value is within stated range; Group Tracking: per-player expected value is inside scenario range; Potion Crafting: event profits are labeled; Laborers: all-calculator-extreme range is correctly labeled |
-| `tests/e2e/albion-claims.spec.ts` | Solo Dungeon Maps: no false privacy guarantees; Laborer guide: distinguishes gathering vs crafting vs mercenary laborers; Corrupted Dungeons: Standard vs Premium tax is not silently mixed |
-| `tests/e2e/sitemap-robots.spec.ts` | sitemap.xml includes home, /guides, all category pages, all 10 guide detail pages; excludes noindex filter pages; robots.txt allows all and disallows nothing |
+| `tests/e2e/albion-claims.spec.ts` | Laborer guide: distinguishes gathering vs crafting vs mercenary laborers; Corrupted Dungeons: Standard vs Premium tax is not silently mixed |
+| `tests/e2e/sitemap-robots.spec.ts` | sitemap.xml includes home, /guides, all category pages, all guide detail pages; excludes noindex filter pages; robots.txt allows all and disallows nothing |
 | `tests/e2e/console-errors.spec.ts` | No app-owned console errors or uncaught exceptions on any public route |
 | `tests/e2e/item-icons.spec.ts` | All configured item IDs return valid Albion icons; rendered icons match `data-item-id` URLs |
 | `tests/e2e/calculator-interactions.spec.ts` | Premium toggle, skill tiers, laborer specialty, potion sell strategy, and mocked live prices update calculator output |
