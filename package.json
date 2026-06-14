@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "validate": "node scripts/validate-guides.mjs && npx tsx scripts/check-guide-profit-consistency.ts && npx tsx scripts/check-guides-seo-metadata.ts",
+    "validate": "node scripts/validate-guides.mjs && npx tsx scripts/check-guide-profit-consistency.ts && npx tsx scripts/check-guides-seo-metadata.ts && npx tsx scripts/check-profit-snapshots.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",

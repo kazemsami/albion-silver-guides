@@ -1,0 +1,82 @@
+{
+  "t4-ore-mining-yellow-zone": {
+    "conservative": 64123,
+    "median": 205014,
+    "expected": 205014,
+    "highRoll": 240022,
+    "rangeMin": 64123,
+    "rangeMax": 240022
+  },
+  "fiber-farming-solo": {
+    "conservative": 56205,
+    "median": 209041,
+    "expected": 209041,
+    "highRoll": 290683,
+    "rangeMin": 56205,
+    "rangeMax": 290683
+  },
+  "corrupted-dungeons-pvpve": {
+    "conservative": 295715,
+    "median": 372892,
+    "expected": 372892,
+    "highRoll": 475231,
+    "rangeMin": 295715,
+    "rangeMax": 475231
+  },
+  "dungeon-maps-solo": {
+    "conservative": 887700,
+    "median": 983600,
+    "expected": 1183600,
+    "highRoll": 1183600,
+    "rangeMin": 887700,
+    "rangeMax": 1183600
+  },
+  "abyssal-depths-farming": {
+    "conservative": 180314,
+    "median": 301910,
+    "expected": 319103,
+    "highRoll": 508085,
+    "rangeMin": 180314,
+    "rangeMax": 508085
+  },
+  "high-tier-group-tracking": {
+    "conservative": 921619,
+    "median": 1085716,
+    "expected": 921619,
+    "highRoll": 1127891,
+    "rangeMin": 921619,
+    "rangeMax": 1127891
+  },
+  "mists-fishing": {
+    "conservative": 337795,
+    "median": 494745,
+    "expected": 494745,
+    "highRoll": 669892,
+    "rangeMin": 337795,
+    "rangeMax": 669892
+  },
+  "ava-roads-fishing": {
+    "conservative": 1048248,
+    "median": 1311396,
+    "expected": 1311396,
+    "highRoll": 2112699,
+    "rangeMin": 1048248,
+    "rangeMax": 2112699
+  },
+  "laborer-passive-income": {
+    "conservative": 7071,
+    "median": 14142,
+    "expected": 14142,
+    "highRoll": 22669,
+    "rangeMin": 7071,
+    "rangeMax": 22669
+  },
+  "potions-crafting-bulk": {
+    "conservative": 93938,
+    "median": 93938,
+    "expected": 93938,
+    "highRoll": 209512,
+    "rangeMin": 93938,
+    "rangeMax": 209512
+  }
+}

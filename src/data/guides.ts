@@ -344,7 +344,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
           hint: "Gap close between packs; swap to Leather Shoes for CDR if energy is not an issue",
         },
         mainhand: {
-          id: "T8_XBOW_HEAVY",
+          id: "T8_2H_CROSSBOWLARGE",
           name: "Elder's Heavy Crossbow",
           hint: "High AoE bolt clear speed",
         },
@@ -359,8 +359,8 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
           hint: "+damage for faster clears",
         },
         potion: {
-          id: "T8_POTION_HEAL",
-          name: "Elder's Healing Potion",
+          id: "T6_POTION_HEAL@3",
+          name: "Major Healing Potion .3",
           hint: "Emergency heal between pulls",
         },
       },

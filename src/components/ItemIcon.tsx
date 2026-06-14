@@ -14,6 +14,7 @@ export function ItemIcon({ id, name, size = 32 }: ItemIconProps) {
 
   return (
     <div
+      data-item-id={id}
       className="relative flex shrink-0 items-center justify-center rounded border border-[#4a3f2a] bg-[#1a1510]"
       style={{ width: size, height: size }}
       title={name}

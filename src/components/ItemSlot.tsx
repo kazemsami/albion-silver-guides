@@ -23,6 +23,7 @@ export function ItemSlot({ item, label, size = "md", quantity }: ItemSlotProps) 
   return (
     <div className="flex flex-col items-center gap-1">
       <div
+        data-item-id={item.id}
         className={`item-slot relative flex items-center justify-center rounded border-2 border-item-slot-border bg-item-slot-bg ${
           size === "sm" ? "h-[52px] w-[52px]" : "h-16 w-16"
         }`}

@@ -71,6 +71,27 @@ npm run test:e2e:debug
 | `tests/e2e/albion-claims.spec.ts` | Solo Dungeon Maps: no false privacy guarantees; Laborer guide: distinguishes gathering vs crafting vs mercenary laborers; Corrupted Dungeons: Standard vs Premium tax is not silently mixed |
 | `tests/e2e/sitemap-robots.spec.ts` | sitemap.xml includes home, /guides, all category pages, all 10 guide detail pages; excludes noindex filter pages; robots.txt allows all and disallows nothing |
 | `tests/e2e/console-errors.spec.ts` | No app-owned console errors or uncaught exceptions on any public route |
+| `tests/e2e/item-icons.spec.ts` | All configured item IDs return valid Albion icons; rendered icons match `data-item-id` URLs |
+| `tests/e2e/calculator-interactions.spec.ts` | Premium toggle, skill tiers, laborer specialty, potion sell strategy, and mocked live prices update calculator output |
+| `tests/e2e/internal-links.spec.ts` | Internal links on all public pages resolve without 404/500 |
+| `tests/e2e/json-ld.spec.ts` | Type-specific JSON-LD: `WebSite` on `/`, `ItemList` on guides list/category landings, `Article` + `BreadcrumbList` on guide detail pages |
+| `tests/e2e/navigation.spec.ts` | Header dropdown, mobile menu, feedback/donate, theme toggle, persisted market preferences |
+| `tests/e2e/homepage.spec.ts` | Guide count, featured guide links, category cards, silver/hr range sanity, skip link, single h1 |
+
+### Offline validation (`npm run validate`)
+
+| Script | What it checks |
+|--------|----------------|
+| `scripts/validate-guides.mjs` | Guide data completeness and item icon CDN availability |
+| `scripts/check-guide-profit-consistency.ts` | Guide card profit ranges match calculator outcomes |
+| `scripts/check-guides-seo-metadata.ts` | Server-rendered SEO metadata |
+| `scripts/check-profit-snapshots.ts` | Default profit outcomes match `tests/fixtures/profit-snapshots.json` |
+
+Regenerate profit snapshots after intentional calculator changes:
+
+```bash
+npx tsx scripts/check-profit-snapshots.ts --write
+```
 
 ---
 
