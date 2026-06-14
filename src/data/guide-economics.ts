@@ -7,9 +7,15 @@ import {
 import type { HourlyItem } from "@/types/guide";
 import { SKILL_TIERS, tiers } from "@/data/guide-skill-tiers";
 import {
+  AVA_GREEDY_LOGGED_CATCH_PER_HOUR,
+  AVA_LOGGED_JOURNAL_FILL_PER_HOUR,
+  AVA_NORMAL_LOGGED_CATCH_PER_HOUR,
+  AVA_SAFE_LOGGED_CATCH_PER_HOUR,
+  AVA_SAFE_LOGGED_JOURNAL_FILL_PER_HOUR,
   AVA_T7_STURGEON_SHARE,
   AVA_T8_STURGEON_SHARE,
   PUREMIST_SNAPPER_PER_CATCH,
+  type AvaLoggedCatchLine,
 } from "@/data/ava-roads-economics";
 import {
   TRACKING_AVERAGE_LOOT_PER_KILL,
@@ -18,6 +24,25 @@ import {
 
 /** Butchered T7-and-lower bycatch → chopped fish (avg). */
 const AVA_CHOPS_PER_FISH = 15;
+
+function avaLoggedCatchHourlyOutput(
+  catchLines: AvaLoggedCatchLine[],
+  journalName: string,
+  journalQuantity: number,
+): HourlyItem[] {
+  return [
+    ...catchLines.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity: item.quantityPerHour,
+    })),
+    {
+      id: "T7_JOURNAL_FISHING_FULL",
+      name: journalName,
+      quantity: journalQuantity,
+    },
+  ];
+}
 
 /** Split total fish/hr into Sturgeon (sold raw) vs butchered bycatch → chops. */
 function avaRoadsFishOutput(
@@ -416,7 +441,8 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "30-60",
   },
   "ava-roads-fishing": {
-    // 350-550 fish/hr by gear; T8 baseline 450 fish → 193 Sturgeon + 257 butchered × 15 chops
+    // Safe escape and Normal use logged raw-fish species mix. Greedy keeps Sturgeon + chops model.
+    gatherYieldBaseline: "standard",
     hourlyOutput: avaRoadsFishOutput(450, AVA_T8_STURGEON_SHARE),
     hourlyInputs: avaRoadsDeathInputs(0.12, true),
     hourlyConsumables: [
@@ -427,7 +453,11 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     skillTiers: tiers(
       {
         ...SKILL_TIERS.avaSafe,
-        hourlyOutput: avaRoadsFishOutput(345, AVA_T7_STURGEON_SHARE),
+        hourlyOutput: avaLoggedCatchHourlyOutput(
+          AVA_SAFE_LOGGED_CATCH_PER_HOUR,
+          "Grandmaster Fisherman's Journal (Full, 0.84 per 30 min logged)",
+          AVA_SAFE_LOGGED_JOURNAL_FILL_PER_HOUR,
+        ),
         hourlyInputs: avaRoadsDeathInputs(0.06, false),
         hourlyConsumables: [
           { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", quantity: 10 },
@@ -436,17 +466,14 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       },
       {
         ...SKILL_TIERS.avaGrandmaster,
-        hourlyOutput: avaRoadsFishOutput(400, AVA_T7_STURGEON_SHARE),
+        hourlyOutput: avaLoggedCatchHourlyOutput(
+          AVA_NORMAL_LOGGED_CATCH_PER_HOUR,
+          "Grandmaster Fisherman's Journal (Full, 0.84 per 30 min logged, fixed)",
+          AVA_LOGGED_JOURNAL_FILL_PER_HOUR,
+        ),
         hourlyInputs: avaRoadsDeathInputs(0.1, true, "T7_2H_TOOL_FISHINGROD"),
         description:
-          "T7 fisherman set, ~400 fish/hr, 2/5 Sturgeon and 3/5 butchered to chops",
-        bonusOutput: [
-          {
-            id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (avg)",
-            quantity: 0.35 * PUREMIST_SNAPPER_PER_CATCH,
-          },
-        ],
+          "T7 fisherman garb (+30%) and workboots (+12.5%) on logged Safe escape mix (Sturgeon unchanged; T7 cap already in baseline). Snapper in fish table, not a separate RNG line.",
       },
       {
         ...SKILL_TIERS.avaProfit,
@@ -463,20 +490,17 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       },
       {
         ...SKILL_TIERS.avaExpert,
-        hourlyOutput: avaRoadsFishOutput(550, AVA_T8_STURGEON_SHARE),
+        hourlyOutput: avaLoggedCatchHourlyOutput(
+          AVA_GREEDY_LOGGED_CATCH_PER_HOUR,
+          "Grandmaster Fisherman's Journal (Full, 0.84 per 30 min logged, fixed)",
+          AVA_LOGGED_JOURNAL_FILL_PER_HOUR,
+        ),
         hourlyInputs: avaRoadsDeathInputs(0.18, true, "T8_2H_TOOL_FISHINGROD"),
         description:
-          "T8 max spec, ~550 fish/hr on deep T8 road maps. Sturgeon/Snapper from zone-tier RNG on normal schools.",
-        bonusOutput: [
-          {
-            id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (avg)",
-            quantity: 1.35 * PUREMIST_SNAPPER_PER_CATCH,
-          },
-        ],
+          "Full T8 fisherman set plus max fishing 100 and spec 100 (+26.75% fish vs logged fishing 78). Journal fixed at 0.84. Snapper in fish table.",
       },
     ),
-    defaultSkillTierId: "grandmaster",
+    defaultSkillTierId: "safe",
   },
   "laborer-passive-income": {
     /** T8 houses, T7 journals, 150% yield, all laborers same specialty; baseline 10 houses (30 laborers), 22h per job. */

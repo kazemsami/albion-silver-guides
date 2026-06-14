@@ -11,11 +11,12 @@ import {
 import {
   AVA_ROADS_PRESETS,
   AVA_ROADS_SNAPPER_META,
+  AVA_BANKING_INTERVAL_MINUTES,
   type AvaRoadsPresetId,
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
-import { listingTaxRowLabel } from "@/lib/listing-tax";
+import { getGatheringYieldMultiplier, listingTaxRowLabel } from "@/lib/listing-tax";
 import {
   computeAvaRoadsEconomics,
   computeAvaRoadsProfitRange,
@@ -48,17 +49,20 @@ export function AvaRoadsFishingCalculator({
   tierLoadouts,
   defaultMarketCity,
 }: AvaRoadsFishingCalculatorProps) {
-  const { listingTaxRate, premiumSeller, gatheringYieldMultiplier, useLivePrices } =
-    useMarketCity();
+  const { listingTaxRate, premiumSeller, useLivePrices } = useMarketCity();
+  const gatheringYieldMultiplier = getGatheringYieldMultiplier(
+    premiumSeller,
+    economics.gatherYieldBaseline ?? "premium",
+  );
   const { priceMap, mapKind, serializedPrices } = useGuidePriceMap(
     guidePrices,
     defaultMarketCity,
   );
-  const [presetId, setPresetId] = useState<AvaRoadsPresetId>("normal");
+  const [presetId, setPresetId] = useState<AvaRoadsPresetId>("safe");
   const [snapperViewId, setSnapperViewId] =
     useState<AvaRoadsSnapperViewId>("expected");
 
-  const preset = AVA_ROADS_PRESETS.find((p) => p.id === presetId) ?? AVA_ROADS_PRESETS[1];
+  const preset = AVA_ROADS_PRESETS.find((p) => p.id === presetId) ?? AVA_ROADS_PRESETS[0];
   const tier =
     economics.skillTiers.find((t) => t.id === preset.tierId) ??
     economics.skillTiers[0];
@@ -207,23 +211,35 @@ export function AvaRoadsFishingCalculator({
           <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
             Puremist Snapper (RNG, separate line)
           </p>
-          <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
-            {(Object.keys(AVA_ROADS_SNAPPER_META) as AvaRoadsSnapperViewId[]).map(
-              (id) => (
-                <FilterChip
-                  key={id}
-                  label={AVA_ROADS_SNAPPER_META[id].label}
-                  selected={snapperViewId === id}
-                  onSelect={() => setSnapperViewId(id)}
-                />
-              ),
-            )}
-          </div>
-          <p className="mt-2 text-sm text-parchment/55">{result.snapperNote}</p>
-          {result.snapperRngValue != null && (
-            <p className="mt-1 text-xs text-parchment/45">
-              Snapper line this hour: {formatSilverExact(result.snapperRngValue)} silver
+          {presetId === "safe" || presetId === "normal" || presetId === "greedy" ? (
+            <p className="mt-2 text-sm text-parchment/55">
+              {presetId === "safe"
+                ? "Safe escape uses your logged catch mix (T7 cap +12.5% on non-Sturgeon already in counts). Puremist Snapper is in the fish table and scales with Premium yield like the other species."
+                : presetId === "normal"
+                  ? "Normal adds T7 garb (+30%) and workboots (+12.5%) on non-Sturgeon fish. Puremist Snapper is in the fish table, not a separate RNG line."
+                  : "Greedy uses full T8 fisherman set and max fishing 100 + spec 100 (+26.75% fish vs your logged run at fishing 78). Journal stays at fixed 0.84 fill. Puremist Snapper is in the fish table."}
             </p>
+          ) : (
+            <>
+              <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
+                {(Object.keys(AVA_ROADS_SNAPPER_META) as AvaRoadsSnapperViewId[]).map(
+                  (id) => (
+                    <FilterChip
+                      key={id}
+                      label={AVA_ROADS_SNAPPER_META[id].label}
+                      selected={snapperViewId === id}
+                      onSelect={() => setSnapperViewId(id)}
+                    />
+                  ),
+                )}
+              </div>
+              <p className="mt-2 text-sm text-parchment/55">{result.snapperNote}</p>
+              {result.snapperRngValue != null && (
+                <p className="mt-1 text-xs text-parchment/45">
+                  Snapper line this hour: {formatSilverExact(result.snapperRngValue)} silver
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -275,8 +291,8 @@ export function AvaRoadsFishingCalculator({
               value={String(result.effectiveFishPerHour)}
             />
             <AssumptionRow
-              label="Bank every (avg)"
-              value={`${death.bankingIntervalMinutes} min`}
+              label="Bank every"
+              value={`30-40 min (${AVA_BANKING_INTERVAL_MINUTES} min modeled)`}
             />
             <AssumptionRow
               label="Fish value in bag at death (avg)"
@@ -302,10 +318,22 @@ export function AvaRoadsFishingCalculator({
         </div>
 
         <EconomicsTable
-          title="Base fish output / hour (Sturgeon + chops)"
+          title={
+            presetId === "safe"
+              ? "Fish catch / hour (logged Safe escape mix, raw sell)"
+              : presetId === "normal"
+                ? "Fish catch / hour (Safe escape mix + T7 garb/boots, raw sell)"
+                : presetId === "greedy"
+                  ? "Fish catch / hour (Safe escape mix + full T8 set, raw sell)"
+                  : "Base fish output / hour (Sturgeon + chops)"
+          }
           lines={result.baseOutputLines}
           total={sumLineTotals(result.baseOutputLines)}
-          totalLabel="Base fish gross"
+          totalLabel={
+            presetId === "safe" || presetId === "normal" || presetId === "greedy"
+              ? "Raw fish gross"
+              : "Base fish gross"
+          }
           variant="output"
         />
 
@@ -320,16 +348,18 @@ export function AvaRoadsFishingCalculator({
         )}
 
         <EconomicsTable
-          title="Journal + consumables"
-          lines={[
-            result.journalLines.full,
-            ...result.consumableLines.filter(
-              (l) => l.id !== "T7_JOURNAL_FISHING_EMPTY",
-            ),
-            result.journalLines.empty,
-          ]}
+          title="Grandmaster Fisherman's Journal (output)"
+          lines={[result.journalLines.full]}
+          total={result.journalLines.full.lineTotal}
+          totalLabel="Journal gross"
+          variant="output"
+        />
+
+        <EconomicsTable
+          title="Consumables"
+          lines={result.consumableLines}
           total={result.consumableTotal}
-          totalLabel="Net input + consumables"
+          totalLabel="Net consumables + empty journal"
           variant="input"
         />
 

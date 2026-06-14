@@ -1,8 +1,17 @@
 import {
   AVA_CHOPS_PER_FISH,
   AVA_ROADS_SNAPPER_META,
+  AVA_LOGGED_JOURNAL_FILL_PER_HOUR,
+  AVA_GREEDY_LOGGED_CATCH_PER_HOUR,
+  AVA_GREEDY_LOGGED_FISH_PER_HOUR,
+  AVA_NORMAL_LOGGED_CATCH_PER_HOUR,
+  AVA_NORMAL_LOGGED_FISH_PER_HOUR,
+  AVA_SAFE_LOGGED_CATCH_PER_HOUR,
+  AVA_SAFE_LOGGED_FISH_PER_HOUR,
+  AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN,
   getAvaRoadsPreset,
   PUREMIST_SNAPPER_PER_CATCH,
+  type AvaLoggedCatchLine,
   type AvaRoadsPresetId,
   type AvaRoadsSnapperViewId,
 } from "@/data/ava-roads-economics";
@@ -149,6 +158,38 @@ function fishOutputLines(
   ];
 }
 
+/** Logged species catch mix, scaled by Premium fishing yield only. */
+function loggedSpeciesOutputLines(
+  catchPerHour: AvaLoggedCatchLine[],
+  prices: PriceMap,
+  scale: number,
+  mapKind: PriceMapKind = "snapshot",
+): PricedLine[] {
+  return catchPerHour.map((item) =>
+    priceLine(
+      prices,
+      item.id,
+      item.name,
+      Math.round(item.quantityPerHour * scale * 10) / 10,
+      "sell",
+      mapKind,
+    ),
+  );
+}
+
+function loggedCatchForPreset(presetId: AvaRoadsPresetId): AvaLoggedCatchLine[] | null {
+  if (presetId === "safe") return AVA_SAFE_LOGGED_CATCH_PER_HOUR;
+  if (presetId === "normal") return AVA_NORMAL_LOGGED_CATCH_PER_HOUR;
+  if (presetId === "greedy") return AVA_GREEDY_LOGGED_CATCH_PER_HOUR;
+  return null;
+}
+
+function loggedFishPerHourForPreset(presetId: AvaRoadsPresetId): number {
+  if (presetId === "greedy") return AVA_GREEDY_LOGGED_FISH_PER_HOUR;
+  if (presetId === "normal") return AVA_NORMAL_LOGGED_FISH_PER_HOUR;
+  return AVA_SAFE_LOGGED_FISH_PER_HOUR;
+}
+
 export function computeAvaRoadsEconomics(
   prices: PriceMap,
   inputs: AvaRoadsComputeInputs,
@@ -160,16 +201,38 @@ export function computeAvaRoadsEconomics(
   const snapperMeta = AVA_ROADS_SNAPPER_META[inputs.snapperViewId];
 
   const uptimeFactor = 1 - preset.portalSearchDowntime;
+  const loggedCatchPerHour = loggedCatchForPreset(inputs.presetId);
+  const usesLoggedSpeciesMix = loggedCatchPerHour != null;
+  /** Logged species mix uses the same road baseline for all presets; only Premium yield scales fish. */
+  const fishYieldScale = usesLoggedSpeciesMix
+    ? gatheringYieldMultiplier
+    : uptimeFactor * gatheringYieldMultiplier;
+  /** Journal fill is fixed from the logged session; Premium and gear fish boosts do not apply. */
+  const journalFillQuantity = usesLoggedSpeciesMix
+    ? AVA_LOGGED_JOURNAL_FILL_PER_HOUR
+    : gatheringYieldMultiplier;
+
+  const loggedFishPerHour = loggedFishPerHourForPreset(inputs.presetId);
+
   const effectiveFishPerHour = roundSilver(
-    preset.fishPerHour * uptimeFactor * gatheringYieldMultiplier,
+    usesLoggedSpeciesMix
+      ? loggedFishPerHour * fishYieldScale
+      : preset.fishPerHour * fishYieldScale,
   );
 
-  const baseOutputLines = fishOutputLines(
-    prices,
-    effectiveFishPerHour,
-    preset.sturgeonShare,
-    mapKind,
-  );
+  const baseOutputLines = usesLoggedSpeciesMix
+    ? loggedSpeciesOutputLines(
+        loggedCatchPerHour,
+        prices,
+        fishYieldScale,
+        mapKind,
+      )
+    : fishOutputLines(
+        prices,
+        effectiveFishPerHour,
+        preset.sturgeonShare,
+        mapKind,
+      );
 
   const snapperCatches =
     (inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
@@ -178,32 +241,36 @@ export function computeAvaRoadsEconomics(
   const snapperQty = snapperCatches * PUREMIST_SNAPPER_PER_CATCH;
 
   const snapperLine =
-    snapperQty > 0
-      ? priceLine(
-          prices,
-          "T7_FISH_FRESHWATER_AVALON_RARE",
-          inputs.snapperViewId === "lucky"
-            ? `Puremist Snapper (${snapperCatches} lucky catch${snapperCatches === 1 ? "" : "es"} × ${PUREMIST_SNAPPER_PER_CATCH})`
-            : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
-          snapperQty,
-          "sell",
-          mapKind,
-        )
-      : null;
+    usesLoggedSpeciesMix
+      ? null
+      : snapperQty > 0
+        ? priceLine(
+            prices,
+            "T7_FISH_FRESHWATER_AVALON_RARE",
+            inputs.snapperViewId === "lucky"
+              ? `Puremist Snapper (${snapperCatches} lucky catch${snapperCatches === 1 ? "" : "es"} × ${PUREMIST_SNAPPER_PER_CATCH})`
+              : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
+            snapperQty,
+            "sell",
+            mapKind,
+          )
+        : null;
 
   const journalEmpty = priceLine(
     prices,
     "T7_JOURNAL_FISHING_EMPTY",
     "Grandmaster Fisherman's Journal (Empty)",
-    1,
+    usesLoggedSpeciesMix ? journalFillQuantity : 1,
     "sell",
     mapKind,
   );
   const journalFull = priceLine(
     prices,
     "T7_JOURNAL_FISHING_FULL",
-    "Grandmaster Fisherman's Journal (Full)",
-    gatheringYieldMultiplier,
+    usesLoggedSpeciesMix
+      ? `Grandmaster Fisherman's Journal (Full, ${(AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN * 100).toFixed(0)}% per 30 min logged, fixed)`
+      : "Grandmaster Fisherman's Journal (Full)",
+    journalFillQuantity,
     "sell",
     mapKind,
   );

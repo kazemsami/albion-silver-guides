@@ -128,8 +128,9 @@ test.describe("Profit ranges are internally consistent", () => {
     test(`${slug}: profit range min does not exceed max`, async ({ page }) => {
       await page.goto(`/guides/${slug}`);
 
-      // Look for patterns like "104k – 283k" or "600k – 1.8M"
-      const rangePattern = /(\d+(?:\.\d+)?[kKmM]?)\s*[–-]\s*(\d+(?:\.\d+)?[kKmM]?)/g;
+      // Require k/M on both sides so ISO dates (e.g. 2026-06-14) are not parsed as ranges.
+      const rangePattern =
+        /(\d+(?:\.\d+)?[kKmM])\s*[–-]\s*(\d+(?:\.\d+)?[kKmM])/g;
       const bodyText = await page.locator("main").innerText();
       const matches = [...bodyText.matchAll(rangePattern)];
 

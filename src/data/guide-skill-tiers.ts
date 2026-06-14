@@ -41,7 +41,7 @@ export const SKILL_TIERS = {
     id: "safe",
     label: "Safe escape build",
     description:
-      "Fisherman cap + pork pie + GM rod, no garb/boots (~345 fish/hr). Full-loot roads: calculator includes ~0.06 deaths/hr on cheap kit.",
+      "Logged catch mix from a 30-min Safe escape run, doubled to /hr. T7 cap (+12.5% on non-Sturgeon) is already in the counts. Calculator scales fish with Premium yield only.",
     outputMultiplier: 1,
     consumableMultiplier: 1,
     inputMultiplier: 1,
@@ -49,7 +49,8 @@ export const SKILL_TIERS = {
   avaGrandmaster: {
     id: "grandmaster",
     label: "T7 gear (middle spec)",
-    description: "T7 fisherman set (~400 fish/hr",
+    description:
+      "Logged Safe escape mix with T7 garb (+30%) and workboots (+12.5%) on all fish except River Sturgeon.",
     outputMultiplier: 1,
   },
   avaProfit: {
@@ -64,7 +65,7 @@ export const SKILL_TIERS = {
     id: "expert",
     label: "T8 max spec (deep roads)",
     description:
-      "Max fishing specs (~550 fish/hr on T8 road maps). Deep roads: ~0.18 deaths/hr in calculator.",
+      "Full T8 fisherman set on logged species mix, plus max fishing 100 and spec 100 (+26.75% fish vs logged run). Deep roads: ~0.18 deaths/hr in calculator.",
     outputMultiplier: 1,
     inputMultiplier: 1,
   },

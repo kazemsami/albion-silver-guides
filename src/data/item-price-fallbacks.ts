@@ -105,7 +105,7 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T7_2H_TOOL_TRACKING: { sell: 36_000, buy: 106_000 },
   // T1 products
   T1_FISHCHOPS: { sell: 300, buy: 250 },
-  T1_SEAWEED: { sell: 32, buy: 38 },
+  T1_SEAWEED: { sell: 450, buy: 550 },
   T1_ALCHEMY_COMMON: { sell: 1300, buy: 4300 },
   T1_ROCK: { sell: 10, buy: 12 },
   T1_WOOD: { sell: 10, buy: 12 },
@@ -145,7 +145,7 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T5_JOURNAL_MERCENARY_EMPTY: { sell: 6000, buy: 7000 },
   T5_JOURNAL_ORE_EMPTY: { sell: 5500, buy: 6500 },
   T7_JOURNAL_FISHING_EMPTY: { sell: 36_000, buy: 42_000 },
-  T7_JOURNAL_FISHING_FULL: { sell: 82_000, buy: 98_000 },
+  T7_JOURNAL_FISHING_FULL: { sell: 150_000, buy: 175_000 },
   T7_JOURNAL_FIBER_EMPTY: { sell: 36_000, buy: 42_000 },
   T7_JOURNAL_FIBER_FULL: { sell: 82_000, buy: 98_000 },
   T7_JOURNAL_ORE_EMPTY: { sell: 36_000, buy: 42_000 },
@@ -201,8 +201,12 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   TREASURE_DECORATIVE_RARITY3: { sell: 20_000, buy: 24_000 },
   TREASURE_KNOWLEDGE_RARITY2: { sell: 80_000, buy: 95_000 },
   T5_FISH_FRESHWATER_ALL_COMMON: { sell: 2200, buy: 2800 },
+  T3_FISH_FRESHWATER_ALL_COMMON: { sell: 650, buy: 780 },
+  T3_FISH_FRESHWATER_AVALON_RARE: { sell: 3_300, buy: 2_600 },
+  T5_FISH_FRESHWATER_AVALON_RARE: { sell: 6_000, buy: 4_800 },
+  T6_FISH_FRESHWATER_ALL_COMMON: { sell: 1800, buy: 2200 },
   // Fishing
-  T3_FISHINGBAIT: { sell: 180, buy: 210 },
+  T3_FISHINGBAIT: { sell: 1_800, buy: 2_000 },
   T7_FISH_FRESHWATER_AVALON_RARE: { sell: 80_000, buy: 65_000 },
   T8_FISH_FRESHWATER_ALL_COMMON: { sell: 9500, buy: 12_000 },
   // Food & potions

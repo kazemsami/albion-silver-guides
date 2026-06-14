@@ -40,20 +40,20 @@
     "rangeMax": 1127891
   },
   "mists-fishing": {
-    "conservative": 337795,
-    "median": 494745,
-    "expected": 494745,
-    "highRoll": 669892,
-    "rangeMin": 337795,
-    "rangeMax": 669892
+    "conservative": 345012,
+    "median": 511986,
+    "expected": 511986,
+    "highRoll": 742780,
+    "rangeMin": 345012,
+    "rangeMax": 742780
   },
   "ava-roads-fishing": {
-    "conservative": 1048248,
-    "median": 1311396,
-    "expected": 1311396,
-    "highRoll": 2112699,
-    "rangeMin": 1048248,
-    "rangeMax": 2112699
+    "conservative": 871375,
+    "median": 1090795,
+    "expected": 1090795,
+    "highRoll": 1530974,
+    "rangeMin": 871375,
+    "rangeMax": 1530974
   },
   "laborer-passive-income": {
     "conservative": 7071,
