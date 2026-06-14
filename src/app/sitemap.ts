@@ -28,18 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
-    {
-      url: absoluteUrl("/"),
-      lastModified: latestGuideUpdate,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: absoluteUrl("/guides"),
-      lastModified: latestGuideUpdate,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
     ...categoryPages,
     {
       url: absoluteUrl("/license"),
