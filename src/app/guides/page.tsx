@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { GuidesGrid } from "@/components/GuidesGrid";
 import { GuideFilters } from "@/components/GuideFilters";
-import { GuideCategorySelect } from "@/components/GuideCategorySelect";
 import { guides } from "@/data/guides";
 import {
   computeGuideListProfitRanges,
@@ -119,23 +118,11 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
           )}
         />
       ) : null}
-      <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0 flex-1">
-          <h1 className="wiki-heading font-display text-3xl font-bold text-parchment sm:text-4xl">
-            {pageTitle}
-          </h1>
-          <p className="mt-3 max-w-2xl text-parchment/55">{pageIntro}</p>
-        </div>
-        <Suspense
-          fallback={
-            <div className="h-10 w-full min-w-[12rem] animate-pulse rounded-lg border border-gold/15 bg-obsidian-light sm:w-48" />
-          }
-        >
-          <GuideCategorySelect
-            id="guides-page-category"
-            className="w-full shrink-0 sm:w-52"
-          />
-        </Suspense>
+      <div className="mb-10">
+        <h1 className="wiki-heading font-display text-3xl font-bold text-parchment sm:text-4xl">
+          {pageTitle}
+        </h1>
+        <p className="mt-3 max-w-2xl text-parchment/55">{pageIntro}</p>
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[260px_1fr]">

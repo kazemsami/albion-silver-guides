@@ -164,7 +164,7 @@ export interface PricedLine {
   unitPrice: number | null;
   lineTotal: number | null;
   /** Where unitPrice came from, helps explain N/A vs estimate vs live market. */
-  priceSource?: "market" | "fixed" | "estimated";
+  priceSource?: "market" | "snapshot" | "fixed" | "estimated";
 }
 
 export interface LoadoutPricing {

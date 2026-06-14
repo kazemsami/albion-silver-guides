@@ -49,13 +49,14 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
   },
   "ava-roads-fishing": {
     status: "reviewed",
-    lastUpdated: "2026-06-13",
+    lastUpdated: "2026-06-14",
     evidence: {
       runs: 1,
       date: "2026-06-13",
-      gear: "Safe escape build (calculator safe preset)",
+      gear:
+        "Safe escape set (Bloodletter, Assassin Jacket, Miner Workboots, T3 horse; Grandmaster rod and journal in bag), with Premium",
       rawLootSilver: 600_000,
-      netSilver: 600_000,
+      netSilver: 561_000,
       deathsOrKnockdowns: 0,
       sources: [
         {
@@ -68,7 +69,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         },
       ],
       notes:
-        "1 personal run: ~600k in ~30 min on Safe escape. Full-loot Roads mechanics supported by official Roads guide. Income varies with portal search time, competition, deaths, and market.",
+        "1 personal run (~30 min): ~600k raw fish and journal value before listing tax, using the Safe escape loadout with Premium. ~561k net after Premium sell-order tax (~6.5%). Full-loot Roads mechanics supported by official Roads guide. Income varies with portal search time, competition, deaths, and market.",
     },
   },
   "high-tier-group-tracking": {

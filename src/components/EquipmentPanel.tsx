@@ -1,4 +1,5 @@
 import { ItemSlot } from "@/components/ItemSlot";
+import { PriceSourceBadge } from "@/components/PriceSourceBadge";
 import {
   T8_HOUSE_BUILD_MATERIALS,
   computeT8HouseBuildPricing,
@@ -7,16 +8,19 @@ import type {
   EquipmentLoadout,
   EquipmentSlot,
   LoadoutPricing,
+  PricedLine,
   SerializedPriceMap,
 } from "@/types/guide";
 import { formatSilverExact } from "@/lib/format";
 import { deserializePriceMap } from "@/lib/guide-economics";
+import type { PriceMapKind } from "@/lib/albion-prices";
 
 interface EquipmentPanelProps {
   loadout: EquipmentLoadout;
   variant?: "safe" | "profit" | "default";
   pricing?: LoadoutPricing;
   prices?: SerializedPriceMap;
+  priceMapKind?: PriceMapKind;
 }
 
 const variantStyles = {
@@ -44,11 +48,29 @@ const slotLabels: Record<EquipmentSlot, string> = {
   food: "Food",
 };
 
+function ItemDetailPrice({
+  line,
+}: {
+  line: Pick<PricedLine, "lineTotal" | "unitPrice" | "priceSource">;
+}) {
+  const amount = line.lineTotal ?? line.unitPrice;
+  if (amount == null) return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 text-gold/80">
+      {" · "}
+      <PriceSourceBadge source={line.priceSource} />
+      {formatSilverExact(amount)} silver
+    </span>
+  );
+}
+
 export function EquipmentPanel({
   loadout,
   variant = "default",
   pricing,
   prices,
+  priceMapKind = "snapshot",
 }: EquipmentPanelProps) {
   const { slots, inventory, houseCount } = loadout;
   const hasWornGear = Object.keys(slots).length > 0;
@@ -56,7 +78,11 @@ export function EquipmentPanel({
 
   const houseBuildPricing =
     houseCount != null && houseCount > 0 && prices
-      ? computeT8HouseBuildPricing(deserializePriceMap(prices), houseCount)
+      ? computeT8HouseBuildPricing(
+          deserializePriceMap(prices),
+          houseCount,
+          priceMapKind,
+        )
       : null;
 
   const isLaborerSetup = houseCount != null && houseCount > 0;
@@ -187,10 +213,7 @@ export function EquipmentPanel({
                   {line.quantity > 1 ? ` ×${line.quantity}` : ""}
                 </span>
                 {line.lineTotal != null && (
-                  <span className="text-gold/80">
-                    {" · "}
-                    {formatSilverExact(line.lineTotal)} silver
-                  </span>
+                  <ItemDetailPrice line={line} />
                 )}
               </li>
             ))}
@@ -201,12 +224,12 @@ export function EquipmentPanel({
                   {item.name}
                   {(item.quantity ?? 1) > 1 ? ` ×${item.quantity}` : ""}
                 </span>
-                {priceById.get(item.id)?.unitPrice != null && (
-                  <span className="text-gold/80">
-                    {" · "}
-                    {formatSilverExact(priceById.get(item.id)!.lineTotal ?? priceById.get(item.id)!.unitPrice!)} silver
-                  </span>
-                )}
+                {(() => {
+                  const line = priceById.get(item.id);
+                  return line?.unitPrice != null ? (
+                    <ItemDetailPrice line={line} />
+                  ) : null;
+                })()}
                 {item.hint && (
                   <span className="text-parchment/45"> · {item.hint}</span>
                 )}
@@ -222,12 +245,7 @@ export function EquipmentPanel({
                   {item.name}
                   {qty > 1 ? ` ×${qty}` : ""}
                 </span>
-                {line?.lineTotal != null && (
-                  <span className="text-gold/80">
-                    {" · "}
-                    {formatSilverExact(line.lineTotal)} silver
-                  </span>
-                )}
+                {line?.lineTotal != null && <ItemDetailPrice line={line} />}
                 {item.hint && (
                   <span className="text-parchment/45"> · {item.hint}</span>
                 )}

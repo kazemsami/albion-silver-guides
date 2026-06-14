@@ -629,13 +629,19 @@ export function collectGuideItemIds(
 export function computeLoadoutPricing(
   loadout: EquipmentLoadout,
   prices: PriceMap,
+  mapKind: PriceMapKind = "snapshot",
 ): LoadoutPricing {
   const lines: PricedLine[] = [];
 
   for (const item of Object.values(loadout.slots)) {
     if (item) {
       const quantity = item.quantity ?? 1;
-      const { unitPrice, priceSource } = resolveUnitPrice(item, prices, "sell");
+      const { unitPrice, priceSource } = resolveUnitPrice(
+        item,
+        prices,
+        "sell",
+        mapKind,
+      );
       lines.push({
         id: item.id,
         name: item.name,
@@ -649,7 +655,12 @@ export function computeLoadoutPricing(
   }
   for (const item of loadout.inventory ?? []) {
     const quantity = item.quantity ?? 1;
-    const { unitPrice, priceSource } = resolveUnitPrice(item, prices, "sell");
+    const { unitPrice, priceSource } = resolveUnitPrice(
+      item,
+      prices,
+      "sell",
+      mapKind,
+    );
     lines.push({
       id: item.id,
       name: item.name,

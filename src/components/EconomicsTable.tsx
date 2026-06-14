@@ -1,4 +1,5 @@
 import { ItemIcon } from "@/components/ItemIcon";
+import { PriceSourceBadge } from "@/components/PriceSourceBadge";
 import type { PricedLine } from "@/types/guide";
 import {
   formatItemQuantity,
@@ -64,14 +65,7 @@ export function EconomicsTable({
                 <td className="py-2 pr-3 text-right tabular-nums text-parchment/50">
                   {line.unitPrice != null ? (
                     <span className="inline-flex items-center justify-end gap-1">
-                      {line.priceSource === "estimated" && (
-                        <span
-                          className="text-[10px] font-medium uppercase text-amber-400/80"
-                          title="No royal market listing; trade-chat estimate"
-                        >
-                          est.
-                        </span>
-                      )}
+                      <PriceSourceBadge source={line.priceSource} />
                       {formatSilverExact(line.unitPrice)}
                     </span>
                   ) : (

@@ -1,5 +1,10 @@
 import type { AlbionItem, LoadoutPricing, PricedLine } from "@/types/guide";
-import { getBuyPrice, getSellPrice, type PriceMap } from "@/lib/albion-prices";
+import {
+  resolveBuyPrice,
+  resolveSellPrice,
+  type PriceMap,
+  type PriceMapKind,
+} from "@/lib/albion-prices";
 
 /**
  * Materials to build a T8 Elder's House from a T2 Novice's House (cumulative upgrades).
@@ -22,17 +27,21 @@ export const T8_HOUSE_BUILD_ITEM_IDS = T8_HOUSE_BUILD_MATERIALS.map((m) => m.id)
 export function computeT8HouseBuildPricing(
   prices: PriceMap,
   houseCount = 1,
+  mapKind: PriceMapKind = "snapshot",
 ): LoadoutPricing {
   const lines: PricedLine[] = T8_HOUSE_BUILD_MATERIALS.map((material) => {
     const quantity = (material.quantity ?? 1) * houseCount;
-    const unitPrice =
-      getBuyPrice(prices, material.id) ?? getSellPrice(prices, material.id);
+    const buy = resolveBuyPrice(prices, material.id, mapKind);
+    const resolved =
+      buy.unitPrice != null ? buy : resolveSellPrice(prices, material.id, mapKind);
+    const { unitPrice, priceSource } = resolved;
     return {
       id: material.id,
       name: material.name,
       quantity,
       unitPrice,
       lineTotal: unitPrice != null ? unitPrice * quantity : null,
+      priceSource,
     };
   });
 

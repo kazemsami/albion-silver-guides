@@ -89,9 +89,9 @@ export function AvaRoadsFishingCalculator({
     return {
       ...bundle,
       loadout,
-      pricing: computeLoadoutPricing(loadout, priceMap),
+      pricing: computeLoadoutPricing(loadout, priceMap, mapKind),
     };
-  }, [economics, preset.tierId, tier, tierLoadouts, priceMap]);
+  }, [economics, preset.tierId, tier, tierLoadouts, priceMap, mapKind]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -243,6 +243,7 @@ export function AvaRoadsFishingCalculator({
               variant={loadoutVariantForTier(preset.tierId)}
               pricing={activeLoadout.pricing}
               prices={serializedPrices}
+              priceMapKind={mapKind}
             />
           </div>
         </section>

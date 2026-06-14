@@ -101,9 +101,9 @@ export function TrackingProfitCalculator({
     return {
       ...bundle,
       loadout,
-      pricing: computeLoadoutPricing(loadout, priceMap),
+      pricing: computeLoadoutPricing(loadout, priceMap, mapKind),
     };
-  }, [economics, tier, tierId, tierLoadouts, priceMap]);
+  }, [economics, tier, tierId, tierLoadouts, priceMap, mapKind]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -275,6 +275,7 @@ export function TrackingProfitCalculator({
               variant={activeLoadout.variant}
               pricing={activeLoadout.pricing}
               prices={serializedPrices}
+              priceMapKind={mapKind}
             />
           </div>
         </section>

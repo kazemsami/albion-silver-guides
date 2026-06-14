@@ -7,6 +7,8 @@ import { LivePricesToggle } from "@/components/LivePricesToggle";
 import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { useFeedback } from "@/components/FeedbackDialog";
 import { paypalDonateUrl } from "@/lib/site";
+import { categoryLabels } from "@/types/guide";
+import { guideNavCategories } from "@/lib/guide-categories";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -85,6 +87,18 @@ export function MobileNav() {
             >
               All Guides
             </Link>
+            <div className="mb-1 ml-3 space-y-0.5 border-l border-gold/15 pl-3">
+              {guideNavCategories.map((category) => (
+                <Link
+                  key={category}
+                  href={`/guides?category=${category}`}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-2 text-sm text-parchment/65 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                >
+                  {categoryLabels[category]}
+                </Link>
+              ))}
+            </div>
             <button
               type="button"
               onClick={() => {

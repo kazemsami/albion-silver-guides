@@ -80,7 +80,7 @@ export function GuideProfitCalculator({
       return {
         tierId: tier.id,
         loadout,
-        pricing: computeLoadoutPricing(loadout, priceMap),
+        pricing: computeLoadoutPricing(loadout, priceMap, mapKind),
         variant: loadoutVariantForTier(tier.id),
       };
     }
@@ -98,7 +98,7 @@ export function GuideProfitCalculator({
     return {
       ...bundle,
       loadout,
-      pricing: computeLoadoutPricing(loadout, priceMap),
+      pricing: computeLoadoutPricing(loadout, priceMap, mapKind),
     };
   }, [
     economics,
@@ -108,6 +108,7 @@ export function GuideProfitCalculator({
     tierId,
     tierLoadouts,
     priceMap,
+    mapKind,
     gatheringYieldMultiplier,
   ]);
 
@@ -383,6 +384,7 @@ export function GuideProfitCalculator({
               variant={activeLoadout.variant}
               pricing={activeLoadout.pricing}
               prices={serializedPrices}
+              priceMapKind={mapKind}
             />
           </div>
         </section>

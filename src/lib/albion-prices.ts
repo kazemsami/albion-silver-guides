@@ -163,12 +163,12 @@ export function resolveSellPrice(
   prices: PriceMap,
   itemId: string,
   mapKind: PriceMapKind = "snapshot",
-): { unitPrice: number | null; priceSource: "market" | "estimated" } {
+): { unitPrice: number | null; priceSource: "market" | "snapshot" | "estimated" } {
   const fromMap = prices.get(itemId)?.sell;
   if (fromMap != null && fromMap > 0) {
     return {
       unitPrice: fromMap,
-      priceSource: mapKind === "live" ? "market" : "estimated",
+      priceSource: mapKind === "live" ? "market" : "snapshot",
     };
   }
   const fallback = getItemPriceFallback(itemId, "sell");
@@ -179,12 +179,12 @@ export function resolveBuyPrice(
   prices: PriceMap,
   itemId: string,
   mapKind: PriceMapKind = "snapshot",
-): { unitPrice: number | null; priceSource: "market" | "estimated" } {
+): { unitPrice: number | null; priceSource: "market" | "snapshot" | "estimated" } {
   const fromMap = prices.get(itemId)?.buy;
   if (fromMap != null && fromMap > 0) {
     return {
       unitPrice: fromMap,
-      priceSource: mapKind === "live" ? "market" : "estimated",
+      priceSource: mapKind === "live" ? "market" : "snapshot",
     };
   }
   const fallback = getItemPriceFallback(itemId, "buy");

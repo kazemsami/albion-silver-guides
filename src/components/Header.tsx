@@ -3,6 +3,7 @@ import { MarketCitySelect } from "@/components/MarketCitySelect";
 import { LivePricesToggle } from "@/components/LivePricesToggle";
 import { PremiumTaxToggle } from "@/components/PremiumTaxToggle";
 import { MobileNav } from "@/components/MobileNav";
+import { GuidesNavDropdown } from "@/components/GuidesNavDropdown";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FeedbackButton } from "@/components/FeedbackDialog";
 import { paypalDonateUrl } from "@/lib/site";
@@ -35,12 +36,7 @@ export function Header() {
           </Link>
 
           <nav className="hidden lg:block" aria-label="Main">
-            <Link
-              href="/guides"
-              className="shrink-0 rounded-md px-3 py-2 text-sm text-parchment/70 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-            >
-              All Guides
-            </Link>
+            <GuidesNavDropdown />
           </nav>
         </div>
 

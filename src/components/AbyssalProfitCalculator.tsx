@@ -119,9 +119,9 @@ export function AbyssalProfitCalculator({
     return {
       ...bundle,
       loadout,
-      pricing: computeLoadoutPricing(loadout, priceMap),
+      pricing: computeLoadoutPricing(loadout, priceMap, mapKind),
     };
-  }, [economics, scenario.tierId, tierLoadouts, priceMap]);
+  }, [economics, scenario.tierId, tierLoadouts, priceMap, mapKind]);
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -395,6 +395,7 @@ export function AbyssalProfitCalculator({
               variant={loadoutVariantForTier(scenario.tierId)}
               pricing={activeLoadout.pricing}
               prices={serializedPrices}
+              priceMapKind={mapKind}
             />
           </div>
         </section>

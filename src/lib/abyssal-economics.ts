@@ -67,7 +67,7 @@ function priceOutputLine(
 ): PricedLine {
   const resolved = resolveSellPrice(prices, line.id, mapKind);
   const unitPrice = line.fixedSilverPerUnit ?? resolved.unitPrice;
-  const priceSource = line.fixedSilverPerUnit ? ("estimated" as const) : resolved.priceSource;
+  const priceSource = line.fixedSilverPerUnit ? ("fixed" as const) : resolved.priceSource;
 
   return {
     id: line.id,
