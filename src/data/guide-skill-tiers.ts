@@ -34,7 +34,15 @@ export const SKILL_TIERS = {
   fishing60plus: {
     id: "60+",
     label: "Fishing 60+",
-    description: "T7 fisherman, max throughput",
+    description:
+      "Logged T7 fisherman session (30 min extrapolated to 1 hr, no Premium)",
+    outputMultiplier: 1,
+  },
+  mistsMaxSpec: {
+    id: "max-spec",
+    label: "Max spec (T8, 100/100)",
+    description:
+      "Elder fisherman set with fishing 100 and fishing spec 100 vs logged T7 gear",
     outputMultiplier: 1,
   },
   avaSafe: {

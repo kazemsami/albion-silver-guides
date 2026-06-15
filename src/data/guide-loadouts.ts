@@ -439,7 +439,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     "30-60": {
       title: "Mid-Level Mists Fishing",
       description:
-        "Wear your best gear plus fisherman set, Avalonian rod, bait, and journal. Moose mount recommended. Hunt Rare+ nested mists for T7 zones.",
+        "Wear your best gear plus fisherman set, Avalonian rod, bait, and journal. Moose mount recommended. Hunt Epic+ nested mists for T7 zones.",
       slots: {
         head: { id: "T6_HEAD_GATHERER_FISH", name: "Master's Fisherman Cap", hint: "Best fisherman head you can wear" },
         armor: { id: "T6_ARMOR_GATHERER_FISH", name: "Master's Fisherman Garb", hint: "Best fisherman armor you can wear" },
@@ -449,7 +449,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       inventory: [
         { id: "T6_2H_TOOL_FISHINGROD_AVALON", name: "Master's Avalonian Fishing Rod", hint: "In bag. Cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
-        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Slow fill until you land Rare+ T7 mists consistently" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Slow fill until you land Epic+ T7 mists consistently" },
       ],
     },
     "60+": {
@@ -465,7 +465,23 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       inventory: [
         { id: "T7_2H_TOOL_FISHINGROD_AVALON", name: "Grandmaster's Avalonian Fishing Rod", hint: "In bag. Cast without equipping" },
         { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
-        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "~1/hr in Rare+ T7 mists with this gear" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "~1/hr in Epic+ T7 mists with this gear" },
+      ],
+    },
+    "max-spec": {
+      title: "Max Spec Mists Fishing",
+      description:
+        "Elder fisherman cap, garb, and workboots with fishing 100 and fishing spec 100. Elder Avalonian rod in bag. Journal fill matches the logged T7 run.",
+      slots: {
+        head: { id: "T8_HEAD_GATHERER_FISH", name: "Elder's Fisherman Cap", hint: "+5% fish yield vs Grandmaster cap" },
+        armor: { id: "T8_ARMOR_GATHERER_FISH", name: "Elder's Fisherman Garb", hint: "+10% fish yield vs Grandmaster garb" },
+        shoes: { id: "T8_SHOES_GATHERER_FISH", name: "Elder's Fisherman Workboots", hint: "+5% fish yield vs Grandmaster boots" },
+        ...MISTS_FISHING_MOUNT,
+      },
+      inventory: [
+        { id: "T8_2H_TOOL_FISHINGROD_AVALON", name: "Elder's Avalonian Fishing Rod", hint: "+2.5% fish yield vs Grandmaster Avalonian rod" },
+        { id: "T3_FISHINGBAIT", name: "Fancy Fish Bait", hint: "Use at every school" },
+        { id: "T7_JOURNAL_FISHING_EMPTY", name: "Grandmaster Fisherman's Journal (Empty)", hint: "Logged fill rate (skill does not speed journal)" },
       ],
     },
   },
@@ -665,7 +681,7 @@ export function loadoutVariantForTier(
   if (tierId === "safe" || tierId.includes("yellow") || tierId === "low" || tierId === "10-30" || tierId === "hunter" || tierId === "small" || tierId === "low-capital" || tierId === "t5" || tierId === "learning") {
     return tierId === "safe" ? "safe" : "default";
   }
-  if (tierId === "profit" || tierId === "grandmaster" || tierId === "expert" || tierId === "high" || tierId === "black" || tierId === "slayer" || tierId === "60+" || tierId === "40+" || tierId === "large" || tierId === "high-capital" || tierId === "t7" || tierId === "standard") {
+  if (tierId === "profit" || tierId === "grandmaster" || tierId === "expert" || tierId === "high" || tierId === "black" || tierId === "slayer" || tierId === "60+" || tierId === "max-spec" || tierId === "40+" || tierId === "large" || tierId === "high-capital" || tierId === "t7" || tierId === "standard") {
     return "profit";
   }
   return "default";

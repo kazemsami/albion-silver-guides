@@ -114,7 +114,7 @@ export function GuideProfitCalculator({
     gatheringYieldMultiplier,
   ]);
 
-  const yieldOptions = { gatheringYieldMultiplier };
+  const yieldOptions = { gatheringYieldMultiplier, premiumSeller };
 
   const result = useMemo(() => {
     const scaled = hasLaborerSpecialtyPicker
@@ -146,7 +146,10 @@ export function GuideProfitCalculator({
     if (!usesLoggedStandardBaseline) return null;
     const scaled = hasLaborerSpecialtyPicker
       ? buildLaborerHourlyEconomics(specialty, tier)
-      : scaleGuideEconomics(economics, tier, { gatheringYieldMultiplier: 1 });
+      : scaleGuideEconomics(economics, tier, {
+          gatheringYieldMultiplier: 1,
+          premiumSeller: false,
+        });
     return computeHourlyEconomics(
       { ...economics, ...scaled },
       priceMap,
@@ -174,6 +177,7 @@ export function GuideProfitCalculator({
             true,
             gatherYieldBaseline,
           ),
+          premiumSeller: true,
         });
     return computeHourlyEconomics(
       { ...economics, ...scaled },

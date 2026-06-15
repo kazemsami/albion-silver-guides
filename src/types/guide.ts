@@ -97,6 +97,8 @@ export interface HourlyItem {
   side?: "buy" | "sell";
   /** Fixed silver per unit (e.g. mercenary journal loot) instead of market price. */
   fixedSilverPerUnit?: number;
+  /** When set, used instead of quantity while Premium seller toggle is on (skips generic +50% fish scaling). */
+  quantityPremium?: number;
   /** Used when no market listing exists (e.g. trade-chat-only artifacts). */
   estimatedSilverPerUnit?: number;
 }

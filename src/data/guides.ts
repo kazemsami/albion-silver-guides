@@ -502,7 +502,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "mists-fishing",
     title: "Yellow Zone Mists Fishing",
     description:
-      "Fish in yellow-zone Mists for solid non-lethal fishing income. PvP is knockdown-only, so profit mainly depends on fishing level, fisherman gear, Mist rarity, school density, market prices, and how quickly you find higher-rarity nested Mists. The calculator treats T7 journals and Puremist Snapper as late-game bonuses, not beginner income.",
+      "Fish in yellow-zone Mists for solid non-lethal fishing income. PvP is knockdown-only, so profit depends on fishing level, Mist rarity, and market prices. Reviewed against a logged 30-min run (no Premium): 1,171 chopped fish and 5,580/6,640 Grandmaster journal fill with T7 fisherman gear, T7 Avalonian rod, and Pork Pie (~386k chopped fish gross in 30 min at ~330/chop). Snapper stays RNG upside.",
     category: "fishing",
     difficulty: "intermediate",
     zoneType: "safe",
@@ -528,17 +528,18 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Enter the Mists by finding a Will o' Wisp in a T5/T6 yellow zone. Wear your best gear, fisherman armor, Avalonian rod in bag, bait, and journal. Moose mount is recommended.",
       "Fish active schools near water in your starting Mist. Use T3 Fancy Fish Bait at schools for faster bites and more casts per hour.",
       "When the exit timer reaches around 5:00, start scouting for higher-rarity nested Wisps instead of squeezing one more fishing school.",
-      "Prioritize Rare, Epic, and Legendary nested Mists because higher-rarity Mists are more likely to contain better fishing opportunities. Do not assume every Rare+ Mist is automatically a T7 fishing zone.",
+      "Prioritize Rare, Epic, and Legendary nested Mists when scouting. T7 fishing zones need Epic+ Mists, not Rare ones.",
       "If you only find an Uncommon Will o' Wisp, remember its location and keep searching briefly. If time is running out and no better option appears, enter the Uncommon Mist and keep fishing rather than wasting the rest of the session.",
       "At fishing 60+, bring a Grandmaster Fisherman's Journal when you expect to fish higher-rarity Mists long enough to fill meaningful fame. Below that, treat journals as a slow bonus, not guaranteed hourly income.",
       "After leaving the Mists, sell valuable fish raw. Butcher low-value bycatch into chopped fish only when chopped-fish value is clearly better than raw sale value.",
     ],
-  
+
     tips: [
+      "Logged 30-min run (2026-06-14, no Premium): 999 + 172 chopped fish, journal 5,580/6,640, T7 fisherman + T7 Avalonian rod + Pork Pie. Calculator doubles that pace to 1 hr and subtracts bait, pie, and Standard sell-order fees.",
       "Yellow-zone Mists are knockdown-only, so wear your best gear instead of cheap throwaway kit.",
       "Your fishing rod can stay in your inventory. You do not need to put it in your main hand to fish.",
-      "T7 fishing zones are not the default Mist you spawn into. You are usually hunting for better nested Mists, especially Epic and Legendary ones.",
-      "Puremist Snapper is a rare T7 Mist/Roads fish, not its own visible fishing school. Treat it as RNG upside, not stable hourly income.",
+      "T7 fishing zones need Epic+ Mists, not Rare ones. You are usually hunting for better nested Mists, especially Epic and Legendary ones.",
+      "Puremist Snapper is a T7 Mist fish from Epic+ zones. Plan on about one hook every 2 hours. When you land one: 2 fish without Premium (3 with Premium), 4 at max spec without Premium (5 with Premium). Treat as RNG upside, not stable hourly income.",
       "A T7 Grandmaster Fisherman's Journal usually does not fill efficiently at low fishing levels. It becomes more realistic once you have stronger gear, higher fishing fame, and access to better Mists.",
       "At lower fishing levels, most income comes from normal fish and chopped fish. Do not advertise Snapper or T7 journals as beginner income.",
       "Pork Pie gives extra yield and carry weight, but beginners should check whether the extra fish value actually pays for the food.",
@@ -573,25 +574,25 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     profitBuild: {
       title: "Required Gear",
       description:
-        "Wear your best non-fishing gear for everything else. Required: fisherman set, Avalonian rod in bag, bait, and Grandmaster journal. Moose mount recommended.",
-  
+        "Logged baseline uses T7 fisherman set, T7 Avalonian rod in bag, bait, and Grandmaster journal. Moose mount recommended.",
+
       slots: {
         head: {
-          id: "T8_HEAD_GATHERER_FISH",
-          name: "Elder's Fisherman Cap",
-          hint: "Best fisherman head you can wear.",
+          id: "T7_HEAD_GATHERER_FISH",
+          name: "Grandmaster's Fisherman Cap",
+          hint: "T7 fisherman cap from the logged run.",
         },
-  
+
         armor: {
-          id: "T8_ARMOR_GATHERER_FISH",
-          name: "Elder's Fisherman Garb",
-          hint: "Best fisherman armor you can wear.",
+          id: "T7_ARMOR_GATHERER_FISH",
+          name: "Grandmaster's Fisherman Garb",
+          hint: "T7 fisherman garb from the logged run.",
         },
-  
+
         shoes: {
-          id: "T8_SHOES_GATHERER_FISH",
-          name: "Elder's Fisherman Workboots",
-          hint: "Best fisherman boots you can wear.",
+          id: "T7_SHOES_GATHERER_FISH",
+          name: "Grandmaster's Fisherman Workboots",
+          hint: "T7 fisherman boots from the logged run.",
         },
 
         mount: {
@@ -600,11 +601,11 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
           hint: "Recommended mount for mists fishing loops.",
         },
       },
-  
+
       inventory: [
         {
-          id: "T8_2H_TOOL_FISHINGROD_AVALON",
-          name: "Elder's Avalonian Fishing Rod",
+          id: "T7_2H_TOOL_FISHINGROD_AVALON",
+          name: "Grandmaster's Avalonian Fishing Rod",
           hint: "Stays in bag. Cast without equipping.",
         },
         {

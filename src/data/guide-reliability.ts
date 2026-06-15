@@ -25,13 +25,15 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
   },
   "mists-fishing": {
     status: "reviewed",
-    lastUpdated: "2026-06-13",
+    lastUpdated: "2026-06-14",
     evidence: {
-      runs: 2,
-      date: "2026-06-13",
-      gear: "Level 78 fishing, max gear, yellow Mists setup, no Premium",
-      rawLootSilver: 300_000,
-      netSilver: 300_000,
+      runs: 3,
+      date: "2026-06-14",
+      gear:
+        "T7 fisherman set, T7 Avalonian fishing rod in bag, Pork Pie, Grandmaster journal, no Premium",
+      market: "Martlock (chopped fish ~330 silver avg sell)",
+      rawLootSilver: 386_430,
+      netSilver: 386_430,
       deathsOrKnockdowns: 0,
       sources: [
         {
@@ -44,7 +46,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         },
       ],
       notes:
-        "2 personal runs logged. Latest run (no Premium): ~240k fish + ~60k from half Grandmaster journal filled = ~300k in ~30 min at fishing 78. Earlier run ~450k with Premium. GremmyAngler video is a reference only. Yellow-zone Mists knockdown rules checked against the wiki.",
+        "Latest logged 30-min yellow Mists run: 999 + 172 chopped fish (1,171 total), Grandmaster journal 5,580/6,640 fill, no Premium. Chopped fish gross ~386k in 30 min at ~330/chop avg; calculator extrapolates to 1 hr and uses saved Martlock prices. Earlier runs at fishing 78 (~300k/30 min) and ~450k with Premium. Snapper not included in baseline.",
     },
   },
   "ava-roads-fishing": {

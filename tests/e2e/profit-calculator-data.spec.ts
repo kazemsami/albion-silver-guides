@@ -7,9 +7,9 @@ import { test, expect } from "@playwright/test";
 import { guides } from "@/data/guides";
 import { guideEconomicsBySlug } from "@/data/guide-economics";
 import {
-  fetchAllGuidesMarketDataByCity,
   pickGuideProfitOutcomes,
 } from "@/lib/guide-economics";
+import { fetchGuideMarketDataForTests } from "./helpers";
 import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
 import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
 import {
@@ -22,7 +22,7 @@ test.describe("Guide card profit ranges match baked outcomes", () => {
   test.describe.configure({ timeout: 120_000 });
 
   test("every guide with economics has consistent standard and premium ranges", async () => {
-    const marketData = await fetchAllGuidesMarketDataByCity();
+    const marketData = await fetchGuideMarketDataForTests();
     const source = marketData.estimated;
     const mismatches: string[] = [];
 

@@ -18,6 +18,20 @@ import {
   type AvaLoggedCatchLine,
 } from "@/data/ava-roads-economics";
 import {
+  MISTS_LOGGED_CHOPS_PER_HOUR,
+  MISTS_LOGGED_JOURNAL_FILL_PER_HOUR,
+  MISTS_MAX_SPEC_CHOPS_PER_HOUR,
+  MISTS_MAX_SPEC_FISH_YIELD_PERCENT,
+  MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_30_60,
+  MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_60PLUS,
+  MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_MAX_SPEC,
+  MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_PREMIUM,
+  MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_STANDARD,
+  MISTS_PUREMIST_SNAPPER_PER_CATCH_MAX_SPEC_PREMIUM,
+  MISTS_PUREMIST_SNAPPER_PER_CATCH_MAX_SPEC_STANDARD,
+  mistsPuremistSnapperBonusLine,
+} from "@/data/mists-economics";
+import {
   TRACKING_AVERAGE_LOOT_PER_KILL,
   TRACKING_TIER_CONFIGS,
 } from "@/data/tracking-economics";
@@ -364,9 +378,9 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     defaultSkillTierId: "stalker",
   },
   "mists-fishing": {
+    gatherYieldBaseline: "standard",
     hourlyOutput: [
-      { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
-      { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
+      { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: MISTS_LOGGED_CHOPS_PER_HOUR },
     ],
     hourlyInputs: [],
     hourlyConsumables: [
@@ -377,68 +391,106 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.fishing10_30,
         description:
-          "Uncommon starting mist, chopped fish income. No T7 journal or Snapper modeled.",
+          "Uncommon starting mist, chopped fish only. No T7 journal or Snapper modeled.",
       },
       {
         ...SKILL_TIERS.fishing30_60,
         description:
-          "Hunt Rare+ nested mists for T7 zones. Slow journal fill (~0.15/hr) and low Snapper odds at this level.",
+          "Hunt Epic+ nested mists for T7 zones. Scaled below the logged T7 gear session; slow Snapper odds.",
         hourlyOutput: [
-          { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
-          { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
+          {
+            id: "T1_FISHCHOPS",
+            name: "Chopped Fish",
+            quantity: Math.round(MISTS_LOGGED_CHOPS_PER_HOUR * 0.85),
+          },
           {
             id: "T7_JOURNAL_FISHING_FULL",
             name: "Grandmaster Fisherman's Journal (Full)",
-            quantity: 0.15,
+            quantity: Math.round(MISTS_LOGGED_JOURNAL_FILL_PER_HOUR * 0.85 * 100) / 100,
           },
         ],
         hourlyInputs: [
           {
             id: "T7_JOURNAL_FISHING_EMPTY",
             name: "Grandmaster Fisherman's Journal (Empty)",
-            quantity: 0.15,
+            quantity: Math.round(MISTS_LOGGED_JOURNAL_FILL_PER_HOUR * 0.85 * 100) / 100,
             side: "sell",
           },
         ],
         bonusOutput: [
-          {
-            id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (Rare+ T7 mist, avg)",
-            quantity: 0.08 * PUREMIST_SNAPPER_PER_CATCH,
-          },
+          mistsPuremistSnapperBonusLine(
+            MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_30_60,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_STANDARD,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_PREMIUM,
+          ),
         ],
       },
       {
         ...SKILL_TIERS.fishing60plus,
         description:
-          "Rare/Epic/Legendary T7 mists with GM gear. ~1 T7 journal/hr and best Snapper odds when you find good zones.",
+          "Logged 30-min yellow Mists run (2026-06-14): T7 fisherman set, T7 Avalonian rod, Pork Pie, no Premium. 1,171 chopped fish and 5,580/6,640 journal fill extrapolated to 1 hr. Snapper is RNG upside.",
         hourlyOutput: [
-          { id: "T1_FISHCHOPS", name: "Chopped Fish", quantity: 3200 },
-          { id: "T1_SEAWEED", name: "Seaweed", quantity: 120 },
+          {
+            id: "T1_FISHCHOPS",
+            name: "Chopped Fish",
+            quantity: MISTS_LOGGED_CHOPS_PER_HOUR,
+          },
           {
             id: "T7_JOURNAL_FISHING_FULL",
-            name: "Grandmaster Fisherman's Journal (Full)",
-            quantity: 1,
+            name: "Grandmaster Fisherman's Journal (Full, 84% per 30 min logged)",
+            quantity: MISTS_LOGGED_JOURNAL_FILL_PER_HOUR,
           },
         ],
         hourlyInputs: [
           {
             id: "T7_JOURNAL_FISHING_EMPTY",
             name: "Grandmaster Fisherman's Journal (Empty)",
-            quantity: 1,
+            quantity: MISTS_LOGGED_JOURNAL_FILL_PER_HOUR,
             side: "sell",
           },
         ],
         bonusOutput: [
+          mistsPuremistSnapperBonusLine(
+            MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_60PLUS,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_STANDARD,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_60PLUS_PREMIUM,
+          ),
+        ],
+      },
+      {
+        ...SKILL_TIERS.mistsMaxSpec,
+        description:
+          `Elder Avalonian rod (+2.5%), Elder fisherman garb (+10%), cap and boots (+5% each), fishing 100 and spec 100 (+26.75%, ~${MISTS_MAX_SPEC_FISH_YIELD_PERCENT}% more chopped fish vs the logged T7 session). Journal fill stays at 5,580/6,640 per 30 min.`,
+        hourlyOutput: [
           {
-            id: "T7_FISH_FRESHWATER_AVALON_RARE",
-            name: "Puremist Snapper (Rare+ T7 mist, avg)",
-            quantity: 0.4 * PUREMIST_SNAPPER_PER_CATCH,
+            id: "T1_FISHCHOPS",
+            name: "Chopped Fish (T8 gear, fishing 100, spec 100)",
+            quantity: MISTS_MAX_SPEC_CHOPS_PER_HOUR,
           },
+          {
+            id: "T7_JOURNAL_FISHING_FULL",
+            name: "Grandmaster Fisherman's Journal (Full, logged fill rate)",
+            quantity: MISTS_LOGGED_JOURNAL_FILL_PER_HOUR,
+          },
+        ],
+        hourlyInputs: [
+          {
+            id: "T7_JOURNAL_FISHING_EMPTY",
+            name: "Grandmaster Fisherman's Journal (Empty)",
+            quantity: MISTS_LOGGED_JOURNAL_FILL_PER_HOUR,
+            side: "sell",
+          },
+        ],
+        bonusOutput: [
+          mistsPuremistSnapperBonusLine(
+            MISTS_PUREMIST_SNAPPER_CATCHES_PER_HOUR_MAX_SPEC,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_MAX_SPEC_STANDARD,
+            MISTS_PUREMIST_SNAPPER_PER_CATCH_MAX_SPEC_PREMIUM,
+          ),
         ],
       },
     ),
-    defaultSkillTierId: "30-60",
+    defaultSkillTierId: "60+",
   },
   "ava-roads-fishing": {
     // Safe escape and Normal use logged raw-fish species mix. Greedy keeps Sturgeon + chops model.

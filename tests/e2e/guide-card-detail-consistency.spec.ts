@@ -5,7 +5,6 @@
 import { test, expect } from "@playwright/test";
 import { guideEconomicsBySlug } from "@/data/guide-economics";
 import {
-  fetchAllGuidesMarketDataByCity,
   pickGuideProfitOutcomes,
 } from "@/lib/guide-economics";
 import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
@@ -15,6 +14,7 @@ import {
   CATEGORIES,
   getExpectedGuideSlugsByCategory,
   blockLivePriceApis,
+  fetchGuideMarketDataForTests,
 } from "./helpers";
 import {
   FEATURED_GUIDE_SLUGS,
@@ -99,7 +99,7 @@ test.describe("All guide cards reflect Premium toggle", () => {
   >;
 
   test.beforeAll(async () => {
-    const marketData = await fetchAllGuidesMarketDataByCity();
+    const marketData = await fetchGuideMarketDataForTests();
     const source = marketData.estimated;
     const city = AVERAGE_MARKET_CITY_ID;
     expectedBySlug = {};
@@ -133,7 +133,7 @@ test.describe("All guide cards reflect Premium toggle", () => {
         };
       }
     }
-  });
+  }, 60_000);
 
   test.beforeEach(async ({ page }) => {
     await blockLivePriceApis(page);

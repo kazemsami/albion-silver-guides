@@ -6,7 +6,6 @@ import { test, expect } from "@playwright/test";
 import { guides } from "@/data/guides";
 import {
   computeGuideListProfitRanges,
-  fetchAllGuidesMarketDataByCity,
   pickGuideProfitOutcomes,
   resolveGuideOutcomesPremiumSeller,
 } from "@/lib/guide-economics";
@@ -20,6 +19,7 @@ import {
   shouldNoIndexGuidesList,
 } from "@/lib/guides-seo";
 import type { GuideCategory } from "@/types/guide";
+import { fetchGuideMarketDataForTests } from "./helpers";
 
 test.describe("Guides list SEO config", () => {
   test("gathering category landing resolves indexable SEO", () => {
@@ -63,7 +63,7 @@ test.describe("Dungeon guide server profit ranges", () => {
   test.describe.configure({ timeout: 120_000 });
 
   test("match calculator outcomes for saved prices", async () => {
-    const marketData = await fetchAllGuidesMarketDataByCity();
+    const marketData = await fetchGuideMarketDataForTests();
     const dungeonGuides = guides.filter((guide) => guide.category === "dungeons");
     const serverRanges = computeGuideListProfitRanges(marketData, dungeonGuides);
     const source = marketData.estimated;

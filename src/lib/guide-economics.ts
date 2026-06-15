@@ -59,12 +59,12 @@ import type { GuideProfitOutcomesMap } from "@/lib/guide-profit-outcomes";
 import type { GuideProfitOutcomes } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
+function roundHourlyQuantity(quantity: number): number {
+  return Math.round(quantity * 100) / 100;
+}
+
 function scaleQuantity(quantity: number, multiplier: number): number {
-  const scaled = quantity * multiplier;
-  if (scaled < 1) {
-    return Math.round(scaled * 100) / 100;
-  }
-  return Math.max(1, Math.round(scaled));
+  return roundHourlyQuantity(quantity * multiplier);
 }
 
 function defaultCarryQuantity(itemId: string): number | undefined {
@@ -105,7 +105,10 @@ export function enrichLoadoutWithQuantities(
     if (item.quantity != null) return item;
     const qty = quantityById.get(item.id) ?? defaultCarryQuantity(item.id);
     if (qty == null) return item;
-    return { ...item, quantity: Math.max(1, Math.round(qty)) };
+    const quantity = item.id.includes("JOURNAL")
+      ? roundHourlyQuantity(qty)
+      : Math.max(1, Math.round(qty));
+    return { ...item, quantity };
   };
 
   return {
@@ -123,15 +126,24 @@ export function enrichLoadoutWithQuantities(
 export function scaleGuideEconomics(
   economics: GuideEconomics,
   tier: SkillTier,
-  options?: { gatheringYieldMultiplier?: number },
+  options?: { gatheringYieldMultiplier?: number; premiumSeller?: boolean },
 ): Pick<GuideEconomics, "hourlyOutput" | "hourlyInputs" | "hourlyConsumables"> {
   const outM = tier.outputMultiplier;
   const inM = tier.inputMultiplier ?? tier.outputMultiplier;
   const conM = tier.consumableMultiplier ?? tier.outputMultiplier;
   const yieldMul = options?.gatheringYieldMultiplier ?? 1;
+  const premiumSeller =
+    options?.premiumSeller ??
+    (economics.gatherYieldBaseline === "standard"
+      ? yieldMul > 1
+      : yieldMul >= 1);
 
   const outputSource = tier.hourlyOutput ?? economics.hourlyOutput;
   const scaleOutputQty = (item: HourlyItem, tierMul: number) => {
+    if (item.quantityPremium != null) {
+      const baseQty = premiumSeller ? item.quantityPremium : item.quantity;
+      return scaleQuantity(baseQty, tierMul);
+    }
     const premiumMul = isPremiumYieldItem(item.id) ? yieldMul : 1;
     return scaleQuantity(item.quantity, tierMul * premiumMul);
   };
@@ -482,7 +494,10 @@ export async function fetchAllGuidesProfitRangesByCity(): Promise<
   return data.estimated.ranges.premium;
 }
 
-export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarketData> {
+export async function fetchAllGuidesMarketDataByCity(options?: {
+  /** When false, skip live Albion API fetches (faster for tests and snapshot scripts). */
+  includeLivePrices?: boolean;
+}): Promise<GuidesListMarketData> {
   const slugs = Object.keys(guideEconomicsBySlug);
   const allItemIds = new Set<string>();
 
@@ -504,8 +519,10 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarket
 
   const itemIdList = [...allItemIds];
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIdList);
-  const livePriceMapsByServer =
-    await fetchAlbionPricesByCityAllServers(itemIdList);
+  const includeLivePrices = options?.includeLivePrices ?? true;
+  const livePriceMapsByServer = includeLivePrices
+    ? await fetchAlbionPricesByCityAllServers(itemIdList)
+    : null;
 
   return {
     estimated: buildGuidesListMarketSlice(slugs, estimatedPriceMaps),
@@ -514,7 +531,7 @@ export async function fetchAllGuidesMarketDataByCity(): Promise<GuidesListMarket
         server.id,
         buildGuidesListMarketSlice(
           slugs,
-          livePriceMapsByServer[server.id] ?? estimatedPriceMaps,
+          livePriceMapsByServer?.[server.id] ?? estimatedPriceMaps,
         ),
       ]),
     ) as Record<AlbionPriceServerId, GuidesListMarketSlice>,

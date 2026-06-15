@@ -23,7 +23,9 @@ export type ProfitSnapshotEntry = {
 export type ProfitSnapshotFixture = Record<string, ProfitSnapshotEntry>;
 
 export async function buildProfitSnapshots(): Promise<ProfitSnapshotFixture> {
-  const marketData = await fetchAllGuidesMarketDataByCity();
+  const marketData = await fetchAllGuidesMarketDataByCity({
+    includeLivePrices: false,
+  });
   const fixture: ProfitSnapshotFixture = {};
 
   for (const guide of guides) {

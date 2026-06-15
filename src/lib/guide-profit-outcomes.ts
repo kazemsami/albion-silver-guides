@@ -77,6 +77,7 @@ function computeGenericOutcomes(
   prices: PriceMap,
   listingTaxRate: number,
   gatheringYieldMultiplier: number,
+  premiumSeller: boolean,
   mapKind: PriceMapKind = "snapshot",
 ): GuideProfitOutcomes {
   if (economics.defaultLaborerSpecialtyId) {
@@ -97,7 +98,7 @@ function computeGenericOutcomes(
     return outcomesFromTierNets(nets, economics.defaultSkillTierId);
   }
 
-  const yieldOptions = { gatheringYieldMultiplier };
+  const yieldOptions = { gatheringYieldMultiplier, premiumSeller };
   const nets = economics.skillTiers.map((tier) => ({
     tierId: tier.id,
     net: computeHourlyEconomics(
@@ -277,6 +278,7 @@ export function computeGuideProfitOutcomes(
     prices,
     listingTaxRate,
     gatheringYieldMultiplier,
+    premiumSeller,
     priceMapKind,
   );
 }

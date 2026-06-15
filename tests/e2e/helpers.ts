@@ -14,6 +14,7 @@ import { expect } from "@playwright/test";
 import { guides, getGuidesByCategory } from "@/data/guides";
 import type { Guide, GuideCategory } from "@/types/guide";
 import { categoryLabels } from "@/types/guide";
+import { fetchAllGuidesMarketDataByCity } from "@/lib/guide-economics";
 
 /** All published guides from the app data source. */
 export function getPublishedGuides(): readonly Guide[] {
@@ -189,4 +190,9 @@ export function assertNoBareMarketFeeTotals(text: string): void {
  */
 export async function getPageText(page: Page): Promise<string> {
   return page.locator("body").innerText();
+}
+
+/** Saved snapshot prices only. Avoids slow live Albion API calls in Playwright hooks. */
+export function fetchGuideMarketDataForTests() {
+  return fetchAllGuidesMarketDataByCity({ includeLivePrices: false });
 }
