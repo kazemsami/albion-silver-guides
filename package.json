@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "playwright test",
+    "test:e2e:external": "PLAYWRIGHT_EXTERNAL=1 playwright test tests/e2e/item-icons-external.spec.ts",
     "test:snapshots:write": "npx tsx scripts/write-profit-snapshots.ts",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",

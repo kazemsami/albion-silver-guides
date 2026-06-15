@@ -1,18 +1,16 @@
 /**
- * Category filtering tests.
- * Verifies that category pages show only guides from that category,
- * guide counts are correct, pluralisation is sane, and invalid
- * categories are handled gracefully.
+ * Category filtering E2E tests.
+ * Verifies category pages show only guides from that category and /guides lists every guide once.
  */
 import { test, expect } from "@playwright/test";
-import { CATEGORIES, CATEGORY_GUIDES, GUIDE_SLUGS, blockLivePriceApis } from "./helpers";
-
-// Slugs that must NOT appear on a given category page
-function guidesNotInCategory(category: string): string[] {
-  return Object.entries(CATEGORY_GUIDES)
-    .filter(([cat]) => cat !== category)
-    .flatMap(([, slugs]) => slugs);
-}
+import {
+  CATEGORIES,
+  blockLivePriceApis,
+  collectGuideSlugsFromMain,
+  getAllExpectedGuideSlugs,
+  getExpectedGuideSlugsByCategory,
+  getGuideSlugsNotInCategory,
+} from "./helpers";
 
 test.describe("Category pages show only guides from that category", () => {
   test.beforeEach(async ({ page }) => {
@@ -20,31 +18,22 @@ test.describe("Category pages show only guides from that category", () => {
   });
 
   for (const category of CATEGORIES) {
-    const expectedSlugs = CATEGORY_GUIDES[category];
-    const forbiddenSlugs = guidesNotInCategory(category);
+    const expectedSlugs = getExpectedGuideSlugsByCategory(category);
+    const forbiddenSlugs = getGuideSlugsNotInCategory(category);
 
     test(`/guides?category=${category} shows ${expectedSlugs.length} guide(s)`, async ({
       page,
     }) => {
       await page.goto(`/guides?category=${category}`);
 
-      // Wait for guides to render
-      await page.waitForSelector("[data-guide-slug], article, .guide-card, a[href^='/guides/']", {
-        timeout: 10_000,
-      }).catch(() => null);
+      await page
+        .waitForSelector('main a[href^="/guides/"]', {
+          timeout: 10_000,
+        })
+        .catch(() => null);
 
-      // Collect all guide links on the page (exclude nav links)
-      const guideLinks = page.locator('main a[href^="/guides/"]');
-      const hrefs = await guideLinks.evaluateAll((anchors) =>
-        anchors
-          .map((a) => a.getAttribute("href") ?? "")
-          .filter((h) => h.startsWith("/guides/") && h !== "/guides/")
-          .map((h) => h.replace("/guides/", "").split("?")[0])
-      );
+      const uniqueSlugs = await collectGuideSlugsFromMain(page);
 
-      const uniqueSlugs = [...new Set(hrefs)];
-
-      // Every expected guide must be present
       for (const slug of expectedSlugs) {
         expect(
           uniqueSlugs,
@@ -52,13 +41,17 @@ test.describe("Category pages show only guides from that category", () => {
         ).toContain(slug);
       }
 
-      // No guide from another category should be present
       for (const slug of forbiddenSlugs) {
         expect(
           uniqueSlugs,
           `${category} page must NOT include guide from another category: "${slug}"`,
         ).not.toContain(slug);
       }
+
+      expect(
+        uniqueSlugs.length,
+        `${category} page must show exactly ${expectedSlugs.length} guide(s)`,
+      ).toBe(expectedSlugs.length);
     });
   }
 });
@@ -100,7 +93,6 @@ test.describe("Invalid category is handled gracefully", () => {
       `Invalid category must not 500`,
     ).toBe(true);
 
-    // Must not crash
     const body = await page.locator("body").innerText();
     expect(body).not.toMatch(/Application error/i);
     expect(body).not.toMatch(/\[object Object\]/);
@@ -108,24 +100,20 @@ test.describe("Invalid category is handled gracefully", () => {
 });
 
 test.describe("All guides page shows all published guides", () => {
-  test("/guides shows all published guides", async ({ page }) => {
+  test("/guides shows every published guide exactly once", async ({ page }) => {
     await blockLivePriceApis(page);
     await page.goto("/guides");
 
-    await page.waitForSelector('a[href^="/guides/"]', { timeout: 10_000 }).catch(() => null);
+    await page
+      .waitForSelector('main a[href^="/guides/"]', { timeout: 10_000 })
+      .catch(() => null);
 
-    const guideLinks = page.locator('main a[href^="/guides/"]');
-    const hrefs = await guideLinks.evaluateAll((anchors) =>
-      anchors
-        .map((a) => a.getAttribute("href") ?? "")
-        .filter((h) => h.startsWith("/guides/") && h !== "/guides/")
-        .map((h) => h.replace("/guides/", "").split("?")[0])
-    );
-    const uniqueSlugs = [...new Set(hrefs)];
+    const visibleSlugs = await collectGuideSlugsFromMain(page);
+    const expectedSlugs = [...getAllExpectedGuideSlugs()].sort();
 
     expect(
-      uniqueSlugs.length,
-      `Expected ${GUIDE_SLUGS.length} guides on /guides, got ${uniqueSlugs.length}: ${uniqueSlugs.join(", ")}`,
-    ).toBeGreaterThanOrEqual(GUIDE_SLUGS.length);
+      visibleSlugs,
+      `Expected exactly ${expectedSlugs.length} guides on /guides`,
+    ).toEqual(expectedSlugs);
   });
 });

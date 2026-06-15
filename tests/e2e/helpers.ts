@@ -1,38 +1,56 @@
+/**
+ * Shared Playwright helpers for E2E, data-integrity, and content-lint specs.
+ *
+ * Guide slugs and category membership are derived from `src/data/guides.ts`.
+ * Do not hardcode a second copy of category-to-guide mappings here.
+ *
+ * Future layout (optional):
+ *   tests/e2e     — routing, navigation, rendered UI, calculator interactions
+ *   tests/data    — guide metadata, economics config, SEO config
+ *   tests/content — copy lint, claims, forbidden phrases
+ */
 import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
+import { guides, getGuidesByCategory } from "@/data/guides";
+import type { Guide, GuideCategory } from "@/types/guide";
+import { categoryLabels } from "@/types/guide";
 
-/** All published guide slugs. Matches guides.ts generateStaticParams output. */
-export const GUIDE_SLUGS = [
-  "t4-ore-mining-yellow-zone",
-  "fiber-farming-solo",
-  "corrupted-dungeons-pvpve",
-  "abyssal-depths-farming",
-  "high-tier-group-tracking",
-  "mists-fishing",
-  "ava-roads-fishing",
-  "laborer-passive-income",
-  "potions-crafting-bulk",
-] as const;
+/** All published guides from the app data source. */
+export function getPublishedGuides(): readonly Guide[] {
+  return guides;
+}
 
-export const CATEGORIES = [
-  "gathering",
-  "crafting",
-  "dungeons",
-  "fishing",
-  "laborers",
-] as const;
+/** Slugs for every published guide (sorted for stable assertions). */
+export function getAllExpectedGuideSlugs(): string[] {
+  return guides.map((guide) => guide.slug);
+}
 
-export const CATEGORY_GUIDES: Record<string, string[]> = {
-  gathering: ["t4-ore-mining-yellow-zone", "fiber-farming-solo"],
-  crafting: ["potions-crafting-bulk"],
-  dungeons: [
-    "corrupted-dungeons-pvpve",
-    "abyssal-depths-farming",
-    "high-tier-group-tracking",
-  ],
-  fishing: ["mists-fishing", "ava-roads-fishing"],
-  laborers: ["laborer-passive-income"],
-};
+/** Categories that have at least one published guide, in site display order. */
+export function getPublishedCategories(): GuideCategory[] {
+  return (Object.keys(categoryLabels) as GuideCategory[]).filter((category) =>
+    guides.some((guide) => guide.category === category),
+  );
+}
+
+/** Published guide slugs for a category landing page. */
+export function getExpectedGuideSlugsByCategory(
+  category: GuideCategory,
+): string[] {
+  return getGuidesByCategory(category).map((guide) => guide.slug);
+}
+
+/** Guide slugs that belong to any category other than the given one. */
+export function getGuideSlugsNotInCategory(category: GuideCategory): string[] {
+  return guides
+    .filter((guide) => guide.category !== category)
+    .map((guide) => guide.slug);
+}
+
+/** Convenience alias for `for (const slug of …)` loops in specs. */
+export const GUIDE_SLUGS = getAllExpectedGuideSlugs();
+
+/** Convenience alias for category filter specs. */
+export const CATEGORIES = getPublishedCategories();
 
 /** Patterns that must never appear in visible page text. */
 export const FORBIDDEN_TEXT_PATTERNS = [
@@ -43,9 +61,26 @@ export const FORBIDDEN_TEXT_PATTERNS = [
   /guide s\b/i,
   /\bPotion s\b/,
   /\{\{/,
-  // duplicated ordered-list numbers checked per-guide page in content-quality.spec.ts
   /Loading filters…/,
 ];
+
+/** Duplicated ordered-list numbers in rendered copy (e.g. "1. 1." or "1. 1"). */
+export const DUPLICATED_STEP_NUMBER_PATTERN = /\b(\d+)\.\s+\1\b/;
+
+/**
+ * Collect unique guide slugs linked from the main content area.
+ * Excludes bare `/guides/` nav links; deduplicates and sorts for exact comparisons.
+ */
+export async function collectGuideSlugsFromMain(page: Page): Promise<string[]> {
+  const hrefs = await page.locator('main a[href^="/guides/"]').evaluateAll(
+    (anchors) =>
+      anchors
+        .map((a) => a.getAttribute("href") ?? "")
+        .filter((h) => h.startsWith("/guides/") && h !== "/guides/")
+        .map((h) => h.replace("/guides/", "").split("?")[0]),
+  );
+  return [...new Set(hrefs)].sort();
+}
 
 /**
  * Block live market price API calls so tests use snapshot prices only.
@@ -116,7 +151,6 @@ export async function assertCoreSeo(page: Page): Promise<void> {
     .getAttribute("content");
   expect(ogDescription?.trim(), "og:description must not be empty").toBeTruthy();
 
-  // Canonical: if present it must point to a real URL (not a relative path)
   const canonical = await page
     .locator('link[rel="canonical"]')
     .getAttribute("href");

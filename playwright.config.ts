@@ -15,6 +15,8 @@ const useExternalServer = !/^https?:\/\/localhost(?::\d+)?\/?$/i.test(
  * Vercel CI: set BASE_URL to the deployment URL (webServer skipped).
  * Run: npm run test:e2e
  */
+const includeExternalTests = process.env.PLAYWRIGHT_EXTERNAL === "1";
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -23,6 +25,8 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? "github" : "list",
   timeout: 30_000,
+  // Albion render CDN checks: npm run test:e2e:external
+  testIgnore: includeExternalTests ? undefined : /item-icons-external\.spec\.ts/,
 
   use: {
     baseURL,

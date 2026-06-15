@@ -3,10 +3,17 @@
  * Cross-checks profit ranges and calculator display between list pages and detail pages.
  */
 import { test, expect } from "@playwright/test";
+import { guideEconomicsBySlug } from "@/data/guide-economics";
+import {
+  fetchAllGuidesMarketDataByCity,
+  pickGuideProfitOutcomes,
+} from "@/lib/guide-economics";
+import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
+import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
 import {
   GUIDE_SLUGS,
   CATEGORIES,
-  CATEGORY_GUIDES,
+  getExpectedGuideSlugsByCategory,
   blockLivePriceApis,
 } from "./helpers";
 import {
@@ -22,13 +29,6 @@ import {
   silverAsDisplayedOnCard,
   HERO_MATCHES_EXPECTED_SLUGS,
 } from "./guide-profit-ui-helpers";
-
-/** Guides reviewed against logged no-Premium runs; cards should still react to Premium toggle. */
-const STANDARD_BASELINE_CARD_SLUGS = [
-  "t4-ore-mining-yellow-zone",
-  "fiber-farming-solo",
-  "ava-roads-fishing",
-] as const;
 
 interface CardInfo {
   title: string;
@@ -90,36 +90,97 @@ test.describe("Guide cards always use computed profit ranges", () => {
   }
 });
 
-test.describe("Logged baseline guide cards respond to Premium toggle", () => {
+test.describe("All guide cards reflect Premium toggle", () => {
+  test.describe.configure({ timeout: 120_000 });
+
+  let expectedBySlug: Record<
+    string,
+    { standard: { min: number; max: number }; premium: { min: number; max: number } }
+  >;
+
+  test.beforeAll(async () => {
+    const marketData = await fetchAllGuidesMarketDataByCity();
+    const source = marketData.estimated;
+    const city = AVERAGE_MARKET_CITY_ID;
+    expectedBySlug = {};
+
+    for (const slug of GUIDE_SLUGS) {
+      if (!guideEconomicsBySlug[slug]) continue;
+
+      const standardOutcomes = pickGuideProfitOutcomes(
+        source.outcomes,
+        false,
+        city,
+        slug,
+      );
+      const premiumOutcomes = pickGuideProfitOutcomes(
+        source.outcomes,
+        true,
+        city,
+        slug,
+      );
+      const standardRange = standardOutcomes
+        ? profitRangeFromOutcomes(standardOutcomes)
+        : null;
+      const premiumRange = premiumOutcomes
+        ? profitRangeFromOutcomes(premiumOutcomes)
+        : null;
+
+      if (standardRange && premiumRange) {
+        expectedBySlug[slug] = {
+          standard: standardRange,
+          premium: premiumRange,
+        };
+      }
+    }
+  });
+
   test.beforeEach(async ({ page }) => {
     await blockLivePriceApis(page);
   });
 
-  for (const slug of STANDARD_BASELINE_CARD_SLUGS) {
-    test(`${slug}: /guides card profit range changes with Premium`, async ({
+  for (const slug of GUIDE_SLUGS) {
+    test(`${slug}: /guides card shows Standard then Premium profit ranges`, async ({
       page,
     }) => {
+      if (!guideEconomicsBySlug[slug]) return;
+
+      const expected = expectedBySlug[slug];
+      expect(
+        expected,
+        `Missing baked Standard/Premium ranges for ${slug}`,
+      ).toBeTruthy();
+
       await page.goto("/guides");
-
       const premium = page.getByLabel("Premium account");
-      await premium.setChecked(false);
 
+      await premium.setChecked(false);
       const card = page.locator(`a[href="/guides/${slug}"]`).first();
       await expect(card).toBeVisible({ timeout: 15_000 });
 
-      const standardRange = await extractCardProfitRange(card, slug);
-      expect(standardRange).not.toBeNull();
+      const standardCard = await extractCardProfitRange(card, slug);
+      expect(standardCard).not.toBeNull();
+      expect(standardCard!.min).toBe(
+        silverAsDisplayedOnCard(expected!.standard.min),
+      );
+      expect(standardCard!.max).toBe(
+        silverAsDisplayedOnCard(expected!.standard.max),
+      );
 
       await premium.setChecked(true);
-      const premiumRange = await extractCardProfitRange(card, slug);
-      expect(premiumRange).not.toBeNull();
+      const premiumCard = await extractCardProfitRange(card, slug);
+      expect(premiumCard).not.toBeNull();
+      expect(premiumCard!.min).toBe(
+        silverAsDisplayedOnCard(expected!.premium.min),
+      );
+      expect(premiumCard!.max).toBe(
+        silverAsDisplayedOnCard(expected!.premium.max),
+      );
 
-      const changed =
-        premiumRange!.min !== standardRange!.min ||
-        premiumRange!.max !== standardRange!.max;
       expect(
-        changed,
-        `Card for ${slug} should update when Premium is toggled`,
+        premiumCard!.min !== standardCard!.min ||
+          premiumCard!.max !== standardCard!.max,
+        `Card for ${slug} should show different ranges for Standard vs Premium`,
       ).toBe(true);
     });
   }
@@ -326,7 +387,7 @@ test.describe("Category page shows correct guides for each category", () => {
   });
 
   for (const category of CATEGORIES) {
-    const expectedSlugs = CATEGORY_GUIDES[category];
+    const expectedSlugs = getExpectedGuideSlugsByCategory(category);
 
     test(`${category}: all expected guides appear on category page`, async ({
       page,

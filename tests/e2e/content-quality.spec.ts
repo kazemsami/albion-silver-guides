@@ -1,10 +1,14 @@
 /**
- * Content quality tests.
- * Scans visible text on all guide pages for known content bugs:
- * broken placeholders, double punctuation, bad list numbering, etc.
+ * Content lint tests.
+ * Scans visible text for placeholders, broken punctuation, and duplicated step numbers.
  */
 import { test, expect } from "@playwright/test";
-import { GUIDE_SLUGS, CATEGORIES, blockLivePriceApis } from "./helpers";
+import {
+  GUIDE_SLUGS,
+  CATEGORIES,
+  DUPLICATED_STEP_NUMBER_PATTERN,
+  blockLivePriceApis,
+} from "./helpers";
 
 const ALL_ROUTES = [
   "/",
@@ -50,11 +54,6 @@ const CONTENT_CHECKS: Array<{ pattern: RegExp; reason: string }> = [
     pattern: /[a-zA-Z]\.\./,
     reason: 'Double punctuation like "estimates.."',
   },
-  {
-    // Ordered list items where the same number appears twice in a row like "1. 1."
-    pattern: /\b(\d+)\.\s+\1\./,
-    reason: "Duplicated ordered-list numbers like \"1. 1.\"",
-  },
 ];
 
 test.describe("Content quality - no placeholder or broken text", () => {
@@ -75,6 +74,25 @@ test.describe("Content quality - no placeholder or broken text", () => {
       for (const { pattern, reason } of CONTENT_CHECKS) {
         expect(text, reason).not.toMatch(pattern);
       }
+    });
+  }
+});
+
+test.describe("Guide pages have no duplicated step numbers in main content", () => {
+  test.beforeEach(async ({ page }) => {
+    await blockLivePriceApis(page);
+  });
+
+  for (const slug of GUIDE_SLUGS) {
+    test(`/guides/${slug} - no duplicated step numbers`, async ({ page }) => {
+      await page.goto(`/guides/${slug}`);
+      await page.waitForSelector("main", { timeout: 10_000 });
+
+      const text = await page.locator("main").innerText();
+      expect(
+        text,
+        'Duplicated ordered-list numbers like "1. 1." or "1. 1"',
+      ).not.toMatch(DUPLICATED_STEP_NUMBER_PATTERN);
     });
   }
 });

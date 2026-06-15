@@ -107,15 +107,14 @@ test.describe("Avalonian Roads Fishing profit consistency", () => {
         const rangeMin = parseM(rangeMatch[1]);
         const rangeMax = parseM(rangeMatch[2]);
         if (rangeMin > 500_000 && rangeMax > rangeMin) {
-          // Only check ranges that look like profit ranges (>500k)
-          if (expValue < rangeMin * 0.5 || expValue > rangeMax * 1.5) {
-            // The expected value is wildly outside the stated range
-            test.fail(
-              true,
-              `Ava Roads Fishing: expected value ${expRaw}M is outside range ` +
-                `${rangeMatch[1]}M-${rangeMatch[2]}M. Regression detected.`,
-            );
-          }
+          expect(
+            expValue,
+            `Ava Roads Fishing: expected value ${expRaw}M is below half of stated range min ${rangeMatch[1]}M`,
+          ).toBeGreaterThanOrEqual(rangeMin * 0.5);
+          expect(
+            expValue,
+            `Ava Roads Fishing: expected value ${expRaw}M is above 1.5× stated range max ${rangeMatch[2]}M`,
+          ).toBeLessThanOrEqual(rangeMax * 1.5);
         }
       }
     }

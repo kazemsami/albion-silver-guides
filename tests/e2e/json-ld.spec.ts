@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 import {
   GUIDE_SLUGS,
   CATEGORIES,
-  CATEGORY_GUIDES,
+  getExpectedGuideSlugsByCategory,
   blockLivePriceApis,
 } from "./helpers";
 import {
@@ -63,14 +63,14 @@ test.describe("Guides list ItemList JSON-LD", () => {
       await page.goto(`/guides?category=${category}`);
       const blocks = await getJsonLdBlocks(page);
       const list = firstBlockOfType(blocks, "ItemList");
-      const expectedCount = CATEGORY_GUIDES[category].length;
+      const expectedCount = getExpectedGuideSlugsByCategory(category).length;
 
       expect(list).toBeTruthy();
       expect(list!.numberOfItems).toBe(expectedCount);
 
       const elements = list!.itemListElement as Array<Record<string, unknown>>;
       const urls = elements.map((item) => String(item.url ?? ""));
-      for (const slug of CATEGORY_GUIDES[category]) {
+      for (const slug of getExpectedGuideSlugsByCategory(category)) {
         expect(urls.some((url) => url.endsWith(`/guides/${slug}`))).toBe(true);
       }
     });
