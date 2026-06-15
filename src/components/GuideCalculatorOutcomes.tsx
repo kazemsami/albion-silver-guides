@@ -30,15 +30,14 @@ export function GuideCalculatorOutcomes({
   const { priceMap, mapKind } = useGuidePriceMap(guidePrices, defaultMarketCity);
   const { premiumSeller } = useMarketCity();
   const usesLoggedStandardBaseline = gatherYieldBaseline === "standard";
-  const outcomesPremiumSeller = usesLoggedStandardBaseline ? false : premiumSeller;
 
   const outcomes = useMemo(() => {
     return computeGuideProfitOutcomes(guideSlug, priceMap, {
-      listingTaxRate: getListingTaxRate(outcomesPremiumSeller),
-      premiumSeller: outcomesPremiumSeller,
+      listingTaxRate: getListingTaxRate(premiumSeller),
+      premiumSeller,
       priceMapKind: mapKind,
     });
-  }, [guideSlug, mapKind, outcomesPremiumSeller, priceMap]);
+  }, [guideSlug, mapKind, premiumSeller, priceMap]);
 
   const projectedPremiumOutcomes = useMemo(() => {
     if (!usesLoggedStandardBaseline || premiumSeller) return null;
@@ -63,13 +62,21 @@ export function GuideCalculatorOutcomes({
       <div className="wiki-note theme-surface mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
           {usesLoggedStandardBaseline
-            ? "Logged profit outcomes (Standard tax, no Premium)"
+            ? premiumSeller
+              ? "Projected profit outcomes (Premium tax, +50% yield)"
+              : "Logged profit outcomes (Standard tax, no Premium)"
             : outcomesLabel}
         </p>
-        {usesLoggedStandardBaseline && (
+        {usesLoggedStandardBaseline && !premiumSeller && (
           <p className="mt-1 text-xs text-parchment/45">
             Matches reviewed runs without Premium. Toggle Premium in the header for
             projected upside in the breakdown below.
+          </p>
+        )}
+        {usesLoggedStandardBaseline && premiumSeller && (
+          <p className="mt-1 text-xs text-parchment/45">
+            Scaled up from the logged no-Premium baseline (+50% fish/ore yield, Premium
+            tax). Toggle Premium off to see the reviewed logged numbers.
           </p>
         )}
         <div className="mt-3">

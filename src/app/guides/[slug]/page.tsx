@@ -10,6 +10,7 @@ import {
 import {
   fetchAllGuidesMarketDataByCity,
   fetchGuidePricing,
+  computeGuideListProfitRanges,
 } from "@/lib/guide-economics";
 import { GuideCalculatorOutcomes } from "@/components/GuideCalculatorOutcomes";
 import { GuideEvidencePanel } from "@/components/GuideEvidencePanel";
@@ -75,6 +76,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
   const related = guides
     .filter((g) => g.category === guide.category && g.slug !== guide.slug)
     .slice(0, 2);
+  const relatedProfitRanges = computeGuideListProfitRanges(marketData, related);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
@@ -290,7 +292,11 @@ export default async function GuidePage({ params }: GuidePageProps) {
       )}
 
       {related.length > 0 && (
-        <RelatedGuides guides={related} marketData={marketData} />
+        <RelatedGuides
+          guides={related}
+          marketData={marketData}
+          serverProfitRanges={relatedProfitRanges}
+        />
       )}
 
       <GuideComments slug={guide.slug} />

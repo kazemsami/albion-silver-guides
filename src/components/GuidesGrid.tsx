@@ -38,7 +38,7 @@ export function GuidesGrid({
         <GuideCard
           key={guide.slug}
           guide={guide}
-          profitRange={profitRanges[guide.slug]}
+          profitRange={profitRanges[guide.slug] ?? null}
           priceSourceLabel={mounted ? undefined : "saved prices"}
         />
       ))}

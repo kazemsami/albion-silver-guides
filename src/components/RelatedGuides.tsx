@@ -1,18 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import { useProfitRangesForCity } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuidesListMarketData } from "@/lib/guide-economics";
+import type { GuideProfitRangeMap, GuidesListMarketData } from "@/lib/guide-economics";
 
 export function RelatedGuides({
   guides,
   marketData,
+  serverProfitRanges,
 }: {
   guides: Guide[];
   marketData: GuidesListMarketData;
+  serverProfitRanges: GuideProfitRangeMap;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData, guides);
+  const clientProfitRanges = useProfitRangesForCity(marketData, guides);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const profitRanges = mounted ? clientProfitRanges : serverProfitRanges;
 
   return (
     <section className="mt-16 border-t border-gold/10 pt-10">
@@ -24,7 +34,8 @@ export function RelatedGuides({
           <GuideCard
             key={guide.slug}
             guide={guide}
-            profitRange={profitRanges[guide.slug]}
+            profitRange={profitRanges[guide.slug] ?? null}
+            priceSourceLabel={mounted ? undefined : "saved prices"}
           />
         ))}
       </div>

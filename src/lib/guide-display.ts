@@ -1,25 +1,15 @@
-import type { Guide } from "@/types/guide";
 import type { GuideProfitRange } from "@/lib/guide-economics";
 import { formatSilverRange } from "@/lib/format";
+import type { Guide } from "@/types/guide";
 
-export function getGuideSilverDisplay(
-  guide: Guide,
-  profitRange?: GuideProfitRange | null,
+export function formatGuideProfitRange(
+  profitRange: GuideProfitRange,
 ): string {
-  if (profitRange) {
-    return formatSilverRange(profitRange.min, profitRange.max);
-  }
-  return formatSilverRange(guide.silverPerHour.min, guide.silverPerHour.max);
+  return formatSilverRange(profitRange.min, profitRange.max);
 }
 
 export function getCardPriceSourceLabel(useLivePrices: boolean): string {
   return useLivePrices ? "live prices" : "saved prices";
-}
-
-export function hasLiveProfitRange(
-  profitRange?: GuideProfitRange | null,
-): profitRange is GuideProfitRange {
-  return profitRange != null;
 }
 
 export function formatGuideLastUpdated(isoDate: string): string {
@@ -63,17 +53,14 @@ export function getActiveSortFilter(param: string | null): GuideSort {
 }
 
 export function getGuideProfitSortValue(
-  guide: Guide,
+  guide: { slug: string },
   profitRanges: Record<string, GuideProfitRange>,
   sort: GuideSort,
 ): number {
   const range = profitRanges[guide.slug];
-  if (sort === "profit-asc") {
-    return range?.min ?? guide.silverPerHour.min;
-  }
-  if (sort === "profit-desc") {
-    return range?.max ?? guide.silverPerHour.max;
-  }
+  if (!range) return 0;
+  if (sort === "profit-asc") return range.min;
+  if (sort === "profit-desc") return range.max;
   return 0;
 }
 

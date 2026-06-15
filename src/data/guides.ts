@@ -14,7 +14,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
-    silverPerHour: { min: 110_000, max: 205_000 },
     requirements: [
       "T4 pick in bag + T4 miner gear to start; T5 pick for titanium nodes (matches logged run)",
       "Giant Stag for node-to-node travel and carry weight on every tier",
@@ -103,7 +102,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
-    silverPerHour: { min: 104_000, max: 283_000 },
     requirements: [
       "T5 sickle in bag + T5 harvester gear (cap, garb, workboots)",
       "Giant Stag for loop travel and carry weight on every tier",
@@ -195,7 +193,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 250_000, max: 650_000 },
     requirements: [
       "T6 Claymore burst build or equivalent 1v1 PvP setup",
       "Hunter (yellow/blue, knockdown) to learn; Stalker (red/black, full loot) for profit; Slayer needs 100k+ infamy",
@@ -287,7 +284,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 400_000, max: 1_200_000 },
     requirements: [
       "Antiquarian's Den in any royal city or Caerleon, enter unflagged, bank everything in the shared Den bank",
       "Queue duo or trio with a full team when possible; solo works for PvE but is handicapped in PvP",
@@ -406,7 +402,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "dungeons",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 550_000, max: 1_200_000 },
     requirements: [
       "Party of 4 for veteran targets on Avalonian Roads (extra players only speed up study timers)",
       "One tracker/DPS with a T7 Tracking Toolkit (covers Golem, Dawnbird, Panther, and Werewolf via tier +1)",
@@ -511,8 +506,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "fishing",
     difficulty: "intermediate",
     zoneType: "safe",
-  
-    silverPerHour: { min: 250_000, max: 1_000_000 },
   
     silverByLevel: [
       { label: "Fishing Level 10-30", amount: 250_000 },
@@ -638,7 +631,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "fishing",
     difficulty: "advanced",
     zoneType: "dangerous",
-    silverPerHour: { min: 600_000, max: 1_800_000 },
     silverByLevel: [
       { label: "Safe escape (bank 30-40 min)", min: 400_000, max: 900_000 },
       { label: "Normal GM gear (bank 30-40 min)", min: 600_000, max: 1_300_000 },
@@ -824,7 +816,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "laborers",
     difficulty: "advanced",
     zoneType: "safe",
-    silverPerHour: { min: 5_000, max: 35_000 },
     silverByLevel: [
       { label: "4-6 T8 houses (per 22h)", min: 120_000, max: 450_000 },
       { label: "8-12 T8 houses (per 22h)", min: 240_000, max: 900_000 },
@@ -928,7 +919,6 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     category: "crafting",
     difficulty: "intermediate",
     zoneType: "safe",
-    silverPerHour: { min: 80_000, max: 350_000 },
     requirements: [
       "T6 Alchemy with potions specialization (T7 spec for Gigantify, Resistance, and Sticky)",
       "T6+ alchemy lab at a royal city station in Bridgewatch (any public alchemist station works)",

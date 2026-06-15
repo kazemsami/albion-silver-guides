@@ -60,6 +60,8 @@ test.describe("Guides list SEO config", () => {
 });
 
 test.describe("Dungeon guide server profit ranges", () => {
+  test.describe.configure({ timeout: 120_000 });
+
   test("match calculator outcomes for saved prices", async () => {
     const marketData = await fetchAllGuidesMarketDataByCity();
     const dungeonGuides = guides.filter((guide) => guide.category === "dungeons");

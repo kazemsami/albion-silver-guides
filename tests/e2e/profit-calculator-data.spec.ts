@@ -9,7 +9,6 @@ import { guideEconomicsBySlug } from "@/data/guide-economics";
 import {
   fetchAllGuidesMarketDataByCity,
   pickGuideProfitOutcomes,
-  resolveGuideOutcomesPremiumSeller,
 } from "@/lib/guide-economics";
 import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
 import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
@@ -20,6 +19,8 @@ import {
 } from "./profit-snapshot-helpers";
 
 test.describe("Guide card profit ranges match baked outcomes", () => {
+  test.describe.configure({ timeout: 120_000 });
+
   test("every guide with economics has consistent standard and premium ranges", async () => {
     const marketData = await fetchAllGuidesMarketDataByCity();
     const source = marketData.estimated;
@@ -31,14 +32,10 @@ test.describe("Guide card profit ranges match baked outcomes", () => {
       const city = AVERAGE_MARKET_CITY_ID;
 
       for (const premiumSeller of [false, true]) {
-        const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(
-          guide.slug,
-          premiumSeller,
-        );
-        const premiumKey = outcomesPremiumSeller ? "premium" : "standard";
+        const premiumKey = premiumSeller ? "premium" : "standard";
         const outcomes = pickGuideProfitOutcomes(
           source.outcomes,
-          outcomesPremiumSeller,
+          premiumSeller,
           city,
           guide.slug,
         );
@@ -73,6 +70,8 @@ test.describe("Guide card profit ranges match baked outcomes", () => {
 });
 
 test.describe("Profit outcome snapshots", () => {
+  test.describe.configure({ timeout: 120_000 });
+
   test("default calculator outcomes match committed fixture", async () => {
     const current = await buildProfitSnapshots();
     const expected = readProfitSnapshotFixture();

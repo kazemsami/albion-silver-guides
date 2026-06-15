@@ -218,7 +218,6 @@ export interface Guide {
   category: GuideCategory;
   difficulty: Difficulty;
   zoneType: ZoneType;
-  silverPerHour: { min: number; max: number };
   silverByLevel?: SilverTier[];
   safeBuild?: EquipmentLoadout;
   profitBuild?: EquipmentLoadout;

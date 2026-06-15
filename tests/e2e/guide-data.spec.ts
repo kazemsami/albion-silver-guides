@@ -24,13 +24,6 @@ test.describe("Guide data completeness", () => {
       expect(guide.difficulty, "difficulty").toBeTruthy();
       expect(guide.zoneType, "zoneType").toBeTruthy();
 
-      expect(guide.silverPerHour.min, "silverPerHour.min").toBeGreaterThan(0);
-      expect(guide.silverPerHour.max, "silverPerHour.max").toBeGreaterThan(0);
-      expect(
-        guide.silverPerHour.min,
-        "silverPerHour min must not exceed max",
-      ).toBeLessThanOrEqual(guide.silverPerHour.max);
-
       expect(guide.requirements.length, "requirements").toBeGreaterThan(0);
       expect(guide.steps.length, "steps").toBeGreaterThan(0);
       expect(guide.tips.length, "tips").toBeGreaterThan(0);

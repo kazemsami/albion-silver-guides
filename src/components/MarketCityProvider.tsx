@@ -30,7 +30,6 @@ import type { GuidesListMarketData, GuidesListMarketSlice } from "@/lib/guide-ec
 import {
   pickGuideProfitOutcomes,
   pickGuideProfitRanges,
-  resolveGuideOutcomesPremiumSeller,
 } from "@/lib/guide-economics";
 import { profitRangeFromOutcomes } from "@/lib/guide-profit-outcomes";
 import { effectiveMarketCity } from "@/lib/guide-market-city";
@@ -214,13 +213,9 @@ export function useProfitRangesForCity(
     const result: Record<string, { min: number; max: number }> = {};
     for (const guide of guideList) {
       const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
-      const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(
-        guide.slug,
-        premiumSeller,
-      );
       const outcomes = pickGuideProfitOutcomes(
         source.outcomes,
-        outcomesPremiumSeller,
+        premiumSeller,
         city,
         guide.slug,
       );

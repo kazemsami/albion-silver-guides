@@ -2,35 +2,36 @@
 
 import { useProfitRangesForCity } from "@/components/MarketCityProvider";
 import type { Guide } from "@/types/guide";
-import type { GuidesListMarketData } from "@/lib/guide-economics";
+import type { GuideProfitRange, GuidesListMarketData } from "@/lib/guide-economics";
 import { formatSilverRange } from "@/lib/format";
+
+function spanFromRanges(ranges: GuideProfitRange[]): GuideProfitRange | null {
+  if (ranges.length === 0) return null;
+  return {
+    min: Math.min(...ranges.map((r) => r.min)),
+    max: Math.max(...ranges.map((r) => r.max)),
+  };
+}
 
 export function HomeProfitRangeStat({
   guides,
   marketData,
+  serverProfitRanges,
 }: {
   guides: Guide[];
   marketData: GuidesListMarketData;
+  serverProfitRanges: Record<string, GuideProfitRange>;
 }) {
-  const profitRanges = useProfitRangesForCity(marketData, guides);
-
-  const liveMins = Object.values(profitRanges).map((r) => r.min);
-  const liveMaxs = Object.values(profitRanges).map((r) => r.max);
-
-  const totalSilverRange =
-    liveMins.length > 0
-      ? { min: Math.min(...liveMins), max: Math.max(...liveMaxs) }
-      : guides.reduce(
-          (acc, g) => ({
-            min: Math.min(acc.min, g.silverPerHour.min),
-            max: Math.max(acc.max, g.silverPerHour.max),
-          }),
-          { min: Infinity, max: 0 },
-        );
+  const clientProfitRanges = useProfitRangesForCity(marketData, guides);
+  const liveSpan = spanFromRanges(Object.values(clientProfitRanges));
+  const serverSpan = spanFromRanges(Object.values(serverProfitRanges));
+  const totalSilverRange = liveSpan ?? serverSpan;
 
   return (
     <p className="text-2xl font-bold text-gold">
-      {formatSilverRange(totalSilverRange.min, totalSilverRange.max)}
+      {totalSilverRange
+        ? formatSilverRange(totalSilverRange.min, totalSilverRange.max)
+        : "N/A"}
     </p>
   );
 }

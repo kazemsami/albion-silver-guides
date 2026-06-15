@@ -333,7 +333,7 @@ function computeAllGuideProfitRanges(
   return result;
 }
 
-/** Match detail-page outcomes: logged Standard baseline guides ignore Premium toggle. */
+/** Match detail-page outcomes for logged Standard-baseline guides when Premium is off. */
 export function resolveGuideOutcomesPremiumSeller(
   slug: string,
   premiumSeller: boolean,
@@ -459,13 +459,9 @@ export function computeGuideListProfitRanges(
 
   for (const guide of guideList) {
     const city = effectiveMarketCity(marketCity, guide.defaultMarketCity);
-    const outcomesPremiumSeller = resolveGuideOutcomesPremiumSeller(
-      guide.slug,
-      premiumSeller,
-    );
     const outcomes = pickGuideProfitOutcomes(
       source.outcomes,
-      outcomesPremiumSeller,
+      premiumSeller,
       city,
       guide.slug,
     );

@@ -10,10 +10,7 @@ import {
 } from "@/types/guide";
 import { GuideReliabilityBadges } from "@/components/GuideReliabilityBadges";
 import { GuideRiskBadge } from "@/components/GuideRiskBadge";
-import {
-  getGuideSilverDisplay,
-  getCardPriceSourceLabel,
-} from "@/lib/guide-display";
+import { getCardPriceSourceLabel } from "@/lib/guide-display";
 import type { GuideProfitRange } from "@/lib/guide-economics";
 import { formatSilverPrice } from "@/lib/format";
 
@@ -34,7 +31,7 @@ export function GuideCard({
   priceSourceLabel: priceSourceLabelOverride,
 }: {
   guide: Guide;
-  profitRange?: GuideProfitRange | null;
+  profitRange: GuideProfitRange | null | undefined;
   /** SSR hint when client market toggles are not hydrated yet. */
   priceSourceLabel?: string;
 }) {
@@ -47,6 +44,7 @@ export function GuideCard({
     guide.slug === "potions-crafting-bulk"
       ? "Profit range / 10k focus"
       : "Profit range / hr";
+
   return (
     <Link
       href={`/guides/${guide.slug}`}
@@ -84,24 +82,20 @@ export function GuideCard({
         <span className="text-[10px] uppercase tracking-widest text-parchment/35">
           {profitRangeLabel}
         </span>
-        {profitRange ? (
-          <p className="mt-1 text-sm font-semibold text-gold tabular-nums">
-            {profitRange.min !== profitRange.max
-              ? `${formatSilverPrice(profitRange.min)} – ${formatSilverPrice(profitRange.max)}${profitUnit}`
-              : `${formatSilverPrice(profitRange.max)}${profitUnit}`}
-            <span className="ml-1 font-normal text-parchment/40">
-              · {priceSourceLabel}
-            </span>
-          </p>
-        ) : (
-          <p className="mt-1 text-sm font-semibold text-gold">
-            {getGuideSilverDisplay(guide, null)}
-            <span className="font-normal text-parchment/40">
-              {" "}
-              {profitUnit} · {priceSourceLabel}
-            </span>
-          </p>
-        )}
+        <p className="mt-1 text-sm font-semibold text-gold tabular-nums">
+          {profitRange ? (
+            <>
+              {profitRange.min !== profitRange.max
+                ? `${formatSilverPrice(profitRange.min)} – ${formatSilverPrice(profitRange.max)}${profitUnit}`
+                : `${formatSilverPrice(profitRange.max)}${profitUnit}`}
+              <span className="ml-1 font-normal text-parchment/40">
+                · {priceSourceLabel}
+              </span>
+            </>
+          ) : (
+            <span className="text-parchment/45">N/A</span>
+          )}
+        </p>
         <div className="mt-3 flex items-center justify-between">
           <span className="text-xs text-parchment/40">
             {guide.readTime} min read →

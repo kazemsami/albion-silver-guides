@@ -7,7 +7,10 @@ import { JsonLd } from "@/components/JsonLd";
 import { getFeaturedGuides } from "@/data/guides";
 import type { GuideCategory } from "@/types/guide";
 import { guides } from "@/data/guides";
-import { fetchAllGuidesMarketDataByCity } from "@/lib/guide-economics";
+import {
+  computeGuideListProfitRanges,
+  fetchAllGuidesMarketDataByCity,
+} from "@/lib/guide-economics";
 import { createPageMetadata } from "@/lib/site";
 import { websiteJsonLd } from "@/lib/structured-data";
 
@@ -31,6 +34,8 @@ export const revalidate = 3600;
 export default async function Home() {
   const featured = getFeaturedGuides();
   const marketData = await fetchAllGuidesMarketDataByCity();
+  const siteProfitRanges = computeGuideListProfitRanges(marketData, guides);
+  const featuredProfitRanges = computeGuideListProfitRanges(marketData, featured);
 
   return (
     <>
@@ -76,7 +81,11 @@ export default async function Home() {
               <p className="mt-1 text-xs text-parchment/50">Categories</p>
             </div>
             <div className="theme-surface rounded-xl border border-gold/15 bg-obsidian-light p-4">
-              <HomeProfitRangeStat guides={guides} marketData={marketData} />
+              <HomeProfitRangeStat
+                guides={guides}
+                marketData={marketData}
+                serverProfitRanges={siteProfitRanges}
+              />
               <p className="mt-1 text-xs text-parchment/50">Silver/hr Range</p>
             </div>
             <div className="theme-surface rounded-xl border border-gold/15 bg-obsidian-light p-4">
@@ -106,7 +115,11 @@ export default async function Home() {
           </Link>
         </div>
 
-        <FeaturedGuidesGrid guides={featured} marketData={marketData} />
+        <FeaturedGuidesGrid
+          guides={featured}
+          marketData={marketData}
+          serverProfitRanges={featuredProfitRanges}
+        />
       </section>
 
       {/* Categories */}
