@@ -5,10 +5,8 @@ import { redirect } from "next/navigation";
 import { GuidesGrid } from "@/components/GuidesGrid";
 import { GuideFilters } from "@/components/GuideFilters";
 import { guides } from "@/data/guides";
-import {
-  computeGuideListProfitRanges,
-  fetchAllGuidesMarketDataByCity,
-} from "@/lib/guide-economics";
+import { getCachedAllGuidesMarketData } from "@/lib/cached-market-data";
+import { computeGuideListProfitRanges } from "@/lib/guide-economics";
 import {
   buildGuidesFilterUrl,
   hasInvalidFilterParams,
@@ -73,7 +71,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
   const { category, difficulty, zone, sort } = parseGuideFilters(params);
   const hasFilters = hasActiveListFilters(params);
   const categoryLanding = isGuidesCategoryLandingPage(params);
-  const marketData = await fetchAllGuidesMarketDataByCity();
+  const marketData = await getCachedAllGuidesMarketData();
 
   const filtered = guides.filter((g) => {
     if (category && g.category !== category) return false;

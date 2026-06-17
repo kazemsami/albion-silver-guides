@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Cinzel, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MarketCityProvider } from "@/components/MarketCityProvider";
 import { FeedbackProvider } from "@/components/FeedbackDialog";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import { ThemeScript } from "@/components/ThemeScript";
 import {
   siteDescription,
@@ -96,6 +98,9 @@ export default function RootLayout({
         </a>
         <MarketCityProvider>
           <FeedbackProvider>
+            <Suspense fallback={null}>
+              <NavigationProgress />
+            </Suspense>
             <Header />
             <main id="main-content" className="relative z-10 flex-1">
               {children}

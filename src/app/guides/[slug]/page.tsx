@@ -8,10 +8,10 @@ import {
   difficultyLabels,
 } from "@/types/guide";
 import {
-  fetchAllGuidesMarketDataByCity,
-  fetchGuidePricing,
-  computeGuideListProfitRanges,
-} from "@/lib/guide-economics";
+  getCachedGuidePricing,
+  getCachedGuidesMarketDataForSlugs,
+} from "@/lib/cached-market-data";
+import { computeGuideListProfitRanges } from "@/lib/guide-economics";
 import { GuideCalculatorOutcomes } from "@/components/GuideCalculatorOutcomes";
 import { GuideEvidencePanel } from "@/components/GuideEvidencePanel";
 import { GuideRiskBadge } from "@/components/GuideRiskBadge";
@@ -61,6 +61,8 @@ const difficultyColors = {
   advanced: "text-rose-400 border-rose-400/30 bg-rose-400/10",
 };
 
+export const revalidate = 3600;
+
 export default async function GuidePage({ params }: GuidePageProps) {
   const { slug } = await params;
   const guide = getGuideBySlug(slug);
@@ -68,15 +70,22 @@ export default async function GuidePage({ params }: GuidePageProps) {
   if (!guide) notFound();
 
   const economicsConfig = getGuideEconomics(slug);
-  const [marketPricing, marketData] = await Promise.all([
-    fetchGuidePricing(slug, economicsConfig),
-    fetchAllGuidesMarketDataByCity(),
-  ]);
 
   const related = guides
     .filter((g) => g.category === guide.category && g.slug !== guide.slug)
     .slice(0, 2);
-  const relatedProfitRanges = computeGuideListProfitRanges(marketData, related);
+  const relatedSlugs = related.map((g) => g.slug);
+
+  const [marketPricing, relatedMarketData] = await Promise.all([
+    getCachedGuidePricing(slug),
+    relatedSlugs.length > 0
+      ? getCachedGuidesMarketDataForSlugs(relatedSlugs)
+      : Promise.resolve(null),
+  ]);
+
+  const relatedProfitRanges = relatedMarketData
+    ? computeGuideListProfitRanges(relatedMarketData, related)
+    : {};
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
@@ -292,10 +301,10 @@ export default async function GuidePage({ params }: GuidePageProps) {
         </section>
       )}
 
-      {related.length > 0 && (
+      {related.length > 0 && relatedMarketData && (
         <RelatedGuides
           guides={related}
-          marketData={marketData}
+          marketData={relatedMarketData}
           serverProfitRanges={relatedProfitRanges}
         />
       )}

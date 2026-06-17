@@ -486,23 +486,13 @@ export function computeGuideListProfitRanges(
   return result;
 }
 
-/** Profit ranges per market city for list pages and the city selector. */
-export async function fetchAllGuidesProfitRangesByCity(): Promise<
-  GuideProfitRangesByCity
-> {
-  const data = await fetchAllGuidesMarketDataByCity();
-  return data.estimated.ranges.premium;
-}
-
-export async function fetchAllGuidesMarketDataByCity(options?: {
-  /** When false, skip live Albion API fetches (faster for tests and snapshot scripts). */
-  includeLivePrices?: boolean;
-}): Promise<GuidesListMarketData> {
-  const slugs = Object.keys(guideEconomicsBySlug);
+function collectMarketItemIdsForSlugs(slugs: string[]): string[] {
   const allItemIds = new Set<string>();
 
   for (const slug of slugs) {
     const economics = guideEconomicsBySlug[slug];
+    if (!economics) continue;
+
     const tierLoadouts = getAllTierLoadouts(
       slug,
       economics.skillTiers.map((t) => t.id),
@@ -517,7 +507,14 @@ export async function fetchAllGuidesMarketDataByCity(options?: {
     }
   }
 
-  const itemIdList = [...allItemIds];
+  return [...allItemIds];
+}
+
+async function buildGuidesMarketDataForSlugs(
+  slugs: string[],
+  options?: { includeLivePrices?: boolean },
+): Promise<GuidesListMarketData> {
+  const itemIdList = collectMarketItemIdsForSlugs(slugs);
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIdList);
   const includeLivePrices = options?.includeLivePrices ?? true;
   const livePriceMapsByServer = includeLivePrices
@@ -536,6 +533,30 @@ export async function fetchAllGuidesMarketDataByCity(options?: {
       ]),
     ) as Record<AlbionPriceServerId, GuidesListMarketSlice>,
   };
+}
+
+/** Profit ranges per market city for list pages and the city selector. */
+export async function fetchAllGuidesProfitRangesByCity(): Promise<
+  GuideProfitRangesByCity
+> {
+  const data = await fetchAllGuidesMarketDataByCity();
+  return data.estimated.ranges.premium;
+}
+
+export async function fetchAllGuidesMarketDataByCity(options?: {
+  /** When false, skip live Albion API fetches (faster for tests and snapshot scripts). */
+  includeLivePrices?: boolean;
+}): Promise<GuidesListMarketData> {
+  const slugs = Object.keys(guideEconomicsBySlug);
+  return buildGuidesMarketDataForSlugs(slugs, options);
+}
+
+/** Lighter market slice for a subset of guides (e.g. related cards on a detail page). */
+export async function fetchGuidesMarketDataForSlugs(
+  slugs: string[],
+  options?: { includeLivePrices?: boolean },
+): Promise<GuidesListMarketData> {
+  return buildGuidesMarketDataForSlugs(slugs, options);
 }
 
 const CONSUMABLE_IDS = new Set([

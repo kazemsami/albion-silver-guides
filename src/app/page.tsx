@@ -7,10 +7,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { getFeaturedGuides } from "@/data/guides";
 import type { GuideCategory } from "@/types/guide";
 import { guides } from "@/data/guides";
-import {
-  computeGuideListProfitRanges,
-  fetchAllGuidesMarketDataByCity,
-} from "@/lib/guide-economics";
+import { getCachedAllGuidesMarketData } from "@/lib/cached-market-data";
+import { computeGuideListProfitRanges } from "@/lib/guide-economics";
 import { createPageMetadata } from "@/lib/site";
 import { websiteJsonLd } from "@/lib/structured-data";
 
@@ -33,7 +31,7 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const featured = getFeaturedGuides();
-  const marketData = await fetchAllGuidesMarketDataByCity();
+  const marketData = await getCachedAllGuidesMarketData();
   const siteProfitRanges = computeGuideListProfitRanges(marketData, guides);
   const featuredProfitRanges = computeGuideListProfitRanges(marketData, featured);
 

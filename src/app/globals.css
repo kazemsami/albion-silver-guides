@@ -495,3 +495,41 @@ body::before {
 .giscus iframe {
   width: 100%;
 }
+
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 200;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+.navigation-progress-bar {
+  height: 100%;
+  width: 35%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold),
+    color-mix(in srgb, var(--gold) 70%, white)
+  );
+  animation: navigation-progress-slide 1.1s ease-in-out infinite;
+}
+
+html[data-navigating] {
+  cursor: progress;
+}
+
+@keyframes navigation-progress-slide {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(320%);
+  }
+}
