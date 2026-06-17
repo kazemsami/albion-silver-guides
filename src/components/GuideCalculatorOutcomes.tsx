@@ -22,11 +22,13 @@ export function GuideCalculatorOutcomes({
   defaultMarketCity,
   guidePrices,
   gatherYieldBaseline = "premium",
+  routeLogged = false,
 }: {
   guideSlug: string;
   defaultMarketCity?: MarketCityId;
   guidePrices: GuideMarketPrices;
   gatherYieldBaseline?: GatherYieldBaseline;
+  routeLogged?: boolean;
 }) {
   const { priceMap, mapKind } = useGuidePriceMap(guidePrices, defaultMarketCity);
   const { premiumSeller } = useMarketCity();
@@ -65,7 +67,10 @@ export function GuideCalculatorOutcomes({
 
   return (
     <>
-      <GuideMarketNote defaultMarketCity={defaultMarketCity} />
+      <GuideMarketNote
+        defaultMarketCity={defaultMarketCity}
+        routeLogged={routeLogged}
+      />
       <div className="wiki-note theme-surface mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
           {usesLoggedStandardBaseline

@@ -48,12 +48,12 @@
     "rangeMax": 1214667
   },
   "ava-roads-fishing": {
-    "conservative": 871375,
-    "median": 1090795,
-    "expected": 1090795,
-    "highRoll": 1530974,
-    "rangeMin": 871375,
-    "rangeMax": 1530974
+    "conservative": 882575,
+    "median": 982288,
+    "expected": 982288,
+    "highRoll": 1851454,
+    "rangeMin": 882575,
+    "rangeMax": 1851454
   },
   "laborer-passive-income": {
     "conservative": 7071,

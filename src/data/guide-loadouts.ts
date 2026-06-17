@@ -620,7 +620,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     t6: {
       title: "T6 Bulk Alchemy",
       description:
-        "Daily stock for Major Healing .1 (3,461 focus), Major Energy .1 (4,188 focus), and Poison (1,635 focus). Pick the best profit per 10k focus in the calculator.",
+        "Daily stock for Major Healing .1, Major Energy .1, and Poison. Focus per batch varies with spec; check the calculator.",
       slots: {},
       inventory: [
         { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 Major Healing or Energy" },
@@ -635,7 +635,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     t7: {
       title: "T7 War Potions",
       description:
-        "Before ZvZ: Gigantify .1 (5,278 focus), Resistance .1 (6,368 focus), and Sticky (5,503 focus). Each batch is 5 pots.",
+        "Before ZvZ: Gigantify .1, Resistance .1, and Sticky. Each batch is 5 pots; focus cost depends on your spec (see calculator).",
       slots: {},
       inventory: [
         { id: "T6_FOXGLOVE", name: "Elusive Foxglove", quantity: 72, hint: "Per 5 T6 majors; 36 for war pots" },

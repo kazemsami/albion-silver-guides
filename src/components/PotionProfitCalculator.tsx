@@ -11,6 +11,7 @@ import {
   DEFAULT_POTION_DEFAULTS,
   DEFAULT_POTION_EXTRACT_LEVEL,
   MAJOR_HEALING_CRAFT_SILVER,
+  POTION_FOCUS_COST_NOTE,
   POTION_EXTRACT_META,
   POTION_EXTRACT_LEVELS,
   POTION_EXTRACT_PER_BATCH,
@@ -199,6 +200,7 @@ export function PotionProfitCalculator({
             {recipe.craftSilverCost != null && recipe.craftSilverCost > 0
               ? `, ${formatSilverExact(recipe.craftSilverCost)} lab silver`
               : ""}
+            . {POTION_FOCUS_COST_NOTE}
           </p>
         </div>
 

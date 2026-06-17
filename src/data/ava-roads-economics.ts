@@ -21,10 +21,9 @@ export interface AvaLoggedCatchLine {
   quantityPerHour: number;
 }
 
-/** Logged Safe escape 30-min session (2026-06-14, no Premium). Counts include T7 fisherman cap (+12.5% on non-Sturgeon). */
+/** Logged Safe escape 30-min session (2026-06-14, no Premium). Counts include T7 fisherman cap (+12.5% on non-Sturgeon). Puremist Snapper is modeled separately (RNG line). */
 export const AVA_SAFE_LOGGED_CATCH_PER_30MIN: AvaLoggedCatchLine[] = [
   { id: "T8_FISH_FRESHWATER_ALL_COMMON", name: "River Sturgeon", quantityPerHour: 8 },
-  { id: "T7_FISH_FRESHWATER_AVALON_RARE", name: "Puremist Snapper", quantityPerHour: 2 },
   { id: "T7_FISH_FRESHWATER_ALL_COMMON", name: "Danglemouth Catfish", quantityPerHour: 25 },
   { id: "T6_FISH_FRESHWATER_ALL_COMMON", name: "Brightscale Zander", quantityPerHour: 18 },
   { id: "T5_FISH_FRESHWATER_AVALON_RARE", name: "Clearhaze Snapper", quantityPerHour: 2 },
@@ -32,15 +31,36 @@ export const AVA_SAFE_LOGGED_CATCH_PER_30MIN: AvaLoggedCatchLine[] = [
   { id: "T1_SEAWEED", name: "Seaweed", quantityPerHour: 56 },
 ];
 
-/** Same catch mix extrapolated to 1 hr (×2). Snapper is included here, not a separate RNG line. */
+/** Puremist Snapper fish from the same logged 30-min session (separate RNG line in calculator). */
+export const AVA_SAFE_LOGGED_SNAPPER_FISH_PER_30MIN = 2;
+
+/** Logged session: 2 Snapper fish in 30 min → 4 fish/hr → 1 school catch/hr at 4 fish per catch. */
+export const AVA_SAFE_LOGGED_SNAPPER_CATCHES_PER_HOUR =
+  (AVA_SAFE_LOGGED_SNAPPER_FISH_PER_30MIN / PUREMIST_SNAPPER_PER_CATCH) * 2;
+
+/** River Sturgeon is excluded from fisherman garb and workboots yield bonuses. */
+export const AVA_STURGEON_ITEM_ID = "T8_FISH_FRESHWATER_ALL_COMMON";
+
+/** Seaweed is not affected by fisherman gear yield bonuses. */
+export const AVA_SEAWEED_ITEM_ID = "T1_SEAWEED";
+
+function sumAvaLoggedFish(catchLines: AvaLoggedCatchLine[]): number {
+  return catchLines
+    .filter((item) => item.id !== AVA_SEAWEED_ITEM_ID)
+    .reduce((sum, item) => sum + item.quantityPerHour, 0);
+}
+
+/** Same school-fish mix extrapolated to 1 hr (×2). Snapper excluded; see snapper constants above. */
 export const AVA_SAFE_LOGGED_CATCH_PER_HOUR: AvaLoggedCatchLine[] =
   AVA_SAFE_LOGGED_CATCH_PER_30MIN.map((item) => ({
     ...item,
     quantityPerHour: item.quantityPerHour * 2,
   }));
 
-/** Fish only (excludes seaweed), logged hourly baseline before uptime/Premium scaling. */
-export const AVA_SAFE_LOGGED_FISH_PER_HOUR = 146;
+/** Fish only (excludes seaweed and Puremist Snapper), logged hourly baseline before uptime/Premium scaling. */
+export const AVA_SAFE_LOGGED_FISH_PER_HOUR = sumAvaLoggedFish(
+  AVA_SAFE_LOGGED_CATCH_PER_HOUR,
+);
 
 /** Grandmaster journal fill from the same logged 30-min session. */
 export const AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN = 5600 / 6640;
@@ -48,12 +68,6 @@ export const AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN = 5600 / 6640;
 /** Extrapolated to 1 hr at the same fill pace (×2). */
 export const AVA_SAFE_LOGGED_JOURNAL_FILL_PER_HOUR =
   AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN * 2;
-
-/** River Sturgeon is excluded from fisherman garb and workboots yield bonuses. */
-export const AVA_STURGEON_ITEM_ID = "T8_FISH_FRESHWATER_ALL_COMMON";
-
-/** Seaweed is not affected by fisherman gear yield bonuses. */
-export const AVA_SEAWEED_ITEM_ID = "T1_SEAWEED";
 
 /** T7 cap on Safe escape logged run: +12.5% on all fish except River Sturgeon (already in baseline). */
 export const AVA_T7_FISHERMAN_CAP_YIELD = 1.125;
@@ -149,19 +163,13 @@ export const AVA_GREEDY_SKILL_SPEC_YIELD =
   (AVA_GREEDY_FISHING_LEVEL - AVA_LOGGED_FISHING_LEVEL) *
     AVA_FISHING_SKILL_YIELD_PER_LEVEL;
 
-function sumAvaLoggedFish(catchLines: AvaLoggedCatchLine[]): number {
-  return catchLines
-    .filter((item) => item.id !== AVA_SEAWEED_ITEM_ID)
-    .reduce((sum, item) => sum + item.quantityPerHour, 0);
-}
-
 /** Safe escape logged mix with T7 garb (+30%) and workboots (+12.5%) on non-Sturgeon fish. */
 export const AVA_NORMAL_LOGGED_CATCH_PER_30MIN = applyAvaBycatchGearYield(
   AVA_SAFE_LOGGED_CATCH_PER_30MIN,
   AVA_NORMAL_BYCATCH_GEAR_YIELD,
 );
 
-/** Same mix extrapolated to 1 hr (×2). Snapper is included here, not a separate RNG line. */
+/** Same mix extrapolated to 1 hr (×2). School fish only; Puremist Snapper is a separate RNG line. */
 export const AVA_NORMAL_LOGGED_CATCH_PER_HOUR: AvaLoggedCatchLine[] =
   AVA_NORMAL_LOGGED_CATCH_PER_30MIN.map((item) => ({
     ...item,

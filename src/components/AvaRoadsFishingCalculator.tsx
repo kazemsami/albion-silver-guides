@@ -214,32 +214,29 @@ export function AvaRoadsFishingCalculator({
           {presetId === "safe" || presetId === "normal" || presetId === "greedy" ? (
             <p className="mt-2 text-sm text-parchment/55">
               {presetId === "safe"
-                ? "Safe escape uses your logged catch mix (T7 cap +12.5% on non-Sturgeon already in counts). Puremist Snapper is in the fish table and scales with Premium yield like the other species."
+                ? "Safe escape school fish use your logged 30-min mix (×2/hr). Puremist Snapper is modeled separately (~1 catch/hr from that session, not in the school table)."
                 : presetId === "normal"
-                  ? "Normal adds T7 garb (+30%) and workboots (+12.5%) on non-Sturgeon fish. Puremist Snapper is in the fish table, not a separate RNG line."
-                  : "Greedy uses full T8 fisherman set and max fishing 100 + spec 100 (+26.75% fish vs your logged run at fishing 78). Journal stays at fixed 0.84 fill. Puremist Snapper is in the fish table."}
+                  ? "Normal scales school fish with T7 garb (+30%) and workboots (+12.5%) on non-Sturgeon species. Puremist Snapper stays on the separate RNG line below."
+                  : "Greedy scales school fish with full T8 gear and max fishing/spec. Journal stays at fixed 0.84 fill. Puremist Snapper stays on the separate RNG line below."}
             </p>
-          ) : (
-            <>
-              <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
-                {(Object.keys(AVA_ROADS_SNAPPER_META) as AvaRoadsSnapperViewId[]).map(
-                  (id) => (
-                    <FilterChip
-                      key={id}
-                      label={AVA_ROADS_SNAPPER_META[id].label}
-                      selected={snapperViewId === id}
-                      onSelect={() => setSnapperViewId(id)}
-                    />
-                  ),
-                )}
-              </div>
-              <p className="mt-2 text-sm text-parchment/55">{result.snapperNote}</p>
-              {result.snapperRngValue != null && (
-                <p className="mt-1 text-xs text-parchment/45">
-                  Snapper line this hour: {formatSilverExact(result.snapperRngValue)} silver
-                </p>
-              )}
-            </>
+          ) : null}
+          <div className="mt-2 flex flex-wrap gap-2" role="radiogroup">
+            {(Object.keys(AVA_ROADS_SNAPPER_META) as AvaRoadsSnapperViewId[]).map(
+              (id) => (
+                <FilterChip
+                  key={id}
+                  label={AVA_ROADS_SNAPPER_META[id].label}
+                  selected={snapperViewId === id}
+                  onSelect={() => setSnapperViewId(id)}
+                />
+              ),
+            )}
+          </div>
+          <p className="mt-2 text-sm text-parchment/55">{result.snapperNote}</p>
+          {result.snapperRngValue != null && (
+            <p className="mt-1 text-xs text-parchment/45">
+              Snapper line this hour: {formatSilverExact(result.snapperRngValue)} silver
+            </p>
           )}
         </div>
       </div>

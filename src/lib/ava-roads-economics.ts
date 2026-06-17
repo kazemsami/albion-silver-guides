@@ -9,6 +9,7 @@ import {
   AVA_SAFE_LOGGED_CATCH_PER_HOUR,
   AVA_SAFE_LOGGED_FISH_PER_HOUR,
   AVA_SAFE_LOGGED_JOURNAL_FILL_PER_30MIN,
+  AVA_SAFE_LOGGED_SNAPPER_CATCHES_PER_HOUR,
   getAvaRoadsPreset,
   PUREMIST_SNAPPER_PER_CATCH,
   type AvaLoggedCatchLine,
@@ -234,27 +235,28 @@ export function computeAvaRoadsEconomics(
         mapKind,
       );
 
+  const snapperBasePerHour = usesLoggedSpeciesMix
+    ? AVA_SAFE_LOGGED_SNAPPER_CATCHES_PER_HOUR
+    : preset.snapperExpectedPerHour * uptimeFactor;
   const snapperCatches =
-    (inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
-      ? preset.snapperLuckyCount
-      : preset.snapperExpectedPerHour * uptimeFactor) * gatheringYieldMultiplier;
+    (snapperBasePerHour +
+      (inputs.snapperViewId === "lucky" ? preset.snapperLuckyCount : 0)) *
+    gatheringYieldMultiplier;
   const snapperQty = snapperCatches * PUREMIST_SNAPPER_PER_CATCH;
 
   const snapperLine =
-    usesLoggedSpeciesMix
-      ? null
-      : snapperQty > 0
-        ? priceLine(
-            prices,
-            "T7_FISH_FRESHWATER_AVALON_RARE",
-            inputs.snapperViewId === "lucky"
-              ? `Puremist Snapper (${snapperCatches} lucky catch${snapperCatches === 1 ? "" : "es"} × ${PUREMIST_SNAPPER_PER_CATCH})`
-              : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
-            snapperQty,
-            "sell",
-            mapKind,
-          )
-        : null;
+    snapperQty > 0
+      ? priceLine(
+          prices,
+          "T7_FISH_FRESHWATER_AVALON_RARE",
+          inputs.snapperViewId === "lucky" && preset.snapperLuckyCount > 0
+            ? `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr incl. lucky bonus × ${PUREMIST_SNAPPER_PER_CATCH})`
+            : `Puremist Snapper (${snapperCatches.toFixed(2)} catches/hr × ${PUREMIST_SNAPPER_PER_CATCH})`,
+          snapperQty,
+          "sell",
+          mapKind,
+        )
+      : null;
 
   const journalEmpty = priceLine(
     prices,

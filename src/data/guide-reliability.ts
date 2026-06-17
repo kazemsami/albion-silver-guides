@@ -141,7 +141,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
       market:
         "Average buy/sell prices logged in Bridgewatch and saved as calculator defaults (see guide tips for the full table)",
       notes:
-        "Recipes and material counts checked against game data. Focus per batch read from craft UI. Saved Bridgewatch prices used for income modeling. Focus per batch (5 pots): T6 Major Healing .1 = 3,461, .2 = 4,895 (+ 2,500 silver lab fee each), Major Energy .1 = 4,188, .2 = 5,923, Poison 1,635; T7 Major Gigantify .1 = 5,278, .2 = 7,009, Major Resistance .1 = 6,368, .2 = 8,103, Major Sticky 5,503.",
+        "Recipes and material counts checked against game data. Focus per batch read from craft UI at tested alchemy/potions spec (costs vary with spec and focus efficiency). Saved Bridgewatch prices used for income modeling. Example focus per batch of 5 pots at tested spec: T6 Major Healing .1 = 3,461, .2 = 4,895 (+ 2,500 silver lab fee each), Major Energy .1 = 4,188, .2 = 5,923, Poison 1,635; T7 Major Gigantify .1 = 5,278, .2 = 7,009, Major Resistance .1 = 6,368, .2 = 8,103, Major Sticky 5,503.",
     },
   },
 };

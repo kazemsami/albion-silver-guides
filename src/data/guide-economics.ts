@@ -396,7 +396,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       {
         ...SKILL_TIERS.fishing30_60,
         description:
-          "Hunt Epic+ nested mists for T7 zones. Scaled below the logged T7 gear session; slow Snapper odds.",
+          "Hunt Epic and Legendary nested mists for dependable T7 zones. Scaled below the logged T7 gear session; slow Snapper odds.",
         hourlyOutput: [
           {
             id: "T1_FISHCHOPS",
@@ -525,7 +525,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         ),
         hourlyInputs: avaRoadsDeathInputs(0.1, true, "T7_2H_TOOL_FISHINGROD"),
         description:
-          "T7 fisherman garb (+30%) and workboots (+12.5%) on logged Safe escape mix (Sturgeon unchanged; T7 cap already in baseline). Snapper in fish table, not a separate RNG line.",
+          "T7 fisherman garb (+30%) and workboots (+12.5%) on logged Safe escape school-fish mix (Sturgeon unchanged; T7 cap already in baseline). Puremist Snapper stays on the separate RNG line.",
       },
       {
         ...SKILL_TIERS.avaProfit,
@@ -549,7 +549,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
         ),
         hourlyInputs: avaRoadsDeathInputs(0.18, true, "T8_2H_TOOL_FISHINGROD"),
         description:
-          "Full T8 fisherman set plus max fishing 100 and spec 100 (+26.75% fish vs logged fishing 78). Journal fixed at 0.84. Snapper in fish table.",
+          "Full T8 fisherman set plus max fishing 100 and spec 100 (+26.75% fish vs logged fishing 78). Journal fixed at 0.84. Puremist Snapper on separate RNG line.",
       },
     ),
     defaultSkillTierId: "safe",

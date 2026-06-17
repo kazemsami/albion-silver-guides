@@ -6,8 +6,11 @@ import type { MarketCityId } from "@/lib/market-cities";
 
 export function GuideMarketNote({
   defaultMarketCity,
+  routeLogged = false,
 }: {
   defaultMarketCity?: MarketCityId;
+  /** True when the guide has attached test-log evidence (not just a default city). */
+  routeLogged?: boolean;
 }) {
   const { marketCity, setMarketCity } = useMarketCity();
   const effectiveCity = useEffectiveMarketCity(defaultMarketCity);
@@ -23,16 +26,33 @@ export function GuideMarketNote({
 
   return (
     <p className="mt-2 text-xs text-parchment/45">
-      Average uses the median price across all six royal cities. This route
-      was logged in{" "}
-      <button
-        type="button"
-        onClick={() => setMarketCity(defaultMarketCity)}
-        className="text-gold/90 underline decoration-gold/30 underline-offset-2 hover:text-gold"
-      >
-        {getMarketCityLabel(defaultMarketCity)}
-      </button>
-      . Pick that city in the header for route-specific live prices.
+      Average uses the median price across all six royal cities.{" "}
+      {routeLogged ? (
+        <>
+          This route was logged in{" "}
+          <button
+            type="button"
+            onClick={() => setMarketCity(defaultMarketCity)}
+            className="text-gold/90 underline decoration-gold/30 underline-offset-2 hover:text-gold"
+          >
+            {getMarketCityLabel(defaultMarketCity)}
+          </button>
+          .
+        </>
+      ) : (
+        <>
+          Calculator defaults use{" "}
+          <button
+            type="button"
+            onClick={() => setMarketCity(defaultMarketCity)}
+            className="text-gold/90 underline decoration-gold/30 underline-offset-2 hover:text-gold"
+          >
+            {getMarketCityLabel(defaultMarketCity)}
+          </button>{" "}
+          snapshot prices.
+        </>
+      )}{" "}
+      Pick that city in the header for route-specific live prices.
     </p>
   );
 }

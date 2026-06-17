@@ -113,6 +113,10 @@ export interface PotionEconomicsDefaults {
 
 export const MAJOR_HEALING_CRAFT_SILVER = 2_500;
 
+/** Focus costs in recipes were read from the craft UI at tested alchemy/potions spec; they drop as spec and focus efficiency rise. */
+export const POTION_FOCUS_COST_NOTE =
+  "Focus per batch depends on alchemy level, potions spec, and focus efficiency. Calculator values match craft UI at tested spec.";
+
 export const POTION_RECIPES: PotionRecipe[] = [
   {
     id: "heal",

@@ -162,6 +162,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
             defaultMarketCity={guide.defaultMarketCity}
             guidePrices={marketPricing.guidePrices}
             gatherYieldBaseline={economicsConfig.gatherYieldBaseline}
+            routeLogged={!!guide.reliability.evidence}
           />
           {slug === "high-tier-group-tracking" ? (
           <TrackingProfitCalculator
