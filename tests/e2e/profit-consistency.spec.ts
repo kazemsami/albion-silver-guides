@@ -177,8 +177,9 @@ test.describe("Potion Crafting profit consistency", () => {
     // We check that if "event" appears, it is associated with a distinct heading/label.
     const hasEventProfit = /event.*profit|profit.*event/i.test(text);
     if (hasEventProfit) {
-      // It must be clearly labeled as an event scenario, not the default
-      const isLabeled = /event\s*(scenario|holding|bonus|only)/i.test(text);
+      const isLabeled =
+        /event\s*(scenario|holding|bonus|only)/i.test(text) ||
+        /hold for events/i.test(text);
       expect(
         isLabeled,
         "Event-based profit must be clearly labeled as an event scenario, not mixed with baseline",

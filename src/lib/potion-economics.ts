@@ -2,6 +2,7 @@ import {
   DEFAULT_POTION_DEFAULTS,
   DEFAULT_POTION_EXTRACT_LEVEL,
   getPotionRecipe,
+  POTION_RECIPE_GROUPS,
   POTION_SELL_THROUGH_META,
   resolvePotionBatch,
   type PotionEconomicsDefaults,
@@ -13,7 +14,7 @@ import {
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
-import type { PricedLine } from "@/types/guide";
+import type { GuideProfitOutcomes, PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
 export type PotionFocusMode = "with-focus" | "without-focus";
@@ -155,6 +156,11 @@ function computeBatch(
   );
   const grossOutput = outputLine.lineTotal;
 
+  const hasCompletePricing =
+    grossOutput != null &&
+    materialCost != null &&
+    materialLines.every((line) => line.unitPrice != null);
+
   const craftSilverCost = recipe.craftSilverCost ?? 0;
   const stationFeePerBatch = defaults.stationFeePerBatch;
 
@@ -164,7 +170,7 @@ function computeBatch(
       : null;
 
   const netBeforeFocus =
-    grossOutput != null
+    hasCompletePricing
       ? roundSilver(
           grossOutput -
             (netMaterialCost ?? 0) -
@@ -283,38 +289,89 @@ export function computePotionEconomics(
 
 export type PotionProfitRange = { min: number; max: number };
 
-/** Per 10k focus range for guide cards (Major Healing with focus). */
-export function computePotionProfitRange(
+function getPotionGuideCardRecipeIds(): PotionRecipeId[] {
+  return (
+    POTION_RECIPE_GROUPS.find((group) => group.tier === "T6")?.recipeIds ?? []
+  );
+}
+
+function potionProfitPer10k(
+  prices: PriceMap,
+  recipeId: PotionRecipeId,
+  sellThroughId: PotionSellThroughId,
+  listingTaxRate: number,
+  priceMapKind: PriceMapKind = "snapshot",
+): number | null {
+  return computePotionEconomics(
+    prices,
+    {
+      recipeId,
+      tierId: "t6",
+      sellThroughId,
+      focusMode: "with-focus",
+      extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
+      defaults: DEFAULT_POTION_DEFAULTS,
+      priceMapKind,
+    },
+    listingTaxRate,
+  ).profitPerTenThousandFocus;
+}
+
+/** Guide card + outcomes table: worst T6 recipe (normal) through best event hold. */
+export function computePotionGuideProfitOutcomes(
   prices: PriceMap,
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
-): PotionProfitRange {
-  const conservative = computePotionEconomics(
+  priceMapKind: PriceMapKind = "snapshot",
+): GuideProfitOutcomes {
+  const recipeIds = getPotionGuideCardRecipeIds();
+  const normalProfits = recipeIds.map((recipeId) =>
+    potionProfitPer10k(prices, recipeId, "normal", listingTaxRate, priceMapKind),
+  ).filter((value): value is number => value != null);
+
+  const eventProfits = recipeIds.map((recipeId) =>
+    potionProfitPer10k(prices, recipeId, "event", listingTaxRate, priceMapKind),
+  ).filter((value): value is number => value != null);
+
+  const defaultProfit = potionProfitPer10k(
     prices,
-    {
-      recipeId: "heal",
-      tierId: "t6",
-      sellThroughId: "normal",
-      focusMode: "with-focus",
-      extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
-      defaults: DEFAULT_POTION_DEFAULTS,
-    },
+    "heal",
+    "normal",
     listingTaxRate,
-  );
-  const eventHold = computePotionEconomics(
-    prices,
-    {
-      recipeId: "heal",
-      tierId: "t6",
-      sellThroughId: "event",
-      focusMode: "with-focus",
-      extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
-      defaults: DEFAULT_POTION_DEFAULTS,
-    },
-    listingTaxRate,
+    priceMapKind,
   );
 
   return {
-    min: conservative.profitPerTenThousandFocus ?? 0,
-    max: eventHold.profitPerTenThousandFocus ?? 150_000,
+    conservative:
+      normalProfits.length > 0 ? roundSilver(Math.min(...normalProfits)) : null,
+    median: defaultProfit != null ? roundSilver(defaultProfit) : null,
+    expected: defaultProfit != null ? roundSilver(defaultProfit) : null,
+    highRoll:
+      eventProfits.length > 0 ? roundSilver(Math.max(...eventProfits)) : null,
+  };
+}
+
+export const POTION_PROFIT_OUTCOME_HINTS: Partial<
+  Record<keyof GuideProfitOutcomes, string>
+> = {
+  conservative: "Worst T6 bulk recipe, sell normally (with focus)",
+  median: "Major Healing .1, sell normally (default recipe)",
+  expected: "Major Healing .1, sell normally",
+  highRoll: "Best T6 bulk recipe, hold for events (+20% sell uplift)",
+};
+
+/** Per 10k focus range for guide cards. */
+export function computePotionProfitRange(
+  prices: PriceMap,
+  listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
+  priceMapKind: PriceMapKind = "snapshot",
+): PotionProfitRange {
+  const outcomes = computePotionGuideProfitOutcomes(
+    prices,
+    listingTaxRate,
+    priceMapKind,
+  );
+  return {
+    min: outcomes.conservative ?? outcomes.median ?? 0,
+    max: outcomes.highRoll ?? outcomes.expected ?? 150_000,
   };
 }

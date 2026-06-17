@@ -9,6 +9,7 @@ import { GuideMarketNote } from "@/components/GuideMarketNote";
 import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
 import { ABYSSAL_PROFIT_OUTCOME_HINTS } from "@/lib/abyssal-economics";
+import { POTION_PROFIT_OUTCOME_HINTS } from "@/lib/potion-economics";
 import {
   getListingTaxRate,
 } from "@/lib/listing-tax";
@@ -55,6 +56,12 @@ export function GuideCalculatorOutcomes({
   const outcomesUnit =
     guideSlug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
   const isAbyssal = guideSlug === "abyssal-depths-farming";
+  const isPotions = guideSlug === "potions-crafting-bulk";
+  const outcomeHints = isAbyssal
+    ? ABYSSAL_PROFIT_OUTCOME_HINTS
+    : isPotions
+      ? POTION_PROFIT_OUTCOME_HINTS
+      : undefined;
 
   return (
     <>
@@ -83,7 +90,7 @@ export function GuideCalculatorOutcomes({
           <ProfitOutcomesTable
             outcomes={outcomes}
             unitLabel={outcomesUnit}
-            outcomeHints={isAbyssal ? ABYSSAL_PROFIT_OUTCOME_HINTS : undefined}
+            outcomeHints={outcomeHints}
           />
         </div>
         {isAbyssal && (

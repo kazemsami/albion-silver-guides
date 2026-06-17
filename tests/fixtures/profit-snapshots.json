@@ -64,11 +64,11 @@
     "rangeMax": 22669
   },
   "potions-crafting-bulk": {
-    "conservative": 93938,
+    "conservative": 58930,
     "median": 93938,
     "expected": 93938,
     "highRoll": 209512,
-    "rangeMin": 93938,
+    "rangeMin": 58930,
     "rangeMax": 209512
   }
 }

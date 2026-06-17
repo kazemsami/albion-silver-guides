@@ -8,7 +8,6 @@ import {
   DEFAULT_TRACKING_RISK,
   TRACKING_TIER_CONFIGS,
 } from "@/data/tracking-economics";
-import { DEFAULT_POTION_DEFAULTS, DEFAULT_POTION_EXTRACT_LEVEL } from "@/data/potion-economics";
 import type { GuideEconomics, GuideProfitOutcomes } from "@/types/guide";
 import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
 import {
@@ -18,7 +17,7 @@ import {
 import { computeTrackingEconomics } from "@/lib/tracking-economics";
 import { computeAvaRoadsEconomics } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitOutcomes } from "@/lib/abyssal-economics";
-import { computePotionEconomics } from "@/lib/potion-economics";
+import { computePotionGuideProfitOutcomes } from "@/lib/potion-economics";
 import {
   getGatheringYieldMultiplier,
   PREMIUM_LISTING_TAX_RATE,
@@ -219,53 +218,11 @@ export function computeGuideProfitOutcomes(
   }
 
   if (slug === "potions-crafting-bulk") {
-    const conservative = computePotionEconomics(
+    return computePotionGuideProfitOutcomes(
       prices,
-      {
-        recipeId: "heal",
-        tierId: "t6",
-        sellThroughId: "normal",
-        focusMode: "with-focus",
-        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
-        defaults: DEFAULT_POTION_DEFAULTS,
-        priceMapKind,
-      },
       listingTaxRate,
-    ).profitPerTenThousandFocus;
-    const median = computePotionEconomics(
-      prices,
-      {
-        recipeId: "heal",
-        tierId: "t6",
-        sellThroughId: "normal",
-        focusMode: "with-focus",
-        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
-        defaults: DEFAULT_POTION_DEFAULTS,
-        priceMapKind,
-      },
-      listingTaxRate,
-    ).profitPerTenThousandFocus;
-    const expected = median;
-    const highRoll = computePotionEconomics(
-      prices,
-      {
-        recipeId: "heal",
-        tierId: "t6",
-        sellThroughId: "event",
-        focusMode: "with-focus",
-        extractLevel: DEFAULT_POTION_EXTRACT_LEVEL,
-        defaults: DEFAULT_POTION_DEFAULTS,
-        priceMapKind,
-      },
-      listingTaxRate,
-    ).profitPerTenThousandFocus;
-
-    return {
-      conservative: conservative ?? null,
-      median: median ?? null,
-      expected: expected ?? null,
-      highRoll: highRoll ?? null,
-    };
+      priceMapKind,
+    );
   }
 
   const economics = guideEconomicsBySlug[slug];

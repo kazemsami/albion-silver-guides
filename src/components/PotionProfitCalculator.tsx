@@ -115,8 +115,8 @@ export function PotionProfitCalculator({
   );
 
   const profitRange = useMemo(
-    () => computePotionProfitRange(priceMap),
-    [priceMap],
+    () => computePotionProfitRange(priceMap, listingTaxRate, mapKind),
+    [priceMap, listingTaxRate, mapKind],
   );
 
   const formattedAt = new Date(pricedAt).toLocaleString("en-US", {
@@ -275,9 +275,8 @@ export function PotionProfitCalculator({
               profitRange.min != null &&
               profitRange.max != null && (
                 <p className="mt-1 text-xs text-parchment/45">
-                  Major Healing normal vs event holding scenario:{" "}
-                  {formatSilverRange(profitRange.min, profitRange.max)}/10k
-                  focus
+                  T6 bulk range: worst recipe (sell normally) through best recipe
+                  (hold for events). Default recipe is Major Healing .1.
                 </p>
               )}
           </div>
