@@ -42,7 +42,7 @@ export function GuideCard({
     guide.slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
   const profitRangeLabel =
     guide.slug === "potions-crafting-bulk"
-      ? "Profit range / 10k focus"
+      ? "Profit range / 10k focus (conservative to high-roll)"
       : "Profit range / hr";
 
   return (

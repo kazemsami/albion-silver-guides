@@ -127,7 +127,10 @@ export function scaleGuideEconomics(
   economics: GuideEconomics,
   tier: SkillTier,
   options?: { gatheringYieldMultiplier?: number; premiumSeller?: boolean },
-): Pick<GuideEconomics, "hourlyOutput" | "hourlyInputs" | "hourlyConsumables"> {
+): Pick<
+  GuideEconomics,
+  "hourlyOutput" | "hourlyInputs" | "hourlyConsumables" | "bonusOutput"
+> {
   const outM = tier.outputMultiplier;
   const inM = tier.inputMultiplier ?? tier.outputMultiplier;
   const conM = tier.consumableMultiplier ?? tier.outputMultiplier;
@@ -149,16 +152,14 @@ export function scaleGuideEconomics(
   };
 
   return {
-    hourlyOutput: [
-      ...outputSource.map((item) => ({
-        ...item,
-        quantity: scaleOutputQty(item, outM),
-      })),
-      ...(tier.bonusOutput ?? []).map((item) => ({
-        ...item,
-        quantity: scaleOutputQty(item, 1),
-      })),
-    ],
+    hourlyOutput: outputSource.map((item) => ({
+      ...item,
+      quantity: scaleOutputQty(item, outM),
+    })),
+    bonusOutput: (tier.bonusOutput ?? []).map((item) => ({
+      ...item,
+      quantity: scaleOutputQty(item, 1),
+    })),
     hourlyInputs: (tier.hourlyInputs ?? economics.hourlyInputs)?.map((item) => ({
       ...item,
       quantity: scaleQuantity(item.quantity, inM),
@@ -248,7 +249,7 @@ export type GuideProfitRange = { min: number; max: number };
 export type GuideProfitRangeMap = Record<string, GuideProfitRange>;
 export type GuideProfitRangesByCity = Record<string, GuideProfitRangeMap>;
 
-function guideUsesGatheringYield(economics: GuideEconomics): boolean {
+export function guideUsesGatheringYield(economics: GuideEconomics): boolean {
   const items = [
     ...economics.hourlyOutput,
     ...economics.skillTiers.flatMap((tier) => [
@@ -319,6 +320,7 @@ function computeAllGuideProfitRanges(
   slugs: string[],
   priceMaps: PriceMapsByCity,
   premiumSeller: boolean,
+  priceMapKind: PriceMapKind = "snapshot",
 ): GuideProfitRangesByCity {
   const listingTaxRate = getListingTaxRate(premiumSeller);
   const result: GuideProfitRangesByCity = {};
@@ -331,7 +333,7 @@ function computeAllGuideProfitRanges(
       const outcomes = computeGuideProfitOutcomes(slug, prices, {
         listingTaxRate,
         premiumSeller,
-        priceMapKind: "snapshot",
+        priceMapKind,
       });
       const range = profitRangeFromOutcomes(outcomes);
       if (range) {
@@ -391,15 +393,31 @@ export type GuidesListMarketData = {
 function buildGuidesListMarketSlice(
   slugs: string[],
   priceMaps: PriceMapsByCity,
+  priceMapKind: PriceMapKind = "snapshot",
 ): GuidesListMarketSlice {
   return {
     ranges: {
-      premium: computeAllGuideProfitRanges(slugs, priceMaps, true),
-      standard: computeAllGuideProfitRanges(slugs, priceMaps, false),
+      premium: computeAllGuideProfitRanges(slugs, priceMaps, true, priceMapKind),
+      standard: computeAllGuideProfitRanges(
+        slugs,
+        priceMaps,
+        false,
+        priceMapKind,
+      ),
     },
     outcomes: {
-      premium: computeAllGuideProfitOutcomes(slugs, priceMaps, true),
-      standard: computeAllGuideProfitOutcomes(slugs, priceMaps, false),
+      premium: computeAllGuideProfitOutcomes(
+        slugs,
+        priceMaps,
+        true,
+        priceMapKind,
+      ),
+      standard: computeAllGuideProfitOutcomes(
+        slugs,
+        priceMaps,
+        false,
+        priceMapKind,
+      ),
     },
   };
 }
@@ -408,6 +426,7 @@ function computeAllGuideProfitOutcomes(
   slugs: string[],
   priceMaps: PriceMapsByCity,
   premiumSeller: boolean,
+  priceMapKind: PriceMapKind = "snapshot",
 ): GuideProfitOutcomesByCity {
   const listingTaxRate = getListingTaxRate(premiumSeller);
   const result: GuideProfitOutcomesByCity = {};
@@ -418,6 +437,7 @@ function computeAllGuideProfitOutcomes(
       cityOutcomes[slug] = computeGuideProfitOutcomes(slug, prices, {
         premiumSeller,
         listingTaxRate,
+        priceMapKind,
       });
     }
     result[city] = cityOutcomes;
@@ -529,6 +549,7 @@ async function buildGuidesMarketDataForSlugs(
         buildGuidesListMarketSlice(
           slugs,
           livePriceMapsByServer?.[server.id] ?? estimatedPriceMaps,
+          "live",
         ),
       ]),
     ) as Record<AlbionPriceServerId, GuidesListMarketSlice>,
@@ -698,10 +719,11 @@ export function computeLoadoutPricing(
   for (const item of Object.values(loadout.slots)) {
     if (item) {
       const quantity = item.quantity ?? 1;
+      const side = CONSUMABLE_IDS.has(item.id) ? "buy" : "sell";
       const { unitPrice, priceSource } = resolveUnitPrice(
         item,
         prices,
-        "sell",
+        side,
         mapKind,
       );
       lines.push({
@@ -750,7 +772,7 @@ export function computeLoadoutPricing(
 export { PREMIUM_LISTING_TAX_RATE };
 
 export const ESTIMATED_PRICES_NOTE =
-  "Estimated snapshot prices. Set station fee in calculator assumptions. Toggle Premium seller for sell-order fee rate.";
+  "Estimated snapshot prices. Set optional player-station usage fee in calculator assumptions. Toggle Premium seller for sell-order fee rate.";
 
 export function marketCityLocationNote(_city: MarketCityId): string {
   return ESTIMATED_PRICES_NOTE;
@@ -772,8 +794,12 @@ export function computeHourlyEconomics(
   const consumables = (economics.hourlyConsumables ?? []).map((item) =>
     priceLine(item, item.quantity, prices, "buy", mapKind),
   );
+  const bonusOutput = (economics.bonusOutput ?? []).map((item) =>
+    priceLine(item, item.quantity, prices, item.side ?? "sell", mapKind),
+  );
 
   const outputTotal = sumLines(output);
+  const bonusOutputTotal = sumLines(bonusOutput);
   const inputTotal = sumLines(input);
   const consumableTotal = sumLines(consumables);
 
@@ -807,6 +833,8 @@ export function computeHourlyEconomics(
     netTotal,
     marketTaxTotal,
     netAfterTax,
+    bonusOutput: bonusOutput.length > 0 ? bonusOutput : undefined,
+    bonusOutputTotal: bonusOutput.length > 0 ? bonusOutputTotal : undefined,
     pricedAt: new Date().toISOString(),
     locationNote: marketCityLocationNote(marketCity),
     hasEstimatedPrices,

@@ -919,7 +919,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "potions-crafting-bulk",
     title: "Bulk Potion Crafting",
     description:
-      "Craft T6 and T7 bulk potions at an alchemy lab and compare recipes in the calculator. Profit is measured per 10,000 focus (with focus) or per batch (without focus). Listing tax, sell strategy, and an adjustable station fee are included. Margins swing with buy prices and whether you sell on a normal week or hold for events.",
+      "Craft T6 and T7 bulk potions at an alchemy lab and compare recipes in the calculator. Profit is measured per 10,000 focus (with focus) or per batch (without focus). Listing tax, sell strategy, fixed NPC lab craft silver, and an optional player-station usage fee are included. Margins swing with buy prices and whether you sell on a normal week or hold for events.",
     category: "crafting",
     difficulty: "intermediate",
     zoneType: "safe",

@@ -144,12 +144,14 @@ export function PotionProfitCalculator({
           Bulk crafting is measured per 10,000 focus, not silver/hour
         </p>
         <p className="mt-1">
-          Pick a potion and compare with or without focus. Each craft makes 5 or
-          10 pots depending on the recipe (specialty T6/T7/T8 pots are usually
-          10). Major Healing includes{" "}
-          {formatSilverExact(MAJOR_HEALING_CRAFT_SILVER)} silver lab cost per
-          batch. Energy filler is usually no focus; plan heal and war pots by
-          profit per 10,000 focus.
+          Pick a potion and compare with or without focus. Batch size depends on
+          the recipe: T6/T7 majors (Healing, Energy, Poison, Gigantify,
+          Resistance, Sticky, Invisibility) make 5 pots; specialty pots with rare
+          ingredients (Berserk, Hellfire, Gathering, Tornado, and T7/T8 variants)
+          make 10. Major Healing includes{" "}
+          {formatSilverExact(MAJOR_HEALING_CRAFT_SILVER)} silver fixed NPC lab
+          craft cost per batch. Energy filler is usually no focus; plan heal and
+          war pots by profit per 10,000 focus.
         </p>
       </div>
 
@@ -302,7 +304,7 @@ export function PotionProfitCalculator({
                 text
               />
             )}
-            <MetricRow label="Lab craft silver per batch" value={batch.craftSilverCost} />
+            <MetricRow label="Fixed NPC lab craft silver per batch" value={batch.craftSilverCost} />
           </div>
         </div>
 
@@ -385,14 +387,14 @@ export function PotionProfitCalculator({
             {result.perTenThousandCraftSilver != null &&
               result.perTenThousandCraftSilver > 0 && (
                 <EconomicsSummaryRow
-                  label={`Minus lab craft silver (${formatSilverExact(batch.craftSilverCost)} × batches)`}
+                  label={`Minus fixed NPC lab craft silver (${formatSilverExact(batch.craftSilverCost)} × batches)`}
                   value={-result.perTenThousandCraftSilver}
                 />
               )}
             {result.perTenThousandStationFee != null &&
               result.perTenThousandStationFee > 0 && (
                 <EconomicsSummaryRow
-                  label={`Minus station fee (${formatSilverExact(batch.stationFeePerBatch)} × batches)`}
+                  label={`Minus player-station usage fee (${formatSilverExact(batch.stationFeePerBatch)} × batches)`}
                   value={-result.perTenThousandStationFee}
                 />
               )}
@@ -434,8 +436,10 @@ export function PotionProfitCalculator({
         <AssumptionSliders defaults={defaults} onChange={setDefaults} />
 
         <p className="mt-3 text-xs text-parchment/40">
-          Listing tax and sell strategy adjustment are included above. Set station fee
-          per batch under Model assumptions (0 if you craft on your own island).
+          Listing tax and sell strategy adjustment are included above. Set the
+          optional player-station usage fee under Model assumptions (0 if you
+          craft on your own island). Fixed NPC lab craft silver is included
+          automatically when the recipe charges it.
         </p>
       </section>
     </>
@@ -574,13 +578,13 @@ function BatchBreakdown({
         )}
         {batch.craftSilverCost > 0 && (
           <EconomicsSummaryRow
-            label="Minus lab craft silver"
+            label="Minus fixed NPC lab craft silver"
             value={-batch.craftSilverCost}
           />
         )}
         {batch.stationFeePerBatch > 0 && (
           <EconomicsSummaryRow
-            label="Minus station fee"
+            label="Minus player-station usage fee"
             value={-batch.stationFeePerBatch}
           />
         )}
@@ -692,7 +696,7 @@ function AssumptionSliders({
       <div className="mt-4 grid gap-4 sm:grid-cols-1">
         <SliderField
           id="station-fee"
-          label="Station fee per batch"
+          label="Optional player-station usage fee per batch"
           value={defaults.stationFeePerBatch}
           min={0}
           max={5000}

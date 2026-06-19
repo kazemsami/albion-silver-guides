@@ -1,6 +1,7 @@
 import {
   DEFAULT_POTION_DEFAULTS,
   DEFAULT_POTION_EXTRACT_LEVEL,
+  collectPotionPricingItemIds,
   getPotionRecipe,
   POTION_RECIPE_GROUPS,
   POTION_SELL_THROUGH_META,
@@ -13,7 +14,12 @@ import {
 } from "@/data/potion-economics";
 import { PREMIUM_LISTING_TAX_RATE } from "@/lib/listing-tax";
 import type { PriceMap, PriceMapKind } from "@/lib/albion-prices";
-import { resolveBuyPrice, resolveSellPrice } from "@/lib/albion-prices";
+import {
+  buildEstimatedPriceMapsByCity,
+  resolveBuyPrice,
+  resolveSellPrice,
+} from "@/lib/albion-prices";
+import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
 import type { GuideProfitOutcomes, PricedLine } from "@/types/guide";
 import { roundSilver } from "@/lib/format";
 
@@ -295,6 +301,31 @@ function getPotionGuideCardRecipeIds(): PotionRecipeId[] {
   );
 }
 
+/** Saved snapshot prices with every bulk-calculator item id (stable conservative floor). */
+function getPotionSnapshotPriceMap(): PriceMap {
+  return buildEstimatedPriceMapsByCity(collectPotionPricingItemIds())[
+    AVERAGE_MARKET_CITY_ID
+  ];
+}
+
+function potionConservativePer10k(
+  recipeIds: PotionRecipeId[],
+  listingTaxRate: number,
+): number | null {
+  const profits = recipeIds
+    .map((recipeId) =>
+      potionProfitPer10k(
+        getPotionSnapshotPriceMap(),
+        recipeId,
+        "normal",
+        listingTaxRate,
+        "snapshot",
+      ),
+    )
+    .filter((value): value is number => value != null);
+  return profits.length > 0 ? roundSilver(Math.min(...profits)) : null;
+}
+
 function potionProfitPer10k(
   prices: PriceMap,
   recipeId: PotionRecipeId,
@@ -324,13 +355,18 @@ export function computePotionGuideProfitOutcomes(
   priceMapKind: PriceMapKind = "snapshot",
 ): GuideProfitOutcomes {
   const recipeIds = getPotionGuideCardRecipeIds();
-  const normalProfits = recipeIds.map((recipeId) =>
-    potionProfitPer10k(prices, recipeId, "normal", listingTaxRate, priceMapKind),
-  ).filter((value): value is number => value != null);
 
-  const eventProfits = recipeIds.map((recipeId) =>
-    potionProfitPer10k(prices, recipeId, "event", listingTaxRate, priceMapKind),
-  ).filter((value): value is number => value != null);
+  const eventProfits = recipeIds
+    .map((recipeId) =>
+      potionProfitPer10k(
+        prices,
+        recipeId,
+        "event",
+        listingTaxRate,
+        priceMapKind,
+      ),
+    )
+    .filter((value): value is number => value != null);
 
   const defaultProfit = potionProfitPer10k(
     prices,
@@ -340,9 +376,10 @@ export function computePotionGuideProfitOutcomes(
     priceMapKind,
   );
 
+  const conservative = potionConservativePer10k(recipeIds, listingTaxRate);
+
   return {
-    conservative:
-      normalProfits.length > 0 ? roundSilver(Math.min(...normalProfits)) : null,
+    conservative,
     median: defaultProfit != null ? roundSilver(defaultProfit) : null,
     expected: defaultProfit != null ? roundSilver(defaultProfit) : null,
     highRoll:

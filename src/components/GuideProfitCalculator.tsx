@@ -29,12 +29,14 @@ import {
   STANDARD_LISTING_TAX_RATE,
   STANDARD_MARKET_FEE_LABEL,
   takeHomeFormulaNote,
+  type TakeHomeFormulaNoteKind,
 } from "@/lib/listing-tax";
 import {
   computeHourlyEconomics,
   computeLoadoutPricing,
   computeProfitRange,
   enrichLoadoutWithQuantities,
+  guideUsesGatheringYield,
   scaleGuideEconomics,
 } from "@/lib/guide-economics";
 import {
@@ -141,6 +143,13 @@ export function GuideProfitCalculator({
 
   const gatherYieldBaseline = economics.gatherYieldBaseline ?? "premium";
   const usesLoggedStandardBaseline = gatherYieldBaseline === "standard";
+  const formulaNoteKind: TakeHomeFormulaNoteKind =
+    economics.takeHomeFormulaNoteKind ??
+    (economics.defaultLaborerSpecialtyId
+      ? "laborer"
+      : guideUsesGatheringYield(economics)
+        ? "gathering"
+        : "none");
 
   const loggedBaselineResult = useMemo(() => {
     if (!usesLoggedStandardBaseline) return null;
@@ -220,6 +229,10 @@ export function GuideProfitCalculator({
       ? loggedBaselineResult
       : result;
 
+  const hasBonusOutput =
+    (breakdownResult.bonusOutput?.length ?? 0) > 0 &&
+    breakdownResult.bonusOutputTotal != null;
+
   const profitRange = useMemo(() => {
     if (!usesLoggedStandardBaseline) {
       return computeProfitRange(
@@ -256,8 +269,10 @@ export function GuideProfitCalculator({
             <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
               {usesLoggedStandardBaseline && premiumSeller
                 ? "Est. take-home / hour (with Premium)"
-                : usesLoggedStandardBaseline
-                  ? "Logged take-home / hour (Standard tax, no Premium)"
+                : usesLoggedStandardBaseline && !premiumSeller
+                  ? hasBonusOutput
+                    ? "Logged take-home / hour (excludes Snapper EV)"
+                    : "Logged take-home / hour (Standard tax, no Premium)"
                   : "Est. take-home / hour (after tax)"}
             </p>
             <p className="mt-1 text-3xl font-bold text-gold tabular-nums">
@@ -435,6 +450,16 @@ export function GuideProfitCalculator({
           variant="output"
         />
 
+        {hasBonusOutput && (
+          <EconomicsTable
+            title="RNG upside (not in logged take-home)"
+            lines={breakdownResult.bonusOutput!}
+            total={breakdownResult.bonusOutputTotal ?? null}
+            totalLabel="Snapper EV (optional)"
+            variant="output"
+          />
+        )}
+
         {breakdownResult.input.length > 0 && (
           <EconomicsTable
             title="1-Hour Input Costs"
@@ -485,7 +510,9 @@ export function GuideProfitCalculator({
           <EconomicsSummaryRow
             label={
               usesLoggedStandardBaseline && !premiumSeller
-                ? "Logged take-home / hour"
+                ? hasBonusOutput
+                  ? "Logged take-home / hour (excludes Snapper EV)"
+                  : "Logged take-home / hour"
                 : usesLoggedStandardBaseline
                   ? "Est. take-home / hour (with Premium)"
                   : "Est. take-home / hour"
@@ -493,10 +520,20 @@ export function GuideProfitCalculator({
             value={breakdownResult.netAfterTax ?? breakdownResult.netTotal}
             emphasis
           />
+          {hasBonusOutput && (
+            <EconomicsSummaryRow
+              label="Plus Snapper EV (RNG upside)"
+              value={breakdownResult.bonusOutputTotal ?? null}
+            />
+          )}
         </div>
 
         <p className="mt-3 text-xs text-parchment/40">
-          {takeHomeFormulaNote(premiumSeller, gatherYieldBaseline)}
+          {takeHomeFormulaNote(
+            premiumSeller,
+            gatherYieldBaseline,
+            formulaNoteKind,
+          )}
         </p>
         {economics.consumableNote && (
           <p className="mt-2 text-xs text-parchment/40">

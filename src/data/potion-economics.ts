@@ -90,7 +90,7 @@ export interface PotionRecipe {
   focusCost: number;
   /** Focus per batch by extract tier (.1 / .2). Falls back to focusCost. */
   focusCostByExtract?: Partial<Record<PotionExtractLevel, number>>;
-  /** Fixed silver charged by the lab per craft action (5 pots). */
+  /** Fixed silver charged by the NPC lab per craft action. */
   craftSilverCost?: number;
   /** When false, recipe has no .1/.2 variants and ignores extract selection. */
   supportsExtract?: boolean;
@@ -105,7 +105,7 @@ export interface PotionSessionMix {
 export interface PotionEconomicsDefaults {
   focusMaterialReturnRate: number;
   noFocusMaterialReturnRate: number;
-  /** Alchemist station usage fee per batch (5 pots), set in calculator assumptions. */
+  /** Optional player-station usage fee per batch (0 on your own island). */
   stationFeePerBatch: number;
   minutesPerBatch: number;
   sellThroughPotsPerHour: number;

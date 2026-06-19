@@ -567,6 +567,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ),
     defaultSkillTierId: "medium",
     defaultLaborerSpecialtyId: DEFAULT_LABORER_SPECIALTY_ID,
+    takeHomeFormulaNoteKind: "laborer",
   },
   "potions-crafting-bulk": {
     // ~150 crafts/hr (2:1 heal-to-energy split) incl. buying and listing time, war pots excluded.

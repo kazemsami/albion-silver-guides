@@ -1,19 +1,19 @@
 {
   "t4-ore-mining-yellow-zone": {
     "conservative": 64009,
-    "median": 205014,
-    "expected": 205014,
-    "highRoll": 240247,
+    "median": 177860,
+    "expected": 177860,
+    "highRoll": 205440,
     "rangeMin": 64009,
-    "rangeMax": 240247
+    "rangeMax": 205440
   },
   "fiber-farming-solo": {
-    "conservative": 56346,
-    "median": 209041,
-    "expected": 209041,
-    "highRoll": 288165,
-    "rangeMin": 56346,
-    "rangeMax": 288165
+    "conservative": 52408,
+    "median": 191428,
+    "expected": 191428,
+    "highRoll": 260527,
+    "rangeMin": 52408,
+    "rangeMax": 260527
   },
   "corrupted-dungeons-pvpve": {
     "conservative": 295715,
@@ -41,11 +41,11 @@
   },
   "mists-fishing": {
     "conservative": 358096,
-    "median": 708174,
-    "expected": 833487,
-    "highRoll": 1214667,
+    "median": 654474,
+    "expected": 761887,
+    "highRoll": 1071467,
     "rangeMin": 358096,
-    "rangeMax": 1214667
+    "rangeMax": 1071467
   },
   "ava-roads-fishing": {
     "conservative": 882575,

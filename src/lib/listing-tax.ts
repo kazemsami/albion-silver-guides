@@ -69,23 +69,35 @@ export function listingTaxRowLabel(premiumSeller: boolean): string {
     : "Minus Standard sell-order fees (2.5% setup fee + 8% transaction tax)";
 }
 
+export type TakeHomeFormulaNoteKind = "gathering" | "laborer" | "none";
+
 /** Footer copy for guide profit calculators; reflects the active Premium toggle. */
 export function takeHomeFormulaNote(
   premiumSeller: boolean,
   gatherYieldBaseline: GatherYieldBaseline = "premium",
+  noteKind: TakeHomeFormulaNoteKind = "gathering",
 ): string {
   let yieldNote = "";
-  if (gatherYieldBaseline === "standard") {
-    yieldNote = premiumSeller
-      ? " Yields are scaled up +50% vs the logged no-Premium baseline."
-      : " Matches the logged no-Premium baseline (yields and Standard tax).";
-  } else if (premiumSeller) {
-    yieldNote = " Gather/fish yields use the Premium baseline.";
-  } else {
-    yieldNote = " Gather/fish yields are scaled down for no Premium.";
+  if (noteKind === "laborer") {
+    yieldNote =
+      " Laborer returns depend on journal tier, house/furniture happiness, and journal market prices. Premium affects the fame you earn while filling journals, but not the laborer return itself.";
+  } else if (noteKind === "gathering") {
+    if (gatherYieldBaseline === "standard") {
+      yieldNote = premiumSeller
+        ? " Yields are scaled up +50% vs the logged no-Premium baseline."
+        : " Matches the logged no-Premium baseline (yields and Standard tax).";
+    } else if (premiumSeller) {
+      yieldNote = " Gather/fish yields use the Premium baseline.";
+    } else {
+      yieldNote = " Gather/fish yields are scaled down for no Premium.";
+    }
   }
   const feeLabel = premiumSeller
     ? PREMIUM_MARKET_FEE_LABEL
     : STANDARD_MARKET_FEE_LABEL;
-  return `Take-home = output sell value - input buys - consumables - ${feeLabel} on gross output.${yieldNote} Deaths, repairs, and station fees are not included unless listed as inputs. Yields scale with your selected skill level.`;
+  const yieldScaleNote =
+    noteKind === "gathering"
+      ? " Yields scale with your selected skill level."
+      : "";
+  return `Take-home = output sell value - input buys - consumables - ${feeLabel} on gross output.${yieldNote} Deaths, repairs, and station fees are not included unless listed as inputs.${yieldScaleNote}`;
 }

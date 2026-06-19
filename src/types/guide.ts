@@ -143,6 +143,16 @@ export interface GuideEconomics {
   defaultLaborerSpecialtyId?: string;
   /** Optional note shown below the profit summary clarifying consumable assumptions. */
   consumableNote?: string;
+  /**
+   * Footer formula note under the profit breakdown. Gathering guides use yield
+   * scaling copy; laborer uses journal-specific copy; none omits gather yield text.
+   */
+  takeHomeFormulaNoteKind?: "gathering" | "laborer" | "none";
+  /**
+   * RNG upside lines (e.g. Puremist Snapper EV) scaled per tier but excluded
+   * from logged take-home totals. Set by scaleGuideEconomics, not in static config.
+   */
+  bonusOutput?: HourlyItem[];
 }
 
 /** JSON-safe price map passed from server to client profit calculator. */
@@ -198,6 +208,9 @@ export interface HourlyEconomicsResult {
   marketTaxTotal: number | null;
   /** netTotal minus marketTaxTotal. Best estimate of take-home silver. */
   netAfterTax: number | null;
+  /** RNG upside output priced separately from logged baseline take-home. */
+  bonusOutput?: PricedLine[];
+  bonusOutputTotal?: number | null;
   pricedAt: string;
   locationNote: string;
   /** True when any line uses estimatedSilverPerUnit (thin market data). */
