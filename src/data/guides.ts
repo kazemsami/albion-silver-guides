@@ -306,7 +306,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "After ~10–15 minutes, floor 1 collapses, hellfire damage ramps if you linger. Upward exits to the Den and downward stairs to floor 2 spawn across the map. Hover exit icons to read the timer.",
       "If buff stacks are low, a teammate is down, or your bag already holds good loot, take an exit and secure profit. Floor 2 (T7 mobs, better rewards) repeats the same loop.",
       "Floor 3 (T8 mobs) spawns contested vault keys (3 in duo, 5 in trio) and a central Treasure Vault. Opening the vault spawns a channeled escape portal. When floor 3 collapses there are no Den exits, leave via soul exit or the vault portal.",
-      "Player kills and altar souls are a major loot source, take PvP fights when stacked and geared. Sell tradable chest loot on Caerleon; open silver bags in your bag (they do not drop on death).",
+      "Player kills and altar souls are a major loot source, take PvP fights when stacked and geared. Sell tradable chest loot on Caerleon.",
     ],
     tips: [
       "1200 IP is the efficient sweet spot, do not overspend on 8.4 for marginal gains. A .4 weapon keeps full Fame Bonus if you are leveling specs safely here.",
@@ -315,7 +315,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Adjust win rate and run duration (20, 30, 45 min). Silver/hr drops if runs take longer or you reset often.",
       "Run PvP abilities even while clearing mobs. If you get jumped mid-pull, there is no time to respec.",
       "Never fight without an active room buff if the enemy has one, buffs only proc below 40% HP but are the main edge beyond gear.",
-      "Death loss in the calculator is bag loot only. Open silver bags in your inventory; tradable chest loot is what you lose if you wipe with a full bag.",
+      "Death loss in the calculator is tradable bag loot only.",
       "Reset early when stacks are below ~10, inventory is full, or you are outnumbered. Safe extracts beat greedy floor-3 throws.",
       "Floor 3 is stacked and sweaty, only push when your team hit 15 stacks early and you are ready for key fights. Vault loot is high variance.",
       "Optional: empty T8 mercenary journals on floor 3 T8 mobs (~300k per 15 filled), inventory risk only.",
