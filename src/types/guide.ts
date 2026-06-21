@@ -149,10 +149,16 @@ export interface GuideEconomics {
    */
   takeHomeFormulaNoteKind?: "gathering" | "laborer" | "none";
   /**
-   * RNG upside lines (e.g. Puremist Snapper EV) scaled per tier but excluded
-   * from logged take-home totals. Set by scaleGuideEconomics, not in static config.
+   * RNG upside lines (e.g. Puremist Snapper EV) scaled per tier. When
+   * bonusOutputExcludedFromTakeHome is true, priced separately from take-home.
    */
   bonusOutput?: HourlyItem[];
+  /**
+   * When true, bonusOutput is shown separately and excluded from netAfterTax
+   * (e.g. Puremist Snapper on Mists fishing). Gathering enchant spawns stay
+   * in take-home for the tiers that model them.
+   */
+  bonusOutputExcludedFromTakeHome?: boolean;
 }
 
 /** JSON-safe price map passed from server to client profit calculator. */

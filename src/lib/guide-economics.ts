@@ -785,6 +785,9 @@ export function computeHourlyEconomics(
   listingTaxRate: number = PREMIUM_LISTING_TAX_RATE,
   mapKind: PriceMapKind = "snapshot",
 ): HourlyEconomicsResult {
+  const excludeBonusFromTakeHome =
+    economics.bonusOutputExcludedFromTakeHome ?? false;
+
   const output = economics.hourlyOutput.map((item) =>
     priceLine(item, item.quantity, prices, item.side ?? "sell", mapKind),
   );
@@ -798,7 +801,10 @@ export function computeHourlyEconomics(
     priceLine(item, item.quantity, prices, item.side ?? "sell", mapKind),
   );
 
-  const outputTotal = sumLines(output);
+  const pricedOutput = excludeBonusFromTakeHome
+    ? output
+    : [...output, ...bonusOutput];
+  const outputTotal = sumLines(pricedOutput);
   const bonusOutputTotal = sumLines(bonusOutput);
   const inputTotal = sumLines(input);
   const consumableTotal = sumLines(consumables);
@@ -819,12 +825,12 @@ export function computeHourlyEconomics(
       ? roundSilver(netTotal - marketTaxTotal)
       : null;
 
-  const hasEstimatedPrices = [...output, ...input, ...consumables].some(
+  const hasEstimatedPrices = [...pricedOutput, ...input, ...consumables].some(
     (line) => line.priceSource === "estimated",
   );
 
   return {
-    output,
+    output: pricedOutput,
     outputTotal,
     input,
     inputTotal,
@@ -833,8 +839,14 @@ export function computeHourlyEconomics(
     netTotal,
     marketTaxTotal,
     netAfterTax,
-    bonusOutput: bonusOutput.length > 0 ? bonusOutput : undefined,
-    bonusOutputTotal: bonusOutput.length > 0 ? bonusOutputTotal : undefined,
+    bonusOutput:
+      excludeBonusFromTakeHome && bonusOutput.length > 0
+        ? bonusOutput
+        : undefined,
+    bonusOutputTotal:
+      excludeBonusFromTakeHome && bonusOutput.length > 0
+        ? bonusOutputTotal
+        : undefined,
     pricedAt: new Date().toISOString(),
     locationNote: marketCityLocationNote(marketCity),
     hasEstimatedPrices,

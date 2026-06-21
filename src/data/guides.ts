@@ -10,7 +10,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "t4-ore-mining-yellow-zone",
     title: "Ore Mining in Yellow Zones",
     description:
-      "Mine Martlock highland yellow zones (logged route: Eldon Hill) for iron, tin, and titanium ore. Sell raw ore locally and optionally fill a prospector journal. Reviewed against 1 logged 30-min intermediate run with Pork Pie, no Premium: ~205k/hr net after Standard tax and 1 Pork Pie (~361 iron/hr at ×1.9 extrapolation).",
+      "Mine Martlock highland yellow zones (logged route: Eldon Hill) for iron, tin, and titanium ore. Sell raw ore locally and optionally fill a prospector journal. Reviewed against 1 logged 30-min intermediate run with T5 gear, Pork Pie, and no Premium (~361 iron/hr at ×1.9 extrapolation).",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
@@ -30,7 +30,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
       "Track profit as: (ore sold × price) minus Pork Pie cost minus sell-order market fees. Journals add bonus silver if you fill one while mining.",
     ],
     tips: [
-      "Logged 30-min intermediate run (Eldon Hill, T5 gear, Pork Pie, miner backpack, gatherer bag, every node, no Premium): 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Calculator extrapolates yields to 1 hr at ×1.9 (banking/travel overhead, not straight ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~105k net in 30 min after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and 1 Pork Pie (~205k/hr). Premium (+50% gather yield, 2.5% setup fee + 4% transaction tax) is projected only; toggle Premium in the header to compare.",
+      "Logged 30-min intermediate run (Eldon Hill, T5 gear, Pork Pie, miner backpack, gatherer bag, every node, no Premium): 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Calculator extrapolates yields to 1 hr at ×1.9 (banking/travel overhead, not straight ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~105k net in 30 min at session sell prices after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and 1 Pork Pie. The note above matches the calculator default tier at saved Martlock prices. Premium (+50% gather yield, 2.5% setup fee + 4% transaction tax) is projected only; toggle Premium in the header to compare.",
       "Iron-only routing should raise iron/hr above 361 but total stack weight drops. Tin is fast to mine but lower silver per minute. Titanium and enchanted ore need T5 pick and higher spec (intermediate tier in the calculator).",
       "Martlock has solid local ore buy volume; only haul to Caerleon if the price gap exceeds ~8% after transport time.",
       "Mine during EU off-peak if your zone is crowded; contested nodes cut ore/hr directly.",
@@ -98,7 +98,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "fiber-farming-solo",
     title: "Fiber Farming in Yellow Zones",
     description:
-      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. This route currently models ~209k/hr net under saved Bridgewatch prices (Standard sell-order fees, 1 Pork Pie, no Premium). Reviewed against 1 logged 30-min run on the same loop.",
+      "Farm Lazygrass Plain near Bridgewatch on T5 harvester gear for mixed T3-T5 fiber and cropper journal fills. Reviewed against 1 logged 30-min run on the same loop with Pork Pie and no Premium. Saved-price take-home is shown in the calculator note above.",
     category: "gathering",
     difficulty: "beginner",
     zoneType: "safe",
@@ -119,7 +119,7 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     ],
     tips: [
       "Reviewed against 1 logged run on Lazygrass Plain (Bridgewatch, T5 harvester gear, Pork Pie, no Premium). Logged fiber/hr already includes the Pork Pie gather bonus.",
-      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. Session take-home was 125k net in 30 min. At current saved Bridgewatch prices the calculator models ~209k/hr net (Standard sell-order fees, 1 Pork Pie, no Premium).",
+      "Logged run (~30 min): ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, plus rare hemp and uncommon/rare skyflower when enchanted nodes spawned, one Expert journal filled. Session take-home was 125k net in 30 min at session sell prices. The calculator note above matches the default logged tier at saved Bridgewatch prices (Standard sell-order fees, 1 Pork Pie, no Premium).",
       "Enchanted nodes are bonus silver from intermediate tier up: rare hemp (.2) at beginner; uncommon or rare skyflower (.1/.2) once you run T5 gear and higher mining/fiber spec.",
       "With Premium on the same Lazygrass Plain loop, expect roughly ~450k/hr before tax (+50% gather yield and lower sell-order fees: 2.5% setup fee + 4% transaction tax). That figure is projected, not logged. Toggle Premium in the header to compare.",
       "Skyflower (T5) is most of your silver; prioritize T5 nodes even if it means skipping a T4 cluster.",
@@ -505,15 +505,15 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     slug: "mists-fishing",
     title: "Yellow Zone Mists Fishing",
     description:
-      "Fish in yellow-zone Mists for solid non-lethal fishing income. PvP is knockdown-only, so profit depends on fishing level, Mist rarity, and market prices. Reviewed against a logged 30-min run (no Premium): 1,171 chopped fish and 5,580/6,640 Grandmaster journal fill with T7 fisherman gear, T7 Avalonian rod, and Pork Pie (~386k chopped fish gross in 30 min at ~330/chop). Snapper stays RNG upside.",
+      "Fish in yellow-zone Mists for solid non-lethal fishing income. PvP is knockdown-only, so the zone is beginner-safe, but serious silver needs Fishing 60+, T7 fisherman gear, a T7 Avalonian rod, bait, and Grandmaster journals. Reviewed against a logged 30-min run (no Premium): 1,171 chopped fish and 5,580/6,640 Grandmaster journal fill (~386k chopped fish gross in 30 min at ~330/chop). Snapper stays RNG upside.",
     category: "fishing",
     difficulty: "intermediate",
     zoneType: "safe",
   
     silverByLevel: [
-      { label: "Fishing Level 10-30", amount: 250_000 },
-      { label: "Fishing Level 30-60", amount: 500_000 },
-      { label: "Fishing Level 60+", amount: 800_000 },
+      { label: "Fishing 10-30", amount: 358_000 },
+      { label: "Fishing 30-60", amount: 550_000 },
+      { label: "Fishing 60+ (logged T7 setup)", amount: 762_000 },
     ],
   
     requirements: [

@@ -491,6 +491,7 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
       },
     ),
     defaultSkillTierId: "60+",
+    bonusOutputExcludedFromTakeHome: true,
   },
   "ava-roads-fishing": {
     // Safe escape and Normal use logged raw-fish species mix. Greedy keeps Sturgeon + chops model.

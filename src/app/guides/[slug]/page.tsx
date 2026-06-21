@@ -26,6 +26,10 @@ import { AbyssalProfitCalculator } from "@/components/AbyssalProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/site";
 import { breadcrumbJsonLd, guideArticleJsonLd } from "@/lib/structured-data";
+import { GuideProfitIntroNote } from "@/components/GuideProfitIntroNote";
+import { buildGuideProfitIntroText } from "@/lib/guide-profit-summary";
+import { guideDefaultMarketCityBySlug } from "@/data/guide-meta";
+import { AVERAGE_MARKET_CITY_ID } from "@/lib/market-cities";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +38,9 @@ interface GuidePageProps {
 export async function generateStaticParams() {
   return guides.map((guide) => ({ slug: guide.slug }));
 }
+
+/** Unknown slugs must 404 at the HTTP level, not render the soft not-found page with 200. */
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -86,6 +93,18 @@ export default async function GuidePage({ params }: GuidePageProps) {
   const relatedProfitRanges = relatedMarketData
     ? computeGuideListProfitRanges(relatedMarketData, related)
     : {};
+
+  const profitIntroText =
+    economicsConfig && marketPricing.guidePrices
+      ? buildGuideProfitIntroText(
+          slug,
+          marketPricing.guidePrices,
+          guide.defaultMarketCity ??
+            guideDefaultMarketCityBySlug[slug] ??
+            AVERAGE_MARKET_CITY_ID,
+          economicsConfig,
+        )
+      : null;
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
@@ -162,6 +181,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         <p className="mt-4 text-lg leading-relaxed text-parchment/60">
           {guide.description}
         </p>
+        {profitIntroText && <GuideProfitIntroNote text={profitIntroText} />}
       </div>
 
       {economicsConfig && marketPricing.guidePrices && (

@@ -111,7 +111,7 @@ test.describe("Potion sell strategy", () => {
       expect(eventProfit).not.toBe(normal);
     }).toPass({ timeout: 10_000 });
 
-    await expect(page.locator("main")).toContainText(/event holding/i);
+    await expect(page.locator("main")).toContainText(/Hold for events/i);
   });
 });
 

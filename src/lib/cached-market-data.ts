@@ -10,7 +10,7 @@ const MARKET_REVALIDATE_SECONDS = 3600;
 
 export const getCachedAllGuidesMarketData = unstable_cache(
   () => fetchAllGuidesMarketDataByCity(),
-  ["guides-market-data-all-v3"],
+  ["guides-market-data-all-v4"],
   { revalidate: MARKET_REVALIDATE_SECONDS },
 );
 

@@ -88,7 +88,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     mid: {
       title: "Standard Mining Gear",
       description:
-        "T5 miner set for Eldon Hill. Logged 30-min run, no Premium: ~205k/hr net with Standard tax, Pork Pie, miner backpack, gatherer bag.",
+        "T5 miner set for Eldon Hill. Logged 30-min run, no Premium: see calculator for saved Martlock take-home on the default tier.",
       slots: {
         head: { id: "T5_HEAD_GATHERER_ORE", name: "Expert's Miner Cap", hint: "Mining yield bonus" },
         armor: { id: "T5_ARMOR_GATHERER_ORE", name: "Expert's Miner Garb", hint: "Mining yield bonus" },
@@ -154,7 +154,7 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
     mid: {
       title: "Standard Fiber Gear",
       description:
-        "T5 harvester set + Pork Pie, Lazygrass Plain. Default tier matches the logged 30-min Bridgewatch run. Saved prices model ~209k/hr net (Standard sell-order fees, 1 Pork Pie, no Premium).",
+        "T5 harvester set + Pork Pie, Lazygrass Plain. Default tier matches the logged 30-min Bridgewatch run at saved prices.",
       slots: {
         head: { id: "T5_HEAD_GATHERER_FIBER", name: "Expert's Harvester Cap", hint: "Fiber yield bonus" },
         armor: { id: "T5_ARMOR_GATHERER_FIBER", name: "Expert's Harvester Garb", hint: "Fiber yield bonus" },

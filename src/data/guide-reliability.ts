@@ -108,7 +108,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
       netSilver: 105_000,
       deathsOrKnockdowns: 0,
       notes:
-        "1 logged run (~30 min), intermediate tier, no Premium, mined every ore on path (not iron-only). 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Hourly calculator uses ×1.9 yield extrapolation (not ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~124k gross before tax in 30 min; ~105k net after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and 1 Pork Pie (~205k/hr extrapolated). Prospector journal was not confirmed on this run. Calculator mid tier uses logged yields ×1.9/hr; high tier is projected iron-focused (+15% output, not logged). Premium figures in tips are projected only.",
+        "1 logged run (~30 min), intermediate tier, no Premium, mined every ore on path (not iron-only). 190 iron, 405 tin, 68 titanium, 28 uncommon iron, 17 uncommon titanium. Hourly calculator uses ×1.9 yield extrapolation (not ×2). Saved Martlock ore averages: iron 170, tin 105, titanium 490, uncommon iron 180, uncommon titanium 650. ~124k gross before tax in 30 min; ~105k net after Standard sell-order market fees (2.5% setup fee + 8% transaction tax) and 1 Pork Pie at session sell prices. Prospector journal was not confirmed on this run. Calculator mid tier uses logged yields ×1.9/hr at saved Martlock prices; high tier is projected iron-focused (+15% output, not logged). Premium figures in tips are projected only.",
     },
   },
   "fiber-farming-solo": {
@@ -123,7 +123,7 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
       netSilver: 125_000,
       deathsOrKnockdowns: 0,
       notes:
-        "1 logged run (~30 min). Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. Session take-home: 125k net in 30 min (~140k gross before tax at session sell prices). Saved Bridgewatch prices in the calculator model ~209k/hr net (Standard sell-order fees, 1 Pork Pie, no Premium). Premium upside figures in tips are projected only.",
+        "1 logged run (~30 min). Lazygrass Plain near Bridgewatch (steppe, fiber secondary). T5 harvester gear with 1 Pork Pie. ~225 T3 flax, ~250 T4 hemp, ~141 T5 skyflower, one Expert journal filled. Yields include Pork Pie gather bonus. Session take-home: 125k net in 30 min (~140k gross before tax at session sell prices). Saved Bridgewatch prices in the calculator model the default logged tier at Standard sell-order fees with 1 Pork Pie and no Premium. Premium upside figures in tips are projected only.",
     },
   },
   "corrupted-dungeons-pvpve": {

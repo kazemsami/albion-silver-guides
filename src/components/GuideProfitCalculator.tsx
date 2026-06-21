@@ -230,6 +230,7 @@ export function GuideProfitCalculator({
       : result;
 
   const hasBonusOutput =
+    economics.bonusOutputExcludedFromTakeHome === true &&
     (breakdownResult.bonusOutput?.length ?? 0) > 0 &&
     breakdownResult.bonusOutputTotal != null;
 
