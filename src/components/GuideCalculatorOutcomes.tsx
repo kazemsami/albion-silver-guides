@@ -8,6 +8,7 @@ import {
 import { GuideMarketNote } from "@/components/GuideMarketNote";
 import { ProfitOutcomesTable } from "@/components/ProfitOutcomesTable";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
+import { profitUnitLabel } from "@/lib/laborer-display";
 import { ABYSSAL_PROFIT_OUTCOME_HINTS } from "@/lib/abyssal-economics";
 import { POTION_PROFIT_OUTCOME_HINTS } from "@/lib/potion-economics";
 import {
@@ -54,9 +55,10 @@ export function GuideCalculatorOutcomes({
   const outcomesLabel =
     guideSlug === "potions-crafting-bulk"
       ? "Profit outcomes / 10k focus (after tax)"
-      : "Profit outcomes / hr (after tax)";
-  const outcomesUnit =
-    guideSlug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
+      : guideSlug === "laborer-passive-income"
+        ? "Profit outcomes / 22h cycle (after tax)"
+        : "Profit outcomes / hr (after tax)";
+  const outcomesUnit = profitUnitLabel(guideSlug);
   const isAbyssal = guideSlug === "abyssal-depths-farming";
   const isPotions = guideSlug === "potions-crafting-bulk";
   const outcomeHints = isAbyssal

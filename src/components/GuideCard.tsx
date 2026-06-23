@@ -13,6 +13,7 @@ import { GuideRiskBadge } from "@/components/GuideRiskBadge";
 import { getCardPriceSourceLabel } from "@/lib/guide-display";
 import type { GuideProfitRange } from "@/lib/guide-economics";
 import { formatSilverPrice } from "@/lib/format";
+import { profitRangeTitle, profitUnitLabel } from "@/lib/laborer-display";
 
 const difficultyColors = {
   beginner: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
@@ -38,12 +39,8 @@ export function GuideCard({
   const { useLivePrices } = useMarketCity();
   const priceSourceLabel =
     priceSourceLabelOverride ?? getCardPriceSourceLabel(useLivePrices);
-  const profitUnit =
-    guide.slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
-  const profitRangeLabel =
-    guide.slug === "potions-crafting-bulk"
-      ? "Profit range / 10k focus (conservative to high-roll)"
-      : "Profit range / hr";
+  const profitUnit = profitUnitLabel(guide.slug);
+  const profitRangeLabel = profitRangeTitle(guide.slug);
 
   return (
     <Link

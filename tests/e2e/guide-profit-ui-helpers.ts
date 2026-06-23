@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import type { Locator, Page } from "@playwright/test";
 import { guides } from "@/data/guides";
 import { formatSilverPrice } from "@/lib/format";
+import { profitUnitLabel } from "@/lib/laborer-display";
 import { blockLivePriceApis } from "./helpers";
 import { readProfitSnapshotFixture } from "./profit-snapshot-helpers";
 
@@ -28,7 +29,7 @@ export interface ParsedProfitRange {
 }
 
 export function profitUnitForSlug(slug: string): string {
-  return slug === "potions-crafting-bulk" ? "/10k focus" : "/hr";
+  return profitUnitLabel(slug);
 }
 
 /** Parse compact silver tokens like 209k, 1.1m (matches formatSilver). */
@@ -53,9 +54,9 @@ export function parseProfitRangeDisplay(
   expectedUnit: string,
 ): ParsedProfitRange | null {
   const body = text.split("·")[0].trim();
-  const unitMatch = body.match(/(\/hr|\/10k focus)\s*$/);
+  const unitMatch = body.match(/(\/hr|\/10k focus|\/22h cycle)\s*$/);
   const unit = unitMatch?.[1] ?? expectedUnit;
-  const amountPart = body.replace(/(\/hr|\/10k focus)\s*$/, "").trim();
+  const amountPart = body.replace(/(\/hr|\/10k focus|\/22h cycle)\s*$/, "").trim();
 
   const rangeMatch = amountPart.match(
     /^([\d.-]+[kKmM]?)\s*[–-]\s*([\d.-]+[kKmM]?)$/i,

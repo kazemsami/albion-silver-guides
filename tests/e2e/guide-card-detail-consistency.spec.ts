@@ -85,7 +85,7 @@ test.describe("Guide cards always use computed profit ranges", () => {
         profitText,
         `Card for ${slug} must show computed profit, not N/A`,
       ).not.toMatch(/\bN\/A\b/);
-      expect(profitText).toMatch(/(\/hr|\/10k focus)/);
+      expect(profitText).toMatch(/(\/hr|\/10k focus|\/22h cycle)/);
     });
   }
 });

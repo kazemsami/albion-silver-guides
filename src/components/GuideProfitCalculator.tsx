@@ -16,9 +16,11 @@ import {
 } from "@/components/EconomicsTable";
 import {
   LABORER_SPECIALTIES,
+  buildLaborerCycleEconomics,
   buildLaborerHourlyEconomics,
   buildLaborerLoadout,
   getLaborerSpecialty,
+  laborerCountForTier,
 } from "@/data/laborer-specialties";
 import { loadoutVariantForTier } from "@/data/guide-loadouts";
 import {
@@ -44,6 +46,17 @@ import {
   formatSilverPrice,
   formatSilverRange,
 } from "@/lib/format";
+import {
+  computeT8HouseBuildPricing,
+} from "@/data/t8-house-cost";
+import {
+  LABORER_JOB_HOURS,
+  computeLaborerFullSetupCosts,
+  computeLaborerPayback,
+  formatPaybackDays,
+  laborerCycleProfit,
+  profitUnitLabel,
+} from "@/lib/laborer-display";
 
 interface GuideProfitCalculatorProps {
   economics: GuideEconomics;
@@ -229,10 +242,86 @@ export function GuideProfitCalculator({
       ? loggedBaselineResult
       : result;
 
+  const cycleBreakdownResult = useMemo(() => {
+    if (!hasLaborerSpecialtyPicker) return null;
+    const scaled = buildLaborerCycleEconomics(specialty, tier);
+    const taxRate =
+      usesLoggedStandardBaseline && !premiumSeller
+        ? STANDARD_LISTING_TAX_RATE
+        : listingTaxRate;
+    return computeHourlyEconomics(
+      { ...economics, ...scaled },
+      priceMap,
+      marketCity,
+      taxRate,
+      mapKind,
+    );
+  }, [
+    economics,
+    hasLaborerSpecialtyPicker,
+    listingTaxRate,
+    mapKind,
+    marketCity,
+    priceMap,
+    specialty,
+    tier,
+    usesLoggedStandardBaseline,
+  ]);
+
+  const laborerBreakdown =
+    hasLaborerSpecialtyPicker && cycleBreakdownResult
+      ? cycleBreakdownResult
+      : breakdownResult;
+
+  const laborerCount = hasLaborerSpecialtyPicker
+    ? laborerCountForTier(tier)
+    : 0;
+  const laborerProfitUnit = profitUnitLabel("laborer-passive-income");
+
+  const displayTakeHome = hasLaborerSpecialtyPicker
+    ? laborerCycleProfit(heroTakeHome ?? null)
+    : heroTakeHome;
+  const displayBeforeTax = hasLaborerSpecialtyPicker
+    ? laborerCycleProfit(heroBeforeTax ?? null)
+    : heroBeforeTax;
+
+  const laborerSetupCosts = useMemo(() => {
+    if (!hasLaborerSpecialtyPicker || !activeLoadout?.pricing?.total) return null;
+    const houses = activeLoadout.loadout.houseCount ?? 0;
+    const houseBuild =
+      houses > 0
+        ? computeT8HouseBuildPricing(
+            priceMap,
+            houses,
+            mapKind,
+          ).total ?? 0
+        : 0;
+    return computeLaborerFullSetupCosts({
+      specialty,
+      tier,
+      priceMap,
+      furnitureSilver: activeLoadout.pricing.total,
+      houseBuildSilver: houseBuild,
+      mapKind,
+    });
+  }, [
+    activeLoadout,
+    hasLaborerSpecialtyPicker,
+    mapKind,
+    priceMap,
+    specialty,
+    tier,
+  ]);
+
+  const laborerPayback = useMemo(() => {
+    if (!laborerSetupCosts || displayTakeHome == null) return null;
+    return computeLaborerPayback(laborerSetupCosts.total, displayTakeHome);
+  }, [displayTakeHome, laborerSetupCosts]);
+
   const hasBonusOutput =
     economics.bonusOutputExcludedFromTakeHome === true &&
-    (breakdownResult.bonusOutput?.length ?? 0) > 0 &&
-    breakdownResult.bonusOutputTotal != null;
+    (laborerBreakdown.bonusOutput?.length ?? 0) > 0 &&
+    laborerBreakdown.bonusOutputTotal != null;
 
   const profitRange = useMemo(() => {
     if (!usesLoggedStandardBaseline) {
@@ -268,18 +357,20 @@ export function GuideProfitCalculator({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment/40">
-              {usesLoggedStandardBaseline && premiumSeller
-                ? "Est. take-home / hour (with Premium)"
-                : usesLoggedStandardBaseline && !premiumSeller
-                  ? hasBonusOutput
-                    ? "Logged take-home / hour (excludes Snapper EV)"
-                    : "Logged take-home / hour (Standard tax, no Premium)"
-                  : "Est. take-home / hour (after tax)"}
+              {hasLaborerSpecialtyPicker
+                ? "Est. take-home / 22h cycle (after tax)"
+                : usesLoggedStandardBaseline && premiumSeller
+                  ? "Est. take-home / hour (with Premium)"
+                  : usesLoggedStandardBaseline && !premiumSeller
+                    ? hasBonusOutput
+                      ? "Logged take-home / hour (excludes Snapper EV)"
+                      : "Logged take-home / hour (Standard tax, no Premium)"
+                    : "Est. take-home / hour (after tax)"}
             </p>
             <p className="mt-1 text-3xl font-bold text-gold tabular-nums">
-              {heroTakeHome != null ? formatSilverPrice(heroTakeHome) : "N/A"}
+              {displayTakeHome != null ? formatSilverPrice(displayTakeHome) : "N/A"}
             </p>
-            {heroBeforeTax != null && heroTakeHome != null && (
+            {displayBeforeTax != null && displayTakeHome != null && (
               <p className="mt-1 text-xs text-parchment/45">
                 Before{" "}
                 {usesLoggedStandardBaseline && premiumSeller
@@ -287,7 +378,15 @@ export function GuideProfitCalculator({
                   : usesLoggedStandardBaseline
                     ? "Standard sell-order fees"
                     : "tax"}
-                : {formatSilverPrice(heroBeforeTax)}/hr
+                : {formatSilverPrice(displayBeforeTax)}
+                {hasLaborerSpecialtyPicker ? "/22h cycle" : "/hr"}
+              </p>
+            )}
+            {hasLaborerSpecialtyPicker && heroTakeHome != null && (
+              <p className="mt-1 text-xs text-parchment/45">
+                Amortized {formatSilverPrice(heroTakeHome)}/hr across the wait:{" "}
+                {laborerCount} laborers each finish one journal every {LABORER_JOB_HOURS}h.
+                Not active play income.
               </p>
             )}
             {usesLoggedStandardBaseline && premiumSeller && loggedBaselineResult && (
@@ -295,9 +394,13 @@ export function GuideProfitCalculator({
                 Logged run without Premium:{" "}
                 <span className="font-semibold text-parchment/70 tabular-nums">
                   {loggedBaselineResult.netAfterTax != null
-                    ? formatSilverPrice(loggedBaselineResult.netAfterTax)
+                    ? formatSilverPrice(
+                        hasLaborerSpecialtyPicker
+                          ? laborerCycleProfit(loggedBaselineResult.netAfterTax)
+                          : loggedBaselineResult.netAfterTax,
+                      )
                     : "N/A"}
-                  /hr
+                  {hasLaborerSpecialtyPicker ? "/22h cycle" : "/hr"}
                 </span>
                 {" "}(Standard tax, no yield bonus)
               </p>
@@ -307,9 +410,13 @@ export function GuideProfitCalculator({
                 Projected with Premium:{" "}
                 <span className="font-semibold text-parchment/70 tabular-nums">
                   {projectedPremiumResult.netAfterTax != null
-                    ? formatSilverPrice(projectedPremiumResult.netAfterTax)
+                    ? formatSilverPrice(
+                        hasLaborerSpecialtyPicker
+                          ? laborerCycleProfit(projectedPremiumResult.netAfterTax)
+                          : projectedPremiumResult.netAfterTax,
+                      )
                     : "N/A"}
-                  /hr
+                  {hasLaborerSpecialtyPicker ? "/22h cycle" : "/hr"}
                 </span>
                 {" "}(toggle Premium in the header)
               </p>
@@ -321,7 +428,20 @@ export function GuideProfitCalculator({
                   : usesLoggedStandardBaseline
                     ? "All tiers (logged baseline, Standard tax): "
                     : "All skill levels (after tax): "}
-                {formatSilverRange(profitRange.min, profitRange.max)}/hr
+                {formatSilverRange(profitRange.min, profitRange.max)}
+                {hasLaborerSpecialtyPicker ? laborerProfitUnit : "/hr"}
+              </p>
+            )}
+            {laborerPayback && laborerSetupCosts && (
+              <p className="mt-2 text-xs text-parchment/50">
+                Setup payback (furniture, houses, island L6, T8 contracts):{" "}
+                <span className="font-semibold text-parchment/70 tabular-nums">
+                  ~{Math.ceil(laborerPayback.cycles)} cycles (
+                  {formatPaybackDays(laborerPayback.days)})
+                </span>
+                {" "}on {formatSilverExact(laborerSetupCosts.total)} upfront.
+                {laborerSetupCosts.laborerContractsSilver == null &&
+                  " Laborer contract prices missing from snapshot."}
               </p>
             )}
           </div>
@@ -409,6 +529,15 @@ export function GuideProfitCalculator({
               pricing={activeLoadout.pricing}
               prices={serializedPrices}
               priceMapKind={mapKind}
+              laborerSetup={
+                hasLaborerSpecialtyPicker
+                  ? {
+                      laborerCount,
+                      contractItemId: specialty.contractItemId,
+                      contractName: `Elder ${specialty.label} Contract`,
+                    }
+                  : undefined
+              }
             />
           </div>
         </section>
@@ -428,7 +557,9 @@ export function GuideProfitCalculator({
           </p>
         )}
         <p className="mt-2 text-sm text-parchment/50">
-          Calculated from 1-hour output at{" "}
+          {hasLaborerSpecialtyPicker
+            ? `Calculated for one full ${LABORER_JOB_HOURS}h island cycle at `
+            : "Calculated from 1-hour output at "}
           <span className="text-parchment/70">
             {hasLaborerSpecialtyPicker ? `${specialty.label}, ` : ""}
             {tier.label}
@@ -444,9 +575,13 @@ export function GuideProfitCalculator({
         </p>
 
         <EconomicsTable
-          title="1-Hour Output (sell value)"
-          lines={breakdownResult.output}
-          total={breakdownResult.outputTotal}
+          title={
+            hasLaborerSpecialtyPicker
+              ? "22h Cycle Output (sell value)"
+              : "1-Hour Output (sell value)"
+          }
+          lines={laborerBreakdown.output}
+          total={laborerBreakdown.outputTotal}
           totalLabel="Gross output"
           variant="output"
         />
@@ -454,28 +589,36 @@ export function GuideProfitCalculator({
         {hasBonusOutput && (
           <EconomicsTable
             title="RNG upside (not in logged take-home)"
-            lines={breakdownResult.bonusOutput!}
-            total={breakdownResult.bonusOutputTotal ?? null}
+            lines={laborerBreakdown.bonusOutput!}
+            total={laborerBreakdown.bonusOutputTotal ?? null}
             totalLabel="Snapper EV (optional)"
             variant="output"
           />
         )}
 
-        {breakdownResult.input.length > 0 && (
+        {laborerBreakdown.input.length > 0 && (
           <EconomicsTable
-            title="1-Hour Input Costs"
-            lines={breakdownResult.input}
-            total={breakdownResult.inputTotal}
+            title={
+              hasLaborerSpecialtyPicker
+                ? "22h Cycle Input Costs"
+                : "1-Hour Input Costs"
+            }
+            lines={laborerBreakdown.input}
+            total={laborerBreakdown.inputTotal}
             totalLabel="Input cost"
             variant="input"
           />
         )}
 
-        {breakdownResult.consumables.length > 0 && (
+        {laborerBreakdown.consumables.length > 0 && (
           <EconomicsTable
-            title="1-Hour Consumables"
-            lines={breakdownResult.consumables}
-            total={breakdownResult.consumableTotal}
+            title={
+              hasLaborerSpecialtyPicker
+                ? "22h Cycle Consumables"
+                : "1-Hour Consumables"
+            }
+            lines={laborerBreakdown.consumables}
+            total={laborerBreakdown.consumableTotal}
             totalLabel="Consumable cost"
             variant="input"
           />
@@ -483,48 +626,54 @@ export function GuideProfitCalculator({
 
         <div className="profit-summary-box mt-5 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3">
           <EconomicsSummaryRow
-            label="Gross output / hour"
-            value={breakdownResult.outputTotal}
+            label={
+              hasLaborerSpecialtyPicker
+                ? "Gross output / 22h cycle"
+                : "Gross output / hour"
+            }
+            value={laborerBreakdown.outputTotal}
           />
-          {breakdownResult.inputTotal != null && (
+          {laborerBreakdown.inputTotal != null && (
             <EconomicsSummaryRow
               label="Minus input costs"
-              value={-breakdownResult.inputTotal}
+              value={-laborerBreakdown.inputTotal}
             />
           )}
-          {breakdownResult.consumableTotal != null && (
+          {laborerBreakdown.consumableTotal != null && (
             <EconomicsSummaryRow
               label="Minus consumables"
-              value={-breakdownResult.consumableTotal}
+              value={-laborerBreakdown.consumableTotal}
             />
           )}
           <EconomicsSummaryRow
             label="Net before sell-order fees"
-            value={breakdownResult.netTotal}
+            value={laborerBreakdown.netTotal}
           />
-          {breakdownResult.marketTaxTotal != null && (
+          {laborerBreakdown.marketTaxTotal != null && (
             <EconomicsSummaryRow
               label={listingTaxRowLabel(premiumSeller)}
-              value={-breakdownResult.marketTaxTotal}
+              value={-laborerBreakdown.marketTaxTotal}
             />
           )}
           <EconomicsSummaryRow
             label={
-              usesLoggedStandardBaseline && !premiumSeller
-                ? hasBonusOutput
-                  ? "Logged take-home / hour (excludes Snapper EV)"
-                  : "Logged take-home / hour"
-                : usesLoggedStandardBaseline
-                  ? "Est. take-home / hour (with Premium)"
-                  : "Est. take-home / hour"
+              hasLaborerSpecialtyPicker
+                ? "Est. take-home / 22h cycle"
+                : usesLoggedStandardBaseline && !premiumSeller
+                  ? hasBonusOutput
+                    ? "Logged take-home / hour (excludes Snapper EV)"
+                    : "Logged take-home / hour"
+                  : usesLoggedStandardBaseline
+                    ? "Est. take-home / hour (with Premium)"
+                    : "Est. take-home / hour"
             }
-            value={breakdownResult.netAfterTax ?? breakdownResult.netTotal}
+            value={laborerBreakdown.netAfterTax ?? laborerBreakdown.netTotal}
             emphasis
           />
           {hasBonusOutput && (
             <EconomicsSummaryRow
               label="Plus Snapper EV (RNG upside)"
-              value={breakdownResult.bonusOutputTotal ?? null}
+              value={laborerBreakdown.bonusOutputTotal ?? null}
             />
           )}
         </div>

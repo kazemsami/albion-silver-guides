@@ -12,6 +12,7 @@ import { collectPotionPricingItemIds } from "@/data/potion-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
 import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
+import { laborerCycleProfit } from "@/lib/laborer-display";
 import {
   PREMIUM_LISTING_TAX_RATE,
   getGatheringYieldMultiplier,
@@ -310,10 +311,13 @@ export function computeProfitRange(
     (n): n is number => n != null,
   );
   if (valid.length === 0) return { min: null, max: null };
-  return {
-    min: roundSilver(Math.min(...valid)),
-    max: roundSilver(Math.max(...valid)),
-  };
+  let min = roundSilver(Math.min(...valid));
+  let max = roundSilver(Math.max(...valid));
+  if (economics.defaultLaborerSpecialtyId) {
+    min = laborerCycleProfit(min) ?? min;
+    max = laborerCycleProfit(max) ?? max;
+  }
+  return { min, max };
 }
 
 function computeAllGuideProfitRanges(

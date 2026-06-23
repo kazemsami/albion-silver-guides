@@ -56,12 +56,12 @@
     "rangeMax": 1851454
   },
   "laborer-passive-income": {
-    "conservative": 7071,
-    "median": 14142,
-    "expected": 14142,
-    "highRoll": 22669,
-    "rangeMin": 7071,
-    "rangeMax": 22669
+    "conservative": 155562,
+    "median": 311124,
+    "expected": 311124,
+    "highRoll": 498718,
+    "rangeMin": 155562,
+    "rangeMax": 498718
   },
   "potions-crafting-bulk": {
     "conservative": 58930,

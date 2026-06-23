@@ -4,6 +4,8 @@ import {
   T8_HOUSE_BUILD_MATERIALS,
   computeT8HouseBuildPricing,
 } from "@/data/t8-house-cost";
+import { ISLAND_UPGRADE_LEVEL_6_FIRST_SILVER } from "@/lib/laborer-display";
+import { resolveBuyPrice } from "@/lib/albion-prices";
 import type {
   EquipmentLoadout,
   EquipmentSlot,
@@ -15,12 +17,19 @@ import { formatSilverExact } from "@/lib/format";
 import { deserializePriceMap } from "@/lib/guide-economics";
 import type { PriceMapKind } from "@/lib/albion-prices";
 
+interface LaborerSetupExtras {
+  laborerCount: number;
+  contractItemId: string;
+  contractName: string;
+}
+
 interface EquipmentPanelProps {
   loadout: EquipmentLoadout;
   variant?: "safe" | "profit" | "default";
   pricing?: LoadoutPricing;
   prices?: SerializedPriceMap;
   priceMapKind?: PriceMapKind;
+  laborerSetup?: LaborerSetupExtras;
 }
 
 const variantStyles = {
@@ -71,6 +80,7 @@ export function EquipmentPanel({
   pricing,
   prices,
   priceMapKind = "snapshot",
+  laborerSetup,
 }: EquipmentPanelProps) {
   const { slots, inventory, houseCount } = loadout;
   const hasWornGear = Object.keys(slots).length > 0;
@@ -86,9 +96,31 @@ export function EquipmentPanel({
       : null;
 
   const isLaborerSetup = houseCount != null && houseCount > 0;
+  const priceMap = prices ? deserializePriceMap(prices) : null;
+  const contractUnitPrice =
+    laborerSetup && priceMap
+      ? resolveBuyPrice(
+          priceMap,
+          laborerSetup.contractItemId,
+          priceMapKind,
+        ).unitPrice
+      : null;
+  const laborerHireTotal =
+    contractUnitPrice != null && laborerSetup
+      ? contractUnitPrice * laborerSetup.laborerCount
+      : null;
+  const islandUpgradeSilver = isLaborerSetup
+    ? ISLAND_UPGRADE_LEVEL_6_FIRST_SILVER
+    : null;
   const setupTotal =
-    pricing?.total != null || houseBuildPricing?.total != null
-      ? (pricing?.total ?? 0) + (houseBuildPricing?.total ?? 0)
+    pricing?.total != null ||
+    houseBuildPricing?.total != null ||
+    islandUpgradeSilver != null ||
+    laborerHireTotal != null
+      ? (pricing?.total ?? 0) +
+        (houseBuildPricing?.total ?? 0) +
+        (islandUpgradeSilver ?? 0) +
+        (laborerHireTotal ?? 0)
       : null;
   const loadoutLabel = isLaborerSetup ? "Furniture & journals" : "Loadout market value";
 
@@ -275,6 +307,35 @@ export function EquipmentPanel({
                   <span className="font-semibold text-gold tabular-nums">
                     {formatSilverExact(houseBuildPricing.total)} silver
                   </span>
+                </div>
+              )}
+              {islandUpgradeSilver != null && (
+                <div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm">
+                  <span className="text-parchment/60">
+                    Personal island upgrade to level 6
+                  </span>
+                  <span className="font-semibold text-gold tabular-nums">
+                    {formatSilverExact(islandUpgradeSilver)} silver
+                  </span>
+                </div>
+              )}
+              {laborerSetup && laborerHireTotal != null && (
+                <div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm">
+                  <span className="text-parchment/60">
+                    {laborerSetup.contractName}
+                    {laborerSetup.laborerCount > 1
+                      ? ` (×${laborerSetup.laborerCount})`
+                      : ""}
+                  </span>
+                  <span className="font-semibold text-gold tabular-nums">
+                    {formatSilverExact(laborerHireTotal)} silver
+                  </span>
+                </div>
+              )}
+              {laborerSetup && laborerHireTotal == null && (
+                <div className="mt-1 text-xs text-parchment/45">
+                  T8 laborer contract buy price not in snapshot; payback may be
+                  understated.
                 </div>
               )}
               <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-gold/15 pt-2 text-sm">

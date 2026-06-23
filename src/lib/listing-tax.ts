@@ -80,7 +80,7 @@ export function takeHomeFormulaNote(
   let yieldNote = "";
   if (noteKind === "laborer") {
     yieldNote =
-      " Laborer returns depend on journal tier, house/furniture happiness, and journal market prices. Premium affects the fame you earn while filling journals, but not the laborer return itself.";
+      " Each laborer finishes one journal every 22 hours. Returns depend on journal tier, happiness, and market prices. Compare feeding journals vs selling full journals before you commit. Premium affects fame while filling journals, not the laborer payout itself.";
   } else if (noteKind === "gathering") {
     if (gatherYieldBaseline === "standard") {
       yieldNote = premiumSeller

@@ -23,6 +23,7 @@ import {
   PREMIUM_LISTING_TAX_RATE,
 } from "@/lib/listing-tax";
 import { roundSilver } from "@/lib/format";
+import { isLaborerGuide, scaleLaborerOutcomes } from "@/lib/laborer-display";
 
 export type GuideProfitOutcomesMap = Record<string, GuideProfitOutcomes>;
 
@@ -230,7 +231,7 @@ export function computeGuideProfitOutcomes(
     return { conservative: null, median: null, expected: null, highRoll: null };
   }
 
-  return computeGenericOutcomes(
+  const outcomes = computeGenericOutcomes(
     economics,
     prices,
     listingTaxRate,
@@ -238,4 +239,6 @@ export function computeGuideProfitOutcomes(
     premiumSeller,
     priceMapKind,
   );
+
+  return isLaborerGuide(slug) ? scaleLaborerOutcomes(outcomes) : outcomes;
 }

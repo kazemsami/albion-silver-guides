@@ -10,7 +10,8 @@ const MERCENARY_SILVER = 6303;
 const BASE_HOUSES = 10;
 /** Each T8 laborer house holds three laborers. */
 export const LABORERS_PER_HOUSE = 3;
-const HOURS_PER_JOB = 22;
+export const LABORER_JOB_HOURS = 22;
+const HOURS_PER_JOB = LABORER_JOB_HOURS;
 
 export interface LaborerOutputMixItem {
   id: string;
@@ -22,6 +23,8 @@ export interface LaborerSpecialty {
   id: string;
   label: string;
   laborerName: string;
+  /** T8 laborer contract item id for market buy price (Albion LABOURER spelling). */
+  contractItemId: string;
   fillActivity: string;
   journalEmptyId: string;
   journalFullId: string;
@@ -45,6 +48,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "prospector",
     label: "Prospector",
     laborerName: "prospector",
+    contractItemId: "T8_LABOURER_CONTRACT_ORE",
     fillActivity: "mining T7/T8 ore",
     journalEmptyId: "T7_JOURNAL_ORE_EMPTY",
     journalFullId: "T7_JOURNAL_ORE_FULL",
@@ -60,6 +64,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "lumberjack",
     label: "Lumberjack",
     laborerName: "lumberjack",
+    contractItemId: "T8_LABOURER_CONTRACT_WOOD",
     fillActivity: "chopping T7/T8 wood",
     journalEmptyId: "T7_JOURNAL_WOOD_EMPTY",
     journalFullId: "T7_JOURNAL_WOOD_FULL",
@@ -75,6 +80,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "cropper",
     label: "Cropper",
     laborerName: "cropper",
+    contractItemId: "T8_LABOURER_CONTRACT_FIBER",
     fillActivity: "harvesting T7/T8 fiber",
     journalEmptyId: "T7_JOURNAL_FIBER_EMPTY",
     journalFullId: "T7_JOURNAL_FIBER_FULL",
@@ -90,6 +96,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "gamekeeper",
     label: "Gamekeeper",
     laborerName: "gamekeeper",
+    contractItemId: "T8_LABOURER_CONTRACT_HIDE",
     fillActivity: "skinning T7/T8 hide",
     journalEmptyId: "T7_JOURNAL_HIDE_EMPTY",
     journalFullId: "T7_JOURNAL_HIDE_FULL",
@@ -105,6 +112,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "stonecutter",
     label: "Stonecutter",
     laborerName: "stonecutter",
+    contractItemId: "T8_LABOURER_CONTRACT_STONE",
     fillActivity: "quarrying T7/T8 stone",
     journalEmptyId: "T7_JOURNAL_STONE_EMPTY",
     journalFullId: "T7_JOURNAL_STONE_FULL",
@@ -120,6 +128,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "fisherman",
     label: "Fisherman",
     laborerName: "fisherman",
+    contractItemId: "T8_LABOURER_CONTRACT_FISH",
     fillActivity: "fishing T7/T8 waters",
     journalEmptyId: "T7_JOURNAL_FISHING_EMPTY",
     journalFullId: "T7_JOURNAL_FISHING_FULL",
@@ -135,6 +144,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "mercenary",
     label: "Mercenary",
     laborerName: "mercenary",
+    contractItemId: "T8_LABOURER_CONTRACT_MERCENARY",
     fillActivity: "earning combat fame",
     journalEmptyId: "T7_JOURNAL_MERCENARY_EMPTY",
     journalFullId: "T7_JOURNAL_MERCENARY_FULL",
@@ -151,6 +161,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "blacksmith",
     label: "Blacksmith",
     laborerName: "blacksmith",
+    contractItemId: "T8_LABOURER_CONTRACT_WARRIOR",
     fillActivity: "crafting with warrior fame",
     journalEmptyId: "T7_JOURNAL_WARRIOR_EMPTY",
     journalFullId: "T7_JOURNAL_WARRIOR_FULL",
@@ -169,6 +180,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "fletcher",
     label: "Fletcher",
     laborerName: "fletcher",
+    contractItemId: "T8_LABOURER_CONTRACT_HUNTER",
     fillActivity: "crafting with hunter fame",
     journalEmptyId: "T7_JOURNAL_HUNTER_EMPTY",
     journalFullId: "T7_JOURNAL_HUNTER_FULL",
@@ -187,6 +199,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "imbuer",
     label: "Imbuer",
     laborerName: "imbuer",
+    contractItemId: "T8_LABOURER_CONTRACT_MAGE",
     fillActivity: "crafting with mage fame",
     journalEmptyId: "T7_JOURNAL_MAGE_EMPTY",
     journalFullId: "T7_JOURNAL_MAGE_FULL",
@@ -205,6 +218,7 @@ export const LABORER_SPECIALTIES: LaborerSpecialty[] = [
     id: "tinker",
     label: "Tinker",
     laborerName: "tinker",
+    contractItemId: "T8_LABOURER_CONTRACT_TOOLMAKER",
     fillActivity: "crafting with toolmaker fame",
     journalEmptyId: "T7_JOURNAL_TOOLMAKER_EMPTY",
     journalFullId: "T7_JOURNAL_TOOLMAKER_FULL",
@@ -277,17 +291,15 @@ function materialOutputsForJob(
   ];
 }
 
-export function buildLaborerHourlyEconomics(
+function buildLaborerEconomicsForJobs(
   specialty: LaborerSpecialty,
-  tier: SkillTier,
+  jobsPerPeriod: number,
 ): Pick<{ hourlyOutput: HourlyItem[]; hourlyInputs: HourlyItem[] }, "hourlyOutput" | "hourlyInputs"> {
-  const jobsPerHour = jobsPerHourForTier(tier);
-
   const hourlyInputs: HourlyItem[] = [
     {
       id: specialty.journalFullId,
       name: specialty.journalFullName,
-      quantity: jobsPerHour,
+      quantity: jobsPerPeriod,
       side: "buy",
     },
   ];
@@ -296,7 +308,7 @@ export function buildLaborerHourlyEconomics(
     {
       id: specialty.journalEmptyId,
       name: specialty.journalEmptyName,
-      quantity: jobsPerHour,
+      quantity: jobsPerPeriod,
     },
   ];
 
@@ -304,14 +316,29 @@ export function buildLaborerHourlyEconomics(
     hourlyOutput.unshift({
       id: specialty.outputId,
       name: specialty.outputName,
-      quantity: jobsPerHour,
+      quantity: jobsPerPeriod,
       fixedSilverPerUnit: specialty.silverPerJournal,
     });
   } else {
-    hourlyOutput.unshift(...materialOutputsForJob(specialty, jobsPerHour));
+    hourlyOutput.unshift(...materialOutputsForJob(specialty, jobsPerPeriod));
   }
 
   return { hourlyOutput, hourlyInputs };
+}
+
+export function buildLaborerHourlyEconomics(
+  specialty: LaborerSpecialty,
+  tier: SkillTier,
+): Pick<{ hourlyOutput: HourlyItem[]; hourlyInputs: HourlyItem[] }, "hourlyOutput" | "hourlyInputs"> {
+  return buildLaborerEconomicsForJobs(specialty, jobsPerHourForTier(tier));
+}
+
+/** One full journal job per laborer across a 22-hour island cycle. */
+export function buildLaborerCycleEconomics(
+  specialty: LaborerSpecialty,
+  tier: SkillTier,
+): Pick<{ hourlyOutput: HourlyItem[]; hourlyInputs: HourlyItem[] }, "hourlyOutput" | "hourlyInputs"> {
+  return buildLaborerEconomicsForJobs(specialty, laborerCountForTier(tier));
 }
 
 export function buildLaborerLoadout(
@@ -375,6 +402,7 @@ export function collectLaborerSpecialtyItemIds(): string[] {
     "T8_FURNITUREITEM_TROPHY_GENERAL",
   ]);
   for (const specialty of LABORER_SPECIALTIES) {
+    ids.add(specialty.contractItemId);
     ids.add(specialty.journalEmptyId);
     ids.add(specialty.journalFullId);
     if (!specialty.silverPerJournal) {

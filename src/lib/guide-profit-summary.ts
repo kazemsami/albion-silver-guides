@@ -7,6 +7,9 @@ import {
 } from "@/lib/guide-economics";
 import { computeGuideProfitOutcomes } from "@/lib/guide-profit-outcomes";
 import { formatSilverPrice } from "@/lib/format";
+import {
+  LABORER_JOB_HOURS,
+} from "@/lib/laborer-display";
 import { STANDARD_LISTING_TAX_RATE } from "@/lib/listing-tax";
 
 export function computeGuideProfitOutcomesAtCity(
@@ -28,8 +31,12 @@ export function computeGuideProfitOutcomesAtCity(
   });
 }
 
-function formatTakeHome(amount: number | null): string | null {
-  return amount != null ? `${formatSilverPrice(amount)}/hr` : null;
+function formatTakeHome(amount: number | null, slug: string): string | null {
+  if (amount == null) return null;
+  if (slug === "laborer-passive-income") {
+    return `${formatSilverPrice(amount)}/22h cycle`;
+  }
+  return `${formatSilverPrice(amount)}/hr`;
 }
 
 /** Server-rendered intro line that tracks saved-price calculator outcomes. */
@@ -43,9 +50,9 @@ export function buildGuideProfitIntroText(
   if (!outcomes?.expected) return null;
 
   const cityLabel = marketCity;
-  const expected = formatTakeHome(outcomes.expected);
-  const highRoll = formatTakeHome(outcomes.highRoll);
-  const conservative = formatTakeHome(outcomes.conservative);
+  const expected = formatTakeHome(outcomes.expected, slug);
+  const highRoll = formatTakeHome(outcomes.highRoll, slug);
+  const conservative = formatTakeHome(outcomes.conservative, slug);
 
   if (slug === "mists-fishing") {
     const defaultTier =
@@ -66,6 +73,15 @@ export function buildGuideProfitIntroText(
         ? ` Advanced tier high-roll up to ${highRoll}.`
         : "";
     return `Saved ${cityLabel} prices on the default logged tier: ${expected} take-home (Standard tax, no Premium).${highRollNote}`;
+  }
+
+  if (slug === "laborer-passive-income") {
+    return (
+      `Default prospector island at saved ${cityLabel} prices: ${expected} net per full ${LABORER_JOB_HOURS}h cycle (Standard tax). ` +
+      `That amortizes to about ${formatSilverPrice(Math.round((outcomes.expected ?? 0) / LABORER_JOB_HOURS))}/hr while jobs run, not active farming income. ` +
+      `Compare feeding journals vs selling full journals on the market before you commit silver. ` +
+      `Full setup (houses, furniture, island L6, T8 contracts) often pays back over many weeks.`
+    );
   }
 
   return null;
