@@ -68,7 +68,7 @@ export function Header() {
             rel="noopener noreferrer"
             className="btn-secondary hidden px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold xl:inline-flex"
           >
-            Donate
+            Buy me a coffee
           </a>
           <div className="relative lg:hidden">
             <MobileNav />

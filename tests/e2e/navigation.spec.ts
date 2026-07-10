@@ -38,13 +38,13 @@ test.describe("Desktop header navigation", () => {
     }
   });
 
-  test("Feedback opens dialog and Donate links to PayPal", async ({ page }) => {
+  test("Feedback opens dialog and Buy me a coffee links to PayPal", async ({ page }) => {
     await page.goto("/guides");
     await page.getByRole("button", { name: "Feedback" }).first().click();
     await expect(page.getByRole("dialog")).toBeVisible();
 
-    const donate = page.getByRole("link", { name: "Donate" }).first();
-    await expect(donate).toHaveAttribute("href", paypalDonateUrl);
+    const coffeeLink = page.getByRole("link", { name: "Buy me a coffee" }).first();
+    await expect(coffeeLink).toHaveAttribute("href", paypalDonateUrl);
   });
 
   test("Theme toggle switches without error", async ({ page }) => {

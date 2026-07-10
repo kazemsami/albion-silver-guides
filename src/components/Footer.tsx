@@ -46,7 +46,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="btn-secondary inline-flex px-4 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
               >
-                Support this site
+                Buy me a coffee
               </a>
             </div>
           </div>

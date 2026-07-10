@@ -158,12 +158,12 @@ test.describe("Header and footer consistency", () => {
     await expect(feedbackBtn, "Header must have a Feedback button").toBeVisible();
   });
 
-  test("Header contains Donate link", async ({ page }) => {
+  test("Header contains Buy me a coffee link", async ({ page }) => {
     await page.goto("/guides");
-    const donateLink = page.locator(
-      'header a:has-text("Donate"), header button:has-text("Donate")',
+    const coffeeLink = page.locator(
+      'header a:has-text("Buy me a coffee"), header button:has-text("Buy me a coffee")',
     ).first();
-    await expect(donateLink, "Header must have a Donate link").toBeVisible();
+    await expect(coffeeLink, "Header must have a Buy me a coffee link").toBeVisible();
   });
 
   test("Header contains Live prices control", async ({ page }) => {

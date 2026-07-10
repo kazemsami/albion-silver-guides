@@ -118,7 +118,7 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
               className="mt-1 block rounded-lg border border-gold/25 bg-gold/5 px-3 py-2.5 text-center text-sm font-medium text-gold transition-colors hover:bg-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
             >
-              Donate via PayPal
+              Buy me a coffee
             </a>
           </nav>
         </>
