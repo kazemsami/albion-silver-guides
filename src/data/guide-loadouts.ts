@@ -649,6 +649,59 @@ export const guideLoadoutsBySlug: Record<string, Record<string, EquipmentLoadout
       ],
     },
   },
+  "resource-refining-focus": {
+    t4: {
+      title: "T4 Refining Setup",
+      description: "Iron ore plus tin bars into steel bars (Thetford smelter).",
+      slots: {},
+      inventory: [
+        { id: "T4_ORE", name: "Iron Ore", quantity: 2, hint: "Raw per craft" },
+        { id: "T3_METALBAR", name: "Tin Bar", quantity: 1, hint: "Lower-tier refined" },
+        { id: "T4_METALBAR", name: "Steel Bar", quantity: 1, hint: "Output" },
+      ],
+    },
+    t5: {
+      title: "T5 Refining Setup",
+      description: "Titanium ore plus steel bars into titanium steel.",
+      slots: {},
+      inventory: [
+        { id: "T5_ORE", name: "Titanium Ore", quantity: 3, hint: "Raw per craft" },
+        { id: "T4_METALBAR", name: "Steel Bar", quantity: 1, hint: "Lower-tier refined" },
+        { id: "T5_METALBAR", name: "Titanium Steel Bar", quantity: 1, hint: "Output" },
+      ],
+    },
+    t6: {
+      title: "T6 Refining Setup",
+      description:
+        "Default: Runite ore plus titanium steel into runite steel in Thetford.",
+      slots: {},
+      inventory: [
+        { id: "T6_ORE", name: "Runite Ore", quantity: 4, hint: "Raw per craft" },
+        { id: "T5_METALBAR", name: "Titanium Steel Bar", quantity: 1, hint: "Lower-tier refined" },
+        { id: "T6_METALBAR", name: "Runite Steel Bar", quantity: 1, hint: "Output" },
+      ],
+    },
+    t7: {
+      title: "T7 Refining Setup",
+      description: "Meteorite ore plus runite steel into meteorite steel.",
+      slots: {},
+      inventory: [
+        { id: "T7_ORE", name: "Meteorite Ore", quantity: 5, hint: "Raw per craft" },
+        { id: "T6_METALBAR", name: "Runite Steel Bar", quantity: 1, hint: "Lower-tier refined" },
+        { id: "T7_METALBAR", name: "Meteorite Steel Bar", quantity: 1, hint: "Output" },
+      ],
+    },
+    t8: {
+      title: "T8 Refining Setup",
+      description: "Adamantium ore plus meteorite steel into adamantium steel.",
+      slots: {},
+      inventory: [
+        { id: "T8_ORE", name: "Adamantium Ore", quantity: 5, hint: "Raw per craft" },
+        { id: "T7_METALBAR", name: "Meteorite Steel Bar", quantity: 1, hint: "Lower-tier refined" },
+        { id: "T8_METALBAR", name: "Adamantium Steel Bar", quantity: 1, hint: "Output" },
+      ],
+    },
+  },
 };
 
 export function getGuideLoadouts(slug: string): Record<string, EquipmentLoadout> {

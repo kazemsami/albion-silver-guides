@@ -8,8 +8,15 @@ import {
 import { T8_HOUSE_BUILD_ITEM_IDS } from "@/data/t8-house-cost";
 import { getAllTierLoadouts, loadoutVariantForTier } from "@/data/guide-loadouts";
 import { computeTrackingProfitRange } from "@/lib/tracking-economics";
-import { collectPotionPricingItemIds } from "@/data/potion-economics";
+import {
+  collectPotionPricingItemIds,
+} from "@/data/potion-economics";
+import {
+  collectRefiningLivePricingItemIds,
+  collectRefiningPricingItemIds,
+} from "@/data/refining-economics";
 import { computePotionProfitRange } from "@/lib/potion-economics";
+import { computeRefiningProfitRange } from "@/lib/refining-economics";
 import { computeAvaRoadsProfitRange } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitRange } from "@/lib/abyssal-economics";
 import { laborerCycleProfit } from "@/lib/laborer-display";
@@ -529,6 +536,41 @@ function collectMarketItemIdsForSlugs(slugs: string[]): string[] {
         allItemIds.add(id);
       }
     }
+    if (slug === "resource-refining-focus") {
+      // Estimated maps include enchanted ids; live API only fetches flat (.0).
+      for (const id of collectRefiningPricingItemIds()) {
+        allItemIds.add(id);
+      }
+    }
+  }
+
+  return [...allItemIds];
+}
+
+function collectLiveMarketItemIdsForSlugs(slugs: string[]): string[] {
+  const allItemIds = new Set<string>();
+
+  for (const slug of slugs) {
+    const economics = guideEconomicsBySlug[slug];
+    if (!economics) continue;
+
+    const tierLoadouts = getAllTierLoadouts(
+      slug,
+      economics.skillTiers.map((t) => t.id),
+    );
+    for (const id of collectGuideItemIds(tierLoadouts, economics)) {
+      allItemIds.add(id);
+    }
+    if (slug === "potions-crafting-bulk") {
+      for (const id of collectPotionPricingItemIds()) {
+        allItemIds.add(id);
+      }
+    }
+    if (slug === "resource-refining-focus") {
+      for (const id of collectRefiningLivePricingItemIds()) {
+        allItemIds.add(id);
+      }
+    }
   }
 
   return [...allItemIds];
@@ -539,10 +581,14 @@ async function buildGuidesMarketDataForSlugs(
   options?: { includeLivePrices?: boolean },
 ): Promise<GuidesListMarketData> {
   const itemIdList = collectMarketItemIdsForSlugs(slugs);
+  const liveItemIdList = collectLiveMarketItemIdsForSlugs(slugs);
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIdList);
   const includeLivePrices = options?.includeLivePrices ?? true;
   const livePriceMapsByServer = includeLivePrices
-    ? await fetchAlbionPricesByCityAllServers(itemIdList)
+    ? await fetchAlbionPricesByCityAllServers(
+        liveItemIdList,
+        estimatedPriceMaps,
+      )
     : null;
 
   return {
@@ -892,10 +938,22 @@ export async function fetchGuidePricing(
   const itemIds = [
     ...collectGuideItemIds(tierLoadouts, economics),
     ...(slug === "potions-crafting-bulk" ? collectPotionPricingItemIds() : []),
+    ...(slug === "resource-refining-focus"
+      ? collectRefiningPricingItemIds()
+      : []),
   ];
+  const liveItemIds =
+    slug === "resource-refining-focus"
+      ? [
+          ...collectGuideItemIds(tierLoadouts, economics),
+          ...collectRefiningLivePricingItemIds(),
+        ]
+      : itemIds;
   const estimatedPriceMaps = buildEstimatedPriceMapsByCity(itemIds);
-  const livePriceMapsByServer =
-    await fetchAlbionPricesByCityAllServers(itemIds);
+  const livePriceMapsByServer = await fetchAlbionPricesByCityAllServers(
+    liveItemIds,
+    estimatedPriceMaps,
+  );
   const prices = estimatedPriceMaps[AVERAGE_MARKET_CITY_ID];
 
   const defaultTier = economics?.skillTiers.find(
@@ -934,6 +992,8 @@ export async function fetchGuidePricing(
         ? computeTrackingProfitRange(prices)
         : economics && slug === "potions-crafting-bulk"
           ? computePotionProfitRange(prices)
+          : economics && slug === "resource-refining-focus"
+            ? computeRefiningProfitRange(prices)
           : economics && slug === "ava-roads-fishing"
             ? computeAvaRoadsProfitRange(prices)
             : economics && slug === "abyssal-depths-farming"

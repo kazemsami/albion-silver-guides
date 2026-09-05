@@ -144,6 +144,20 @@ export const guideReliabilityBySlug: Record<string, GuideReliabilityEntry> = {
         "Recipes and material counts checked against game data. Focus per batch read from craft UI at tested alchemy/potions spec (costs vary with spec and focus efficiency). Saved Bridgewatch prices used for income modeling. Example focus per batch of 5 pots at tested spec: T6 Major Healing .1 = 3,461, .2 = 4,895 (+ 2,500 silver lab fee each), Major Energy .1 = 4,188, .2 = 5,923, Poison 1,635; T7 Major Gigantify .1 = 5,278, .2 = 7,009, Major Resistance .1 = 6,368, .2 = 8,103, Major Sticky 5,503.",
     },
   },
+  "resource-refining-focus": {
+    status: "needs-review",
+    lastUpdated: "2026-08-21",
+    evidence: {
+      runs: 0,
+      date: "2026-08-21",
+      gear:
+        "Model assumes mid Destiny Board refining efficiency (~10,000 focus-cost efficiency) at a royal city station with the matching local production bonus",
+      market:
+        "Saved city averages for raw and refined resources; default calculator city is Thetford for metal bars",
+      notes:
+        "Recipes and base focus costs follow the official refining guide and Crafting Focus wiki table. Resource return rates use common royal-city tables (53.9% / 36.7% with bonus; 43.5% / 15.2% without). Not logged against a live refining session; recheck station fee and your real focus cost in-game before large batches.",
+    },
+  },
 };
 
 export function attachGuideReliability(

@@ -21,6 +21,7 @@ import { RelatedGuides } from "@/components/RelatedGuides";
 import { GuideProfitCalculator } from "@/components/GuideProfitCalculator";
 import { TrackingProfitCalculator } from "@/components/TrackingProfitCalculator";
 import { PotionProfitCalculator } from "@/components/PotionProfitCalculator";
+import { RefiningProfitCalculator } from "@/components/RefiningProfitCalculator";
 import { AvaRoadsFishingCalculator } from "@/components/AvaRoadsFishingCalculator";
 import { AbyssalProfitCalculator } from "@/components/AbyssalProfitCalculator";
 import { JsonLd } from "@/components/JsonLd";
@@ -211,6 +212,15 @@ export default async function GuidePage({ params }: GuidePageProps) {
               marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
             }
             tierLoadouts={marketPricing.tierLoadoutBundles}
+            defaultMarketCity={guide.defaultMarketCity}
+          />
+        ) : slug === "resource-refining-focus" ? (
+          <RefiningProfitCalculator
+            economics={economicsConfig}
+            guidePrices={marketPricing.guidePrices}
+            pricedAt={
+              marketPricing.hourlyEconomics?.pricedAt ?? new Date().toISOString()
+            }
             defaultMarketCity={guide.defaultMarketCity}
           />
         ) : slug === "ava-roads-fishing" ? (

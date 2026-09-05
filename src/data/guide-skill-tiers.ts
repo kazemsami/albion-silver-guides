@@ -221,6 +221,41 @@ export const SKILL_TIERS = {
     outputMultiplier: 1.25,
     inputMultiplier: 1.1,
   },
+  refiningT4: {
+    id: "t4",
+    label: "T4 refining",
+    description: "Entry refining with lower focus cost",
+    outputMultiplier: 0.7,
+    inputMultiplier: 0.7,
+  },
+  refiningT5: {
+    id: "t5",
+    label: "T5 refining",
+    description: "Solid mid-tier volume",
+    outputMultiplier: 0.85,
+    inputMultiplier: 0.85,
+  },
+  refiningT6: {
+    id: "t6",
+    label: "T6 refining",
+    description: "Default focus refining batch",
+    outputMultiplier: 1,
+    inputMultiplier: 1,
+  },
+  refiningT7: {
+    id: "t7",
+    label: "T7 refining",
+    description: "High silver per craft, more focus",
+    outputMultiplier: 1.15,
+    inputMultiplier: 1.1,
+  },
+  refiningT8: {
+    id: "t8",
+    label: "T8 refining",
+    description: "Top-tier refining with the highest focus cost",
+    outputMultiplier: 1.3,
+    inputMultiplier: 1.2,
+  },
 } as const satisfies Record<string, SkillTier>;
 
 export function tiers(...items: SkillTier[]): SkillTier[] {

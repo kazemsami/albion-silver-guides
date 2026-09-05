@@ -70,5 +70,13 @@
     "highRoll": 209512,
     "rangeMin": 58930,
     "rangeMax": 209512
+  },
+  "resource-refining-focus": {
+    "conservative": -147561,
+    "median": 139117,
+    "expected": 148049,
+    "highRoll": 331508,
+    "rangeMin": -147561,
+    "rangeMax": 331508
   }
 }

@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import {
+  AVERAGE_MARKET_CITY_ID,
   DEFAULT_MARKET_CITY_ID,
   isMarketCityId,
   LIVE_PRICES_STORAGE_KEY,
@@ -187,8 +188,10 @@ export function useMarketCity(): MarketCityContextValue {
 export function useGuidesListMarketSource(
   marketData: GuidesListMarketData,
 ): GuidesListMarketSlice {
-  const { useLivePrices, priceServer } = useMarketCity();
-  if (!useLivePrices) return marketData.estimated;
+  const { useLivePrices, priceServer, marketCity } = useMarketCity();
+  const useLiveForCity =
+    useLivePrices && marketCity !== AVERAGE_MARKET_CITY_ID;
+  if (!useLiveForCity) return marketData.estimated;
   return (
     marketData.liveByServer[priceServer] ??
     marketData.liveByServer[DEFAULT_ALBION_PRICE_SERVER_ID]
@@ -255,20 +258,28 @@ export function useGuidePriceMap(
 ) {
   const { useLivePrices, priceServer } = useMarketCity();
   const effectiveCity = useEffectiveMarketCity(guideDefaultCity);
-  const mapKind: PriceMapKind = useLivePrices ? "live" : "snapshot";
+  const useLiveForCity =
+    useLivePrices && effectiveCity !== AVERAGE_MARKET_CITY_ID;
+  const mapKind: PriceMapKind = useLiveForCity ? "live" : "snapshot";
 
   const serialized = useMemo(
     () =>
       pickGuideMarketPrices(
         guidePrices,
         effectiveCity,
-        useLivePrices,
+        useLiveForCity,
         priceServer,
       ),
-    [guidePrices, effectiveCity, useLivePrices, priceServer],
+    [guidePrices, effectiveCity, useLiveForCity, priceServer],
   );
 
   const priceMap = useMemo(() => deserializePriceMap(serialized), [serialized]);
 
-  return { priceMap, mapKind, useLivePrices, effectiveCity, serializedPrices: serialized };
+  return {
+    priceMap,
+    mapKind,
+    useLivePrices: useLiveForCity,
+    effectiveCity,
+    serializedPrices: serialized,
+  };
 }

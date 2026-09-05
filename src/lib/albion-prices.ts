@@ -124,31 +124,78 @@ export async function fetchAlbionPriceRows(
   apiHost: string = DEFAULT_API_HOST,
 ): Promise<AlbionPriceRow[]> {
   const unique = [...new Set(itemIds)];
+  if (unique.length === 0) return [];
+
   const merged: AlbionPriceRow[] = [];
   const chunkSize = 40;
+  let chunkFailures = 0;
+  const chunkCount = Math.ceil(unique.length / chunkSize);
 
   for (let i = 0; i < unique.length; i += chunkSize) {
     const chunk = unique.slice(i, i + chunkSize);
     try {
       merged.push(...(await fetchPriceBatch(chunk, apiHost)));
     } catch {
-      // Partial failures should not break the page.
+      chunkFailures += 1;
     }
+  }
+
+  const usable = merged.some(
+    (row) => row.sell_price_min > 0 || row.buy_price_max > 0,
+  );
+
+  // Empty or all-zero payloads must fail so callers do not treat snapshots as live.
+  if (!usable) {
+    throw new Error(
+      `Albion price API returned no usable prices for ${unique.length} items (${apiHost}; ${chunkFailures}/${chunkCount} chunks failed)`,
+    );
   }
 
   return merged;
 }
 
-/** Fetch per-city price maps for every Albion price server region. */
+/** Overlay live buy/sell onto a base map; keep base values when live is missing. */
+export function mergePriceMap(base: PriceMap, overlay: PriceMap): PriceMap {
+  const result: PriceMap = new Map(base);
+  for (const [itemId, live] of overlay) {
+    const prev = result.get(itemId) ?? { sell: null, buy: null };
+    result.set(itemId, {
+      sell: live.sell != null && live.sell > 0 ? live.sell : prev.sell,
+      buy: live.buy != null && live.buy > 0 ? live.buy : prev.buy,
+    });
+  }
+  return result;
+}
+
+export function mergePriceMapsByCity(
+  base: PriceMapsByCity,
+  overlay: PriceMapsByCity,
+): PriceMapsByCity {
+  const result = { ...base } as PriceMapsByCity;
+  for (const city of Object.keys(overlay) as MarketCityId[]) {
+    const baseMap = base[city] ?? new Map();
+    const overlayMap = overlay[city] ?? new Map();
+    result[city] = mergePriceMap(baseMap, overlayMap);
+  }
+  return result;
+}
+
+/**
+ * Fetch per-city price maps for every Albion price server region.
+ * When `baseMaps` is provided, live quotes overlay that full map (e.g. estimated
+ * including enchanted ids not requested from the API).
+ */
 export async function fetchAlbionPricesByCityAllServers(
   itemIds: string[],
+  baseMaps?: PriceMapsByCity,
 ): Promise<Record<AlbionPriceServerId, PriceMapsByCity>> {
-  const fallback = buildEstimatedPriceMapsByCity(itemIds);
+  const fallback = baseMaps ?? buildEstimatedPriceMapsByCity(itemIds);
   const entries = await Promise.all(
     ALBION_PRICE_SERVERS.map(async (server) => {
       try {
         const rows = await fetchAlbionPriceRows(itemIds, server.apiHost);
-        return [server.id, buildPriceMapsFromRows(rows)] as const;
+        const live = buildPriceMapsFromRows(rows);
+        return [server.id, mergePriceMapsByCity(fallback, live)] as const;
       } catch {
         return [server.id, fallback] as const;
       }

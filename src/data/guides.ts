@@ -1021,6 +1021,80 @@ const rawGuides: Omit<Guide, "reliability" | "defaultMarketCity" | "riskProfile"
     featured: false,
     readTime: 8,
   },
+  {
+    slug: "resource-refining-focus",
+    title: "Resource Refining with Focus",
+    description:
+      "Refine ore, wood, fiber, or hide into bars, planks, cloth, or leather at the matching royal-city station. Compare flat through pristine (.0–.4) enchants. Profit is measured per 10,000 focus (with focus) or per craft (without). Material return rate, focus-cost efficiency, listing tax, and optional station usage fee are included. Always refine in the bonus city when you can.",
+    category: "crafting",
+    difficulty: "intermediate",
+    zoneType: "safe",
+    silverByLevel: [
+      { label: "T4–T5 focus refining (per 10k focus)", min: 50_000, max: 250_000 },
+      { label: "T6 focus refining (per 10k focus)", min: 80_000, max: 400_000 },
+      { label: "T7–T8 focus refining (per 10k focus)", min: 100_000, max: 800_000 },
+    ],
+    requirements: [
+      "Destiny Board refining mastery and specialization for the resource you refine (bars, planks, cloth, or leather)",
+      "Access to a Smelter, Lumbermill, Weaver, or Tanner: prefer Thetford, Fort Sterling, Lymhurst, or Martlock for the local production bonus",
+      "Crafting focus if you refine with focus (about 10k–30k focus every few days depending on Premium)",
+      "Silver to buy raw resources plus one lower-tier refined piece per craft",
+    ],
+    steps: [
+      "Pick one resource line and its bonus city: Thetford (metal bars), Fort Sterling (planks), Lymhurst (cloth), Martlock (leather).",
+      "Buy raw resources and the lower-tier refined material on the market (or bring your own gather). Check buy orders before large fills.",
+      "Use a city station with a low usage fee, or refine on your island if the fee in town is high. Island return rates are worse than the bonus city.",
+      "Craft with focus when the calculator shows positive profit per 10,000 focus at your return rate and focus efficiency.",
+      "List the refined output in the same city (or the city with best sell prices). Recheck margins when buy spreads move.",
+      "Without focus, only refine when the no-focus return rate still clears fees, or when you are leveling refining mastery.",
+    ],
+    tips: [
+      "Each craft above T2 needs 1× the previous refined tier plus raw: T4×2, T5×3, T6×4, T7×5, T8×5 raw per craft.",
+      "Resource return rate matters more than tiny price gaps. Bonus city with focus is about 53.9% RRR; without focus about 36.7%. Other cities drop to about 43.5% / 15.2%.",
+      "Focus cost halves every 10,000 focus-cost efficiency. Maxing T4–T8 refining drops cost to 6.25% of base (wiki).",
+      "Enchanted refining (.1–.4) needs enchanted raw at your tier. Lower-tier refined must match the enchant from T4 up; T3 mats (e.g. Thick Leather) stay flat (.0).",
+      "Compare gathering the raw yourself vs buying. Self-gathered raw has opportunity cost equal to the sell price of the raw.",
+      "Station usage fee is a % of item value on player stations. 0% on your island, but island RRR is lower than a bonus royal city.",
+    ],
+    profitBuild: {
+      title: "Refining Setup",
+      description:
+        "Default model: T6 metal bars in Thetford with focus at mid Destiny Board efficiency.",
+      slots: {},
+      inventory: [
+        {
+          id: "T6_ORE",
+          name: "Runite Ore",
+          quantity: 4,
+          hint: "Raw per T6 bar craft",
+        },
+        {
+          id: "T5_METALBAR",
+          name: "Titanium Steel Bar",
+          quantity: 1,
+          hint: "Lower-tier refined per craft",
+        },
+        {
+          id: "T6_METALBAR",
+          name: "Runite Steel Bar",
+          quantity: 1,
+          hint: "Craft output",
+        },
+      ],
+    },
+    featured: true,
+    readTime: 9,
+    references: [
+      {
+        title: "Albion Online: Guide to Refining",
+        url: "https://albiononline.com/news/guide-refining",
+      },
+      {
+        title: "Albion Online Wiki: Crafting Focus",
+        url: "https://wiki.albiononline.com/wiki/Crafting_Focus",
+      },
+    ],
+  },
 ];
 
 export const guides: Guide[] = attachGuideReliability(rawGuides).map((guide) => ({

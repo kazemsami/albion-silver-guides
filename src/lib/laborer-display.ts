@@ -27,13 +27,15 @@ export function laborerCycleProfit(hourlyNet: number | null): number | null {
 }
 
 export function profitUnitLabel(slug: string): string {
-  if (slug === "potions-crafting-bulk") return "/10k focus";
+  if (slug === "potions-crafting-bulk" || slug === "resource-refining-focus") {
+    return "/10k focus";
+  }
   if (isLaborerGuide(slug)) return "/22h cycle";
   return "/hr";
 }
 
 export function profitRangeTitle(slug: string): string {
-  if (slug === "potions-crafting-bulk") {
+  if (slug === "potions-crafting-bulk" || slug === "resource-refining-focus") {
     return "Profit range / 10k focus (conservative to high-roll)";
   }
   if (isLaborerGuide(slug)) {

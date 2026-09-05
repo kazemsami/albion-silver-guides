@@ -18,6 +18,7 @@ import { computeTrackingEconomics } from "@/lib/tracking-economics";
 import { computeAvaRoadsEconomics } from "@/lib/ava-roads-economics";
 import { computeAbyssalProfitOutcomes } from "@/lib/abyssal-economics";
 import { computePotionGuideProfitOutcomes } from "@/lib/potion-economics";
+import { computeRefiningGuideProfitOutcomes } from "@/lib/refining-economics";
 import {
   getGatheringYieldMultiplier,
   PREMIUM_LISTING_TAX_RATE,
@@ -220,6 +221,14 @@ export function computeGuideProfitOutcomes(
 
   if (slug === "potions-crafting-bulk") {
     return computePotionGuideProfitOutcomes(
+      prices,
+      listingTaxRate,
+      priceMapKind,
+    );
+  }
+
+  if (slug === "resource-refining-focus") {
+    return computeRefiningGuideProfitOutcomes(
       prices,
       listingTaxRate,
       priceMapKind,

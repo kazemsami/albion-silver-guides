@@ -12,6 +12,7 @@ export const guideDefaultMarketCityBySlug: Record<string, MarketCityId> = {
   "ava-roads-fishing": "Caerleon",
   "laborer-passive-income": "Thetford",
   "potions-crafting-bulk": "Bridgewatch",
+  "resource-refining-focus": "Thetford",
 };
 
 export const guideRiskProfileBySlug: Record<string, GuideRiskProfile> = {
@@ -24,4 +25,5 @@ export const guideRiskProfileBySlug: Record<string, GuideRiskProfile> = {
   "ava-roads-fishing": "rng-heavy",
   "laborer-passive-income": "safe-passive",
   "potions-crafting-bulk": "rng-heavy",
+  "resource-refining-focus": "safe-passive",
 };

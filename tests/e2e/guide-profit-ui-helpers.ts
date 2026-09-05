@@ -18,6 +18,7 @@ export const HERO_MATCHES_EXPECTED_SLUGS = [
   "mists-fishing",
   "laborer-passive-income",
   "potions-crafting-bulk",
+  "resource-refining-focus",
   "abyssal-depths-farming",
   "high-tier-group-tracking",
 ] as const;

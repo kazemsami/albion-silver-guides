@@ -10,7 +10,7 @@ const MARKET_REVALIDATE_SECONDS = 3600;
 
 export const getCachedAllGuidesMarketData = unstable_cache(
   () => fetchAllGuidesMarketDataByCity(),
-  ["guides-market-data-all-v4"],
+  ["guides-market-data-all-v8"],
   { revalidate: MARKET_REVALIDATE_SECONDS },
 );
 
@@ -18,7 +18,7 @@ export function getCachedGuidesMarketDataForSlugs(slugs: string[]) {
   const key = [...slugs].sort().join(",");
   return unstable_cache(
     () => fetchGuidesMarketDataForSlugs(slugs),
-    ["guides-market-data-slugs", key],
+    ["guides-market-data-slugs-v8", key],
     { revalidate: MARKET_REVALIDATE_SECONDS },
   )();
 }
@@ -27,7 +27,7 @@ export function getCachedGuidePricing(slug: string) {
   const economics = getGuideEconomics(slug);
   return unstable_cache(
     () => fetchGuidePricing(slug, economics),
-    ["guide-pricing", slug],
+    ["guide-pricing-v8", slug],
     { revalidate: MARKET_REVALIDATE_SECONDS },
   )();
 }

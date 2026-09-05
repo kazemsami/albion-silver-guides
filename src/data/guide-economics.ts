@@ -593,6 +593,23 @@ export const guideEconomicsBySlug: Record<string, GuideEconomics> = {
     ),
     defaultSkillTierId: "t6",
   },
+  "resource-refining-focus": {
+    hourlyOutput: [
+      { id: "T6_METALBAR", name: "Runite Steel Bar", quantity: 120 },
+    ],
+    hourlyInputs: [
+      { id: "T6_ORE", name: "Runite Ore", quantity: 480, side: "buy" },
+      { id: "T5_METALBAR", name: "Titanium Steel Bar", quantity: 120, side: "buy" },
+    ],
+    skillTiers: tiers(
+      SKILL_TIERS.refiningT4,
+      SKILL_TIERS.refiningT5,
+      SKILL_TIERS.refiningT6,
+      SKILL_TIERS.refiningT7,
+      SKILL_TIERS.refiningT8,
+    ),
+    defaultSkillTierId: "t6",
+  },
 };
 
 export function getGuideEconomics(slug: string): GuideEconomics | undefined {

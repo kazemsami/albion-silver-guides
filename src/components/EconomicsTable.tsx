@@ -14,6 +14,8 @@ interface EconomicsTableProps {
   totalLabel?: string;
   variant?: "output" | "input" | "neutral";
   quantityLabel?: string;
+  /** Header for the per-item price column (default "Unit"). */
+  unitLabel?: string;
 }
 
 const variantStyles = {
@@ -29,6 +31,7 @@ export function EconomicsTable({
   totalLabel = "Subtotal",
   variant = "neutral",
   quantityLabel = "Qty/hr",
+  unitLabel = "Unit",
 }: EconomicsTableProps) {
   if (lines.length === 0) return null;
 
@@ -43,7 +46,7 @@ export function EconomicsTable({
             <tr className="border-b border-parchment/10 text-[10px] uppercase tracking-wider text-parchment/35">
               <th className="pb-2 pr-3 font-medium">Item</th>
               <th className="pb-2 pr-3 text-right font-medium">{quantityLabel}</th>
-              <th className="pb-2 pr-3 text-right font-medium">Unit</th>
+              <th className="pb-2 pr-3 text-right font-medium">{unitLabel}</th>
               <th className="pb-2 text-right font-medium">Value</th>
             </tr>
           </thead>

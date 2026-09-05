@@ -133,6 +133,40 @@ export const ITEM_PRICE_FALLBACKS: Record<string, FallbackPrices> = {
   T7_PLANKS: { sell: 11_210, buy: 7028 },
   T7_CLOTH: { sell: 9472, buy: 3966 },
   T7_LEATHER: { sell: 17_889, buy: 7849 },
+  T8_ORE: { sell: 4200, buy: 2000 },
+  T8_WOOD: { sell: 5500, buy: 2800 },
+  T8_FIBER: { sell: 3800, buy: 1900 },
+  T8_HIDE: { sell: 9500, buy: 4500 },
+  T8_METALBAR: { sell: 22_000, buy: 9500 },
+  T8_PLANKS: { sell: 28_000, buy: 14_000 },
+  T8_CLOTH: { sell: 24_000, buy: 10_000 },
+  T8_LEATHER: { sell: 42_000, buy: 18_000 },
+  // Refining inputs / lower tiers
+  T6_ORE: { sell: 980, buy: 1100 },
+  T3_METALBAR: { sell: 120, buy: 145 },
+  T4_METALBAR: { sell: 520, buy: 600 },
+  T5_METALBAR: { sell: 1600, buy: 1850 },
+  T6_METALBAR: { sell: 4200, buy: 4800 },
+  T3_WOOD: { sell: 50, buy: 60 },
+  T4_WOOD: { sell: 160, buy: 180 },
+  T5_WOOD: { sell: 460, buy: 520 },
+  T6_WOOD: { sell: 920, buy: 1050 },
+  T3_PLANKS: { sell: 110, buy: 135 },
+  T4_PLANKS: { sell: 500, buy: 580 },
+  T5_PLANKS: { sell: 1550, buy: 1800 },
+  T6_PLANKS: { sell: 4100, buy: 4700 },
+  T6_FIBER: { sell: 780, buy: 900 },
+  T3_CLOTH: { sell: 100, buy: 120 },
+  T4_CLOTH: { sell: 480, buy: 560 },
+  T5_CLOTH: { sell: 1500, buy: 1750 },
+  T6_CLOTH: { sell: 3900, buy: 4500 },
+  T3_HIDE: { sell: 70, buy: 85 },
+  T4_HIDE: { sell: 200, buy: 230 },
+  T5_HIDE: { sell: 580, buy: 650 },
+  T6_HIDE: { sell: 1200, buy: 1400 },
+  T3_LEATHER: { sell: 150, buy: 180 },
+  T4_LEATHER: { sell: 620, buy: 720 },
+  T5_LEATHER: { sell: 1900, buy: 2200 },
   // Journals (empty = buy cost, full = sell value)
   T4_JOURNAL_ORE_EMPTY: { sell: 2800, buy: 3200 },
   T4_JOURNAL_ORE_FULL: { sell: 7800, buy: 9200 },
@@ -441,14 +475,17 @@ export function getItemPriceFallback(
 
   const enchantMatch = itemId.match(/^(.+)@(\d+)$/);
   if (enchantMatch) {
-    const baseId = enchantMatch[1]!;
+    const rawBase = enchantMatch[1]!;
     const level = Number.parseInt(enchantMatch[2]!, 10);
+    // Resources use T6_ORE_LEVEL2@2; strip _LEVELn before looking up flat price.
+    const baseId = rawBase.replace(/_LEVEL\d+$/, "");
     const basePrice = getItemPriceFallback(baseId, side);
     if (basePrice != null && level >= 1) {
       const multipliers: Record<number, { buy: number; sell: number }> = {
         1: { buy: 2.6, sell: 2.6 },
         2: { buy: 6.5, sell: 6.5 },
         3: { buy: 16, sell: 16 },
+        4: { buy: 40, sell: 40 },
       };
       const mult = multipliers[level] ?? { buy: 1, sell: 1 };
       const multiplier = side === "buy" ? mult.buy : mult.sell;

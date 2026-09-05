@@ -8,6 +8,7 @@ const ITEM_ID_SOURCES = [
   "src/data/laborer-specialties.ts",
   "src/data/t8-house-cost.ts",
   "src/data/potion-economics.ts",
+  "src/data/refining-economics.ts",
   "src/data/tracking-economics.ts",
   "src/data/ava-roads-economics.ts",
   "src/data/abyssal-economics.ts",
